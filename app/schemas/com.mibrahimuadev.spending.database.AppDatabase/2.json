@@ -1,0 +1,224 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "6486bebaff28ef16c9a55fc7cebc5bfe",
+    "entities": [
+      {
+        "tableName": "transaksi",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idTransaksi` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tipeTransaksi` TEXT NOT NULL, `idKategori` INTEGER NOT NULL, `idMataUang` INTEGER NOT NULL, `nominal` REAL NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "idTransaksi",
+            "columnName": "idTransaksi",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tipeTransaksi",
+            "columnName": "tipeTransaksi",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idKategori",
+            "columnName": "idKategori",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idMataUang",
+            "columnName": "idMataUang",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nominal",
+            "columnName": "nominal",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idTransaksi"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "mata_uang",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idMataUang` INTEGER NOT NULL, `namaUang` TEXT NOT NULL, `namaUangShort` TEXT NOT NULL, PRIMARY KEY(`idMataUang`))",
+        "fields": [
+          {
+            "fieldPath": "idMataUang",
+            "columnName": "idMataUang",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "namaUang",
+            "columnName": "namaUang",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "namaUangShort",
+            "columnName": "namaUangShort",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idMataUang"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "kategori",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idKategori` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `namaKategori` TEXT, `idIcon` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "idKategori",
+            "columnName": "idKategori",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "namaKategori",
+            "columnName": "namaKategori",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "idIcon",
+            "columnName": "idIcon",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idKategori"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "TransaksiKategori",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `id_kategori` INTEGER, `id_transaksi` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "idKategori",
+            "columnName": "id_kategori",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "idTransaksi",
+            "columnName": "id_transaksi",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "sub_kategori",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idSubKategori` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `idKategori` INTEGER NOT NULL, `namaSubKategori` TEXT, `idIcon` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "idSubKategori",
+            "columnName": "idSubKategori",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idKategori",
+            "columnName": "idKategori",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "namaSubKategori",
+            "columnName": "namaSubKategori",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "idIcon",
+            "columnName": "idIcon",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idSubKategori"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "icon_transaksi",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idIcon` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `namaIcon` TEXT NOT NULL, `lokasiIcon` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "idIcon",
+            "columnName": "idIcon",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "namaIcon",
+            "columnName": "namaIcon",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lokasiIcon",
+            "columnName": "lokasiIcon",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idIcon"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6486bebaff28ef16c9a55fc7cebc5bfe')"
+    ]
+  }
+}

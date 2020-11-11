@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/pemasukanFragment"
+        android:name="com.mibrahimuadev.spending.pemasukan.PemasukanFragment"
+        android:label="fragment_pemasukan"
+        tools:layout="@layout/fragment_pemasukan" >
+        <action
+            android:id="@+id/action_pemasukanFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.mibrahimuadev.spending.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+
+        <action
+            android:id="@+id/action_homeFragment_to_pemasukanFragment"
+            app:destination="@id/pemasukanFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_pengeluaranFragment"
+            app:destination="@id/pengeluaranFragment" />
+        <action
+            android:id="@+id/action_homeFragment_self"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pengeluaranFragment"
+        android:name="com.mibrahimuadev.spending.pengeluaran.PengeluaranFragment"
+        android:label="fragment_pengeluaran"
+        tools:layout="@layout/fragment_pengeluaran" />
+</navigation>
