@@ -4,18 +4,14 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
-import com.mibrahimuadev.spending.database.AppDatabase
-import com.mibrahimuadev.spending.database.entity.TransaksiKategori
-import com.mibrahimuadev.spending.database.entity.TransaksiWithKategori
-import com.mibrahimuadev.spending.repository.TransaksiRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.mibrahimuadev.spending.data.Result
+import com.mibrahimuadev.spending.data.model.ListTransaksi
+import com.mibrahimuadev.spending.data.repository.TransaksiRepository
 
 class HomeViewModel(application: Application): AndroidViewModel(application) {
     private val repository: TransaksiRepository = TransaksiRepository(application)
 
-    val allTransaksi: LiveData<List<TransaksiWithKategori>> = repository.lihatSemuaTransaksi()
+    val allTransaksi: LiveData<Result<List<ListTransaksi>>> = repository.observeAllTransaksi()
     init {
         Log.i("HomeViewModel", "HomeViewModel created")
     }

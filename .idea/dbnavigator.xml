@@ -2,7 +2,7 @@
 <project version="4">
   <component name="DBNavigator.Project.DataEditorManager">
     <record-view-column-sorting-type value="BY_INDEX" />
-    <value-preview-text-wrapping value="true" />
+    <value-preview-text-wrapping value="false" />
     <value-preview-pinned value="false" />
   </component>
   <component name="DBNavigator.Project.DataExportManager">
@@ -25,7 +25,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="792014c5-367d-4152-8fbc-41332ee8e257">
-        <schema name="main" object-types="table, column, dataset trigger, constraint, index, view" />
+        <schema name="main" object-types="view, table" />
       </connection>
     </loaded-nodes>
   </component>
@@ -35,9 +35,7 @@
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="792014c5-367d-4152-8fbc-41332ee8e257" object-ref="schemas/main/tables/kategori" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="792014c5-367d-4152-8fbc-41332ee8e257" />
@@ -45,6 +43,10 @@
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="792014c5-367d-4152-8fbc-41332ee8e257" dataset="main.TransaksiKategori" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="792014c5-367d-4152-8fbc-41332ee8e257" dataset="main.kategori" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="792014c5-367d-4152-8fbc-41332ee8e257" dataset="main.transaksi" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="792014c5-367d-4152-8fbc-41332ee8e257" dataset="main.mata_uang" active-filter-id="03edacc3-d7b7-4051-aeeb-08a141d5ab3c">
+      <filter id="03edacc3-d7b7-4051-aeeb-08a141d5ab3c" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    </filter-actions>
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />

@@ -10,16 +10,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mibrahimuadev.spending.adapter.TransaksiListAdapter
+import com.mibrahimuadev.spending.data.Result
 import com.mibrahimuadev.spending.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
-
-    private lateinit var binding: FragmentHomeBinding
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentHomeBinding.inflate(layoutInflater)
+
+        _binding = FragmentHomeBinding.inflate(layoutInflater)
         val application = requireNotNull(this.activity).application
         Log.i("HomeFragment", "Called ViewModelProvider.get")
 
@@ -33,9 +35,13 @@ class HomeFragment : Fragment() {
         val homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
         homeViewModel.allTransaksi.observe(viewLifecycleOwner, { transaksi ->
-            transaksi.let {
-                adapter.setTransaksi(transaksi)
+            if(transaksi is Result.Success) {
+//                transaksi.let {
+                    adapter.setTransaksi(transaksi.data)
+
+//                }
             }
+
         })
 
 
@@ -48,4 +54,8 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

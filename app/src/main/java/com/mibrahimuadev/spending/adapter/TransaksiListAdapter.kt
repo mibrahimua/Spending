@@ -8,14 +8,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mibrahimuadev.spending.R
-import com.mibrahimuadev.spending.database.entity.TransaksiKategori
-import com.mibrahimuadev.spending.database.entity.TransaksiWithKategori
+import com.mibrahimuadev.spending.data.Result
+import com.mibrahimuadev.spending.data.model.ListTransaksi
 
 class TransaksiListAdapter internal constructor(context: Context) :
     RecyclerView.Adapter<TransaksiListAdapter.TransaksiViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var transaksi = emptyList<TransaksiWithKategori>()
+    private var transaksi = emptyList<ListTransaksi>()
 
     inner class TransaksiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tglTransaksi: TextView = itemView.findViewById(R.id.tgl_transaksi)
@@ -32,7 +32,7 @@ class TransaksiListAdapter internal constructor(context: Context) :
         return transaksi.size
     }
 
-    internal fun setTransaksi(transaksi: List<TransaksiWithKategori>) {
+    internal fun setTransaksi(transaksi: List<ListTransaksi>) {
         this.transaksi = transaksi
         notifyDataSetChanged()
     }
@@ -40,8 +40,9 @@ class TransaksiListAdapter internal constructor(context: Context) :
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: TransaksiViewHolder, position: Int) {
         val current = transaksi[position]
-        holder.tglTransaksi.text = current.namaIcon
-        holder.kategoriTransaksi.text = current.namaKategori
-        holder.nominalTransaksi.text = current.nominal.toString()
+        holder.tglTransaksi.text = current.lokasiIcon
+        holder.kategoriTransaksi.text = current.namaSubKategori
+        holder.nominalTransaksi.text =
+            current.symbolUang + " " + current.nominalTransaksi.toString()
     }
 }
