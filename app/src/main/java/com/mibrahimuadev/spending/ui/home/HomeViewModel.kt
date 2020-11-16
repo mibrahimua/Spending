@@ -1,4 +1,4 @@
-package com.mibrahimuadev.spending.home
+package com.mibrahimuadev.spending.ui.home
 
 import android.app.Application
 import android.util.Log

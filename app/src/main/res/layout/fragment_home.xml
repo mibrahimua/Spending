@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.HomeFragment">
+    tools:context=".ui.home.HomeFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleview_transaksi"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/floatingActionButtonTrans"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
@@ -24,9 +24,33 @@
         android:src="@android:drawable/ic_input_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintHorizontal_bias="0.92"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/recycleview_transaksi"
-        app:layout_constraintVertical_bias="0.94" />
+        app:layout_constraintVertical_bias="0.95" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButtonExpense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:src="@android:drawable/ic_input_add"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonTrans"
+        app:layout_constraintEnd_toEndOf="@+id/floatingActionButtonTrans"
+        app:layout_constraintStart_toStartOf="@+id/floatingActionButtonTrans"
+        app:pressedTranslationZ="12dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButtonIncome"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:src="@android:drawable/ic_input_add"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonExpense"
+        app:layout_constraintEnd_toEndOf="@+id/floatingActionButtonExpense"
+        app:layout_constraintStart_toStartOf="@+id/floatingActionButtonExpense"
+        app:pressedTranslationZ="12dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

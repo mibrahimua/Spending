@@ -1,4 +1,4 @@
-package com.mibrahimuadev.spending.transaksi
+package com.mibrahimuadev.spending.ui.transaction
 
 import android.app.Application
 import android.util.Log
@@ -12,7 +12,7 @@ import com.mibrahimuadev.spending.data.repository.TransaksiRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TransaksiViewModel(application: Application) : AndroidViewModel(application) {
+class AddTransaksiViewModel(application: Application) : AndroidViewModel(application) {
 
     private lateinit var transaksiResults: LiveData<List<Transaksi>>
 
@@ -34,6 +34,9 @@ class TransaksiViewModel(application: Application) : AndroidViewModel(applicatio
             transaksiRepository.insertTransaksi(transaksi)
         }
     }
+
+    val _dataCalculator = MutableLiveData<Double>()
+    val dataCalculator: LiveData<Double> = _dataCalculator
 
 //    fun lihatSemuaKategori():LiveData<List<Kategori>> {
 //        return kategoriRepository.allKategori
