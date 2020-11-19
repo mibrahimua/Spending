@@ -15,21 +15,12 @@
             android:id="@+id/action_homeFragment_self"
             app:destination="@id/homeFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_addExpenTransFragment"
-            app:destination="@id/addExpenTransFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_addIncomTransFragment"
-            app:destination="@id/addIncomTransFragment" />
+            android:id="@+id/action_homeFragment_to_addTransaksiFragment"
+            app:destination="@id/addTransaksiFragment" />
     </fragment>
     <fragment
-        android:id="@+id/addExpenTransFragment"
-        android:name="com.mibrahimuadev.spending.ui.transaction.AddExpenTransFragment"
-        android:label="fragment_add_expen_trans"
-        tools:layout="@layout/fragment_add_expen_trans" />
-    <fragment
-        android:id="@+id/addIncomTransFragment"
-        android:name="com.mibrahimuadev.spending.ui.transaction.AddIncomTransFragment"
-        android:label="fragment_add_incom_trans"
-        tools:layout="@layout/fragment_add_incom_trans" />
+        android:id="@+id/addTransaksiFragment"
+        android:name="com.mibrahimuadev.spending.ui.transaction.AddTransaksiFragment"
+        android:label="AddTransaksiFragment" />
 
 </navigation>

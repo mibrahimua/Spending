@@ -8,6 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="action_button">#F57C00</color>
+    <color name="orange">#F57C00</color>
     <color name="number_action_button">#455A64</color>
 </resources>

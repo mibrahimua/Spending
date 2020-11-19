@@ -25,4 +25,8 @@
     <string name="number_clear">CLR</string>
     <string name="number_submit">Save</string>
     <string name="number_equal">=</string>
+    <string name="note">Note</string>
+
+    <string name="unknown_error_occurred">An unknown error occurred</string>
+    <string name="invalid_format_used">Invalid format used.</string>
 </resources>

@@ -72,12 +72,12 @@ class HomeFragment : Fragment() {
 
         fabExpense.setOnClickListener {
             isFabOpen = false
-            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToAddExpenTransFragment())
+            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment())
         }
 
         fabIncome.setOnClickListener {
             isFabOpen = false
-            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToAddIncomTransFragment())
+            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment())
         }
         return binding.root
     }
