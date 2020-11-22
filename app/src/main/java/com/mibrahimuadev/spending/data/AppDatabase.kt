@@ -10,18 +10,18 @@ import com.mibrahimuadev.spending.data.local.dao.*
 
 
 @Database(
-    entities = [(Transaksi::class), (MataUang::class), (Kategori::class), (SubKategori::class), (IconKategori::class)],
+    entities = [(Transaction::class), (MataUang::class), (Category::class), (SubKategori::class), (CategoryIcon::class)],
     version = 1,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun transaksiDao(): TransaksiDao
+    abstract fun transactionDao(): TransactionDao
 
     abstract fun mataUangDao(): MataUangDao
 
-    abstract fun kategoriDao(): KategoriDao
+    abstract fun categoryDao(): CategoryDao
 
     abstract fun subKategoriDao(): SubKategoriDao
 

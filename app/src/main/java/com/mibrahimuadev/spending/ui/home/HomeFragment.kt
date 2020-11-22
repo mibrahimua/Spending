@@ -50,7 +50,7 @@ class HomeFragment : Fragment() {
 
         val homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
 
-        homeViewModel.allTransaksi.observe(viewLifecycleOwner, { transaksi ->
+        homeViewModel.allTransaction.observe(viewLifecycleOwner, { transaksi ->
             if (transaksi is Result.Success) {
                 adapter.setTransaksi(transaksi.data)
             }

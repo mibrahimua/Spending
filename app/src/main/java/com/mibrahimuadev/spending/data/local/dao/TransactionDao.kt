@@ -2,12 +2,11 @@ package com.mibrahimuadev.spending.data.local.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.mibrahimuadev.spending.data.Result
-import com.mibrahimuadev.spending.data.entity.Transaksi
-import com.mibrahimuadev.spending.data.model.ListTransaksi
+import com.mibrahimuadev.spending.data.entity.Transaction
+import com.mibrahimuadev.spending.data.model.TransactionList
 
 @Dao
-interface TransaksiDao {
+interface TransactionDao {
 
     @Query(
         """SELECT t.idTransaksi, t.tipeTransaksi, t.nominalTransaksi, t.tglTransaksi, k.namaKategori, sk.namaSubKategori, c.lokasiIcon, m.symbolUang , t.catatanTransaksi
@@ -19,7 +18,7 @@ interface TransaksiDao {
 				WHERE t.tipeTransaksi = "PENGELUARAN"
 				GROUP BY t.idTransaksi"""
     )
-    fun observeAllTransaksi(): LiveData<List<ListTransaksi>>
+    fun observeAllTransaksi(): LiveData<List<TransactionList>>
 
     @Query(
         """SELECT t.idTransaksi, t.tipeTransaksi, t.nominalTransaksi, t.tglTransaksi, k.namaKategori, sk.namaSubKategori, c.lokasiIcon, m.symbolUang, t.catatanTransaksi 
@@ -31,13 +30,13 @@ interface TransaksiDao {
 				WHERE t.tipeTransaksi = "PENGELUARAN"
 				GROUP BY t.idTransaksi"""
     )
-    suspend fun getAllTransaksi(): List<ListTransaksi>
+    suspend fun getAllTransaksi(): List<TransactionList>
 
     @Insert
-    suspend fun insertTransaksi(transaksi: Transaksi)
+    suspend fun insertTransaksi(transaction: Transaction)
 
     @Update
-    suspend fun updateTransaksi(transaksi: Transaksi)
+    suspend fun updateTransaksi(transaction: Transaction)
 
     //    @Delete
     @Query("DELETE FROM transaksi")

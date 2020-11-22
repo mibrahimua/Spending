@@ -5,40 +5,40 @@ import androidx.lifecycle.map
 import com.mibrahimuadev.spending.data.Result
 import com.mibrahimuadev.spending.data.Result.Error
 import com.mibrahimuadev.spending.data.Result.Success
-import com.mibrahimuadev.spending.data.entity.Transaksi
-import com.mibrahimuadev.spending.data.local.dao.TransaksiDao
-import com.mibrahimuadev.spending.data.model.ListTransaksi
-import com.mibrahimuadev.spending.data.model.TransaksiDataSource
+import com.mibrahimuadev.spending.data.entity.Transaction
+import com.mibrahimuadev.spending.data.local.dao.TransactionDao
+import com.mibrahimuadev.spending.data.model.TransactionList
+import com.mibrahimuadev.spending.data.model.TransactionDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class TransaksiLocalDataSource internal constructor(
-    private val transaksiDao: TransaksiDao,
+class TransactionLocalDataSource internal constructor(
+    private val transactionDao: TransactionDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : TransaksiDataSource {
+) : TransactionDataSource {
 
-    override fun observeAllTransaksi(): LiveData<Result<List<ListTransaksi>>> {
-        return transaksiDao.observeAllTransaksi().map {
+    override fun observeAllTransaksi(): LiveData<Result<List<TransactionList>>> {
+        return transactionDao.observeAllTransaksi().map {
             Success(it)
         }
     }
 
-    override suspend fun getAllTransaksi(): Result<List<ListTransaksi>> =
+    override suspend fun getAllTransaksi(): Result<List<TransactionList>> =
         withContext(ioDispatcher) {
             return@withContext try {
-                Success(transaksiDao.getAllTransaksi())
+                Success(transactionDao.getAllTransaksi())
             } catch (e: Exception) {
                 Error(e)
             }
         }
 
 
-    override suspend fun getTransaksi(): Result<List<ListTransaksi>> {
+    override suspend fun getTransaksi(): Result<List<TransactionList>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun insertTransaksi(transaksi: Transaksi) {
+    override suspend fun insertTransaksi(transaction: Transaction) {
         TODO("Not yet implemented")
     }
 
@@ -50,7 +50,7 @@ class TransaksiLocalDataSource internal constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateTransaksi(transaksi: Transaksi) {
+    override suspend fun updateTransaksi(transaction: Transaction) {
         TODO("Not yet implemented")
     }
 }

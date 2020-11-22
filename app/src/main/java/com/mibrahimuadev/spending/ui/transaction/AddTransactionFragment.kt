@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import com.mibrahimuadev.spending.databinding.FragmentAddTransactionBinding
-import org.jetbrains.anko.clipboardManager
 
 class AddTransactionFragment : Fragment(), Calculator {
 
@@ -43,6 +43,11 @@ class AddTransactionFragment : Fragment(), Calculator {
         binding.btnEquals.setOnClickListener { calc.handleEquals(); }
         binding.result.setOnLongClickListener { copyToClipboard(true) }
 
+        binding.btnCategory.setOnClickListener {
+            Navigation.findNavController(requireView())
+                .navigate(AddTransactionFragmentDirections.actionAddTransaksiFragmentToAddCategoryTranscFragment())
+        }
+
         return binding.root
     }
 
@@ -69,8 +74,9 @@ class AddTransactionFragment : Fragment(), Calculator {
         return if (value.isEmpty()) {
             false
         } else {
-            val clipBoard = activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip: ClipData = ClipData.newPlainText("text",value)
+            val clipBoard =
+                activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip: ClipData = ClipData.newPlainText("text", value)
             clipBoard.setPrimaryClip(clip)
             Toast.makeText(activity, "Copied", Toast.LENGTH_SHORT).show()
             true

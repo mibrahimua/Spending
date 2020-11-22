@@ -21,6 +21,15 @@
     <fragment
         android:id="@+id/addTransaksiFragment"
         android:name="com.mibrahimuadev.spending.ui.transaction.AddTransactionFragment"
-        android:label="AddTransaksiFragment" />
+        android:label="AddTransaksiFragment" >
+        <action
+            android:id="@+id/action_addTransaksiFragment_to_addCategoryTranscFragment"
+            app:destination="@id/addCategoryTranscFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addCategoryTranscFragment"
+        android:name="com.mibrahimuadev.spending.ui.transaction.AddCategoryTranscFragment"
+        android:label="fragment_add_category_transc"
+        tools:layout="@layout/fragment_add_category_transc" />
 
 </navigation>

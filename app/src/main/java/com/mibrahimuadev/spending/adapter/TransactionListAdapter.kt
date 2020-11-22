@@ -8,36 +8,36 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mibrahimuadev.spending.R
-import com.mibrahimuadev.spending.data.model.ListTransaksi
+import com.mibrahimuadev.spending.data.model.TransactionList
 
 class TransactionListAdapter internal constructor(context: Context) :
-    RecyclerView.Adapter<TransactionListAdapter.TransaksiViewHolder>() {
+    RecyclerView.Adapter<TransactionListAdapter.TransactionViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var transaksi = emptyList<ListTransaksi>()
+    private var transaksi = emptyList<TransactionList>()
 
-    inner class TransaksiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class TransactionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tglTransaksi: TextView = itemView.findViewById(R.id.tgl_transaksi)
         val kategoriTransaksi: TextView = itemView.findViewById(R.id.kategori_transaksi)
         val nominalTransaksi: TextView = itemView.findViewById(R.id.nominal_transaksi)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransaksiViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
         val itemView = inflater.inflate(R.layout.recycleview_transaksi, parent, false)
-        return TransaksiViewHolder(itemView)
+        return TransactionViewHolder(itemView)
     }
 
     override fun getItemCount(): Int {
         return transaksi.size
     }
 
-    internal fun setTransaksi(transaksi: List<ListTransaksi>) {
-        this.transaksi = transaksi
+    internal fun setTransaksi(transaction: List<TransactionList>) {
+        this.transaksi = transaction
         notifyDataSetChanged()
     }
 
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: TransaksiViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         val current = transaksi[position]
         holder.tglTransaksi.text = current.lokasiIcon
         holder.kategoriTransaksi.text = current.namaSubKategori

@@ -2,7 +2,7 @@ package com.mibrahimuadev.spending.data.model
 
 import java.util.*
 
-data class ListTransaksi(
+data class TransactionList(
     override val idTransaksi: Long,
     override val tglTransaksi: Date,
     val lokasiIcon: String,

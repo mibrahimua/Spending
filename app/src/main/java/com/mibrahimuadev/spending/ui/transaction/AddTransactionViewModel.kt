@@ -6,32 +6,32 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.mibrahimuadev.spending.data.entity.Kategori
-import com.mibrahimuadev.spending.data.entity.Transaksi
-import com.mibrahimuadev.spending.data.repository.TransaksiRepository
+import com.mibrahimuadev.spending.data.entity.Category
+import com.mibrahimuadev.spending.data.entity.Transaction
+import com.mibrahimuadev.spending.data.repository.TransactionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AddTransactionViewModel(application: Application) : AndroidViewModel(application) {
 
-    private lateinit var transaksiResults: LiveData<List<Transaksi>>
+    private lateinit var transactionResults: LiveData<List<Transaction>>
 
-    private lateinit var allKategori: LiveData<List<Kategori>>
+    private lateinit var allCategory: LiveData<List<Category>>
 
-    private val transaksiRepository: TransaksiRepository
+    private val transactionRepository: TransactionRepository
 //    private val kategoriRepository: KategoriRepository
 
 
     init {
         Log.i("PemasukanViewModel", "PemasukanViewModel created")
-        transaksiRepository = TransaksiRepository(application)
+        transactionRepository = TransactionRepository(application)
     }
 
     private val _navigateFromHome = MutableLiveData<Boolean?>()
 
-    fun insertTransaksi(transaksi: Transaksi) {
+    fun insertTransaksi(transaction: Transaction) {
         viewModelScope.launch(Dispatchers.IO) {
-            transaksiRepository.insertTransaksi(transaksi)
+            transactionRepository.insertTransaksi(transaction)
         }
     }
 

@@ -6,6 +6,7 @@
     tools:context=".ui.transaction.AddCategoryTranscFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleview_category_transc"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

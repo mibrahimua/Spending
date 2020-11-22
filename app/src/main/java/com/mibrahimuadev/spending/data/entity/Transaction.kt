@@ -17,7 +17,7 @@ import java.util.*
 //        )
 //    )
 )
-data class Transaksi(
+data class Transaction(
     @PrimaryKey(autoGenerate = true)
     override val idTransaksi: Long,
 

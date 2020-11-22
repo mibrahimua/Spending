@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider
 import java.lang.IllegalArgumentException
 
 class AddTransactionViewModelFactory(
-//    private val dataSource: TransaksiDao,
     private val application: Application
 ) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
