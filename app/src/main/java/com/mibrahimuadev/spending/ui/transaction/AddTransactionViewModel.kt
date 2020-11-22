@@ -12,7 +12,7 @@ import com.mibrahimuadev.spending.data.repository.TransaksiRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AddTransaksiViewModel(application: Application) : AndroidViewModel(application) {
+class AddTransactionViewModel(application: Application) : AndroidViewModel(application) {
 
     private lateinit var transaksiResults: LiveData<List<Transaksi>>
 

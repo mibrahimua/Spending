@@ -8,11 +8,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mibrahimuadev.spending.R
-import com.mibrahimuadev.spending.data.Result
 import com.mibrahimuadev.spending.data.model.ListTransaksi
 
-class TransaksiListAdapter internal constructor(context: Context) :
-    RecyclerView.Adapter<TransaksiListAdapter.TransaksiViewHolder>() {
+class TransactionListAdapter internal constructor(context: Context) :
+    RecyclerView.Adapter<TransactionListAdapter.TransaksiViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var transaksi = emptyList<ListTransaksi>()

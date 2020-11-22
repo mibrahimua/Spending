@@ -1,0 +1,204 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "a8f3afb77fbeb30870d2076240bacfa0",
+    "entities": [
+      {
+        "tableName": "transaksi",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idTransaksi` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tipeTransaksi` TEXT NOT NULL, `idSubKategori` INTEGER NOT NULL, `idMataUang` TEXT NOT NULL, `nominalTransaksi` REAL NOT NULL, `tglTransaksi` INTEGER NOT NULL, `catatanTransaksi` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "idTransaksi",
+            "columnName": "idTransaksi",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tipeTransaksi",
+            "columnName": "tipeTransaksi",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idSubKategori",
+            "columnName": "idSubKategori",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idMataUang",
+            "columnName": "idMataUang",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nominalTransaksi",
+            "columnName": "nominalTransaksi",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tglTransaksi",
+            "columnName": "tglTransaksi",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "catatanTransaksi",
+            "columnName": "catatanTransaksi",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idTransaksi"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "mata_uang",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idMataUang` TEXT NOT NULL, `namaUang` TEXT, `symbolUang` TEXT, PRIMARY KEY(`idMataUang`))",
+        "fields": [
+          {
+            "fieldPath": "idMataUang",
+            "columnName": "idMataUang",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "namaUang",
+            "columnName": "namaUang",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "symbolUang",
+            "columnName": "symbolUang",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idMataUang"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "kategori",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idKategori` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `namaKategori` TEXT, `idIcon` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "idKategori",
+            "columnName": "idKategori",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "namaKategori",
+            "columnName": "namaKategori",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "idIcon",
+            "columnName": "idIcon",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idKategori"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "sub_kategori",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idSubKategori` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `idKategori` INTEGER NOT NULL, `namaSubKategori` TEXT, `idIcon` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "idSubKategori",
+            "columnName": "idSubKategori",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "idKategori",
+            "columnName": "idKategori",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "namaSubKategori",
+            "columnName": "namaSubKategori",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "idIcon",
+            "columnName": "idIcon",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idSubKategori"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "icon_kategori",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idIcon` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `namaIcon` TEXT NOT NULL, `lokasiIcon` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "idIcon",
+            "columnName": "idIcon",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "namaIcon",
+            "columnName": "namaIcon",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lokasiIcon",
+            "columnName": "lokasiIcon",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "idIcon"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a8f3afb77fbeb30870d2076240bacfa0')"
+    ]
+  }
+}

@@ -84,6 +84,8 @@ class CalculatorImpl(calculator: Calculator, private val context: Context) {
         } else if (operations.contains(lastChar)/* || lastchar == "."*/) {
             inputDisplayedFormula = inputDisplayedFormula.dropLast(1)
             inputDisplayedFormula += getSign(operation)
+        } else if (!inputDisplayedFormula.trimStart('-').contains(operationsRegex.toRegex())) {
+            inputDisplayedFormula += getSign(operation)
         }
 
         if (lastKey == DIGIT || lastKey == DECIMAL) {
@@ -119,6 +121,7 @@ class CalculatorImpl(calculator: Calculator, private val context: Context) {
         }
 
         if (lastKey != DIGIT && lastKey != DECIMAL) {
+            context.toast(R.string.invalid_format_used)
             return
         }
 

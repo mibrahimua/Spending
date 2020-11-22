@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/addTransaksiFragment"
-        android:name="com.mibrahimuadev.spending.ui.transaction.AddTransaksiFragment"
+        android:name="com.mibrahimuadev.spending.ui.transaction.AddTransactionFragment"
         android:label="AddTransaksiFragment" />
 
 </navigation>

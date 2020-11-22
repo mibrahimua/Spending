@@ -10,11 +10,10 @@ import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mibrahimuadev.spending.R
-import com.mibrahimuadev.spending.adapter.TransaksiListAdapter
+import com.mibrahimuadev.spending.adapter.TransactionListAdapter
 import com.mibrahimuadev.spending.data.Result
 import com.mibrahimuadev.spending.databinding.FragmentHomeBinding
 
@@ -43,7 +42,7 @@ class HomeFragment : Fragment() {
         Log.i("HomeFragment", "isFabOpen are $isFabOpen")
 
         val recycleView = binding.recycleviewTransaksi
-        val adapter = TransaksiListAdapter(application)
+        val adapter = TransactionListAdapter(application)
         recycleView.adapter = adapter
         recycleView.layoutManager = LinearLayoutManager(application)
 
