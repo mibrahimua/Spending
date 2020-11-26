@@ -15,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.adapter.TransactionListAdapter
 import com.mibrahimuadev.spending.data.Result
+import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -71,12 +72,14 @@ class HomeFragment : Fragment() {
 
         fabExpense.setOnClickListener {
             isFabOpen = false
-            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment())
+            Navigation.findNavController(requireView())
+                .navigate(HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment(TransactionType.EXPENSE))
         }
 
         fabIncome.setOnClickListener {
             isFabOpen = false
-            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment())
+            Navigation.findNavController(requireView())
+                .navigate(HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment(TransactionType.INCOME))
         }
         return binding.root
     }

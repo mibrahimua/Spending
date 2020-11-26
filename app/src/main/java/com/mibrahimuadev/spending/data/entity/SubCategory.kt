@@ -4,15 +4,15 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "sub_kategori",
+    tableName = "sub_category",
     )
-data class SubKategori(
+data class SubCategory(
     @PrimaryKey(autoGenerate = true)
-    val idSubKategori: Int,
+    val subCategoryId: Int,
 
-    val idKategori: Int,
+    val categoryId: Int,
 
-    val namaSubKategori: String?,
+    val subCategoryName: String?,
 
-    val idIcon: Int?
+    val iconId: Int?
 )

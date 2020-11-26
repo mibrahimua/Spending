@@ -1,11 +1,11 @@
 package com.mibrahimuadev.spending.data.model
 
 data class CategoryList(
-    val idKategori: Int,
+    val categoryId: Int,
 
-    val namaKategori: String? = "",
+    val categoryName: String? = "",
 
-    val namaIcon: String? = "",
+    val iconName: String? = "",
 
-    val lokasiIcon: String? = ""
+    val iconLocation: String? = ""
 )

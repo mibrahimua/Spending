@@ -3,14 +3,13 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'androidx.navigation.safeargs'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'androidx.navigation.safeargs'
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "com.mibrahimuadev.spending"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -88,6 +87,9 @@ dependencies {
 
     //Calculator
     implementation 'net.objecthunter:exp4j:0.4.8'
+
+    //Datepicker
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
 
     //Anko do async
     implementation "org.jetbrains.anko:anko:0.10.4"

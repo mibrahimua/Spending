@@ -6,17 +6,17 @@ import com.mibrahimuadev.spending.data.entity.Transaction
 
 interface TransactionDataSource {
 
-    fun observeAllTransaksi(): LiveData<Result<List<TransactionList>>>
+    fun observeAllTransactions(): LiveData<Result<List<TransactionList>>>
 
-    suspend fun getAllTransaksi(): Result<List<TransactionList>>
+    suspend fun getAllTransactions(): Result<List<TransactionList>>
 
-    suspend fun getTransaksi(): Result<List<TransactionList>>
+    suspend fun getTransaction(): Result<List<TransactionList>>
 
-    suspend fun insertTransaksi(transaction: Transaction)
+    suspend fun insertTransaction(transaction: Transaction)
 
-    suspend fun deleteAllTransaksi()
+    suspend fun deleteAllTransactions()
 
-    suspend fun deleteTransaksi(idTransaksi: Long)
+    suspend fun deleteTransaction(transactionId: Long)
 
-    suspend fun updateTransaksi(transaction: Transaction)
+    suspend fun updateTransaction(transaction: Transaction)
 }

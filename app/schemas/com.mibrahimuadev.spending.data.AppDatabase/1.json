@@ -2,58 +2,58 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a8f3afb77fbeb30870d2076240bacfa0",
+    "identityHash": "153d9a293d72088eec89902f54c90a80",
     "entities": [
       {
-        "tableName": "transaksi",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idTransaksi` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tipeTransaksi` TEXT NOT NULL, `idSubKategori` INTEGER NOT NULL, `idMataUang` TEXT NOT NULL, `nominalTransaksi` REAL NOT NULL, `tglTransaksi` INTEGER NOT NULL, `catatanTransaksi` TEXT)",
+        "tableName": "transaction_spend",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`transactionId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `transactionType` TEXT NOT NULL, `subCategoryId` INTEGER NOT NULL, `currencyId` TEXT NOT NULL, `transactionNominal` REAL NOT NULL, `transactionDate` INTEGER NOT NULL, `transactionNote` TEXT)",
         "fields": [
           {
-            "fieldPath": "idTransaksi",
-            "columnName": "idTransaksi",
+            "fieldPath": "transactionId",
+            "columnName": "transactionId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "tipeTransaksi",
-            "columnName": "tipeTransaksi",
+            "fieldPath": "transactionType",
+            "columnName": "transactionType",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "idSubKategori",
-            "columnName": "idSubKategori",
+            "fieldPath": "subCategoryId",
+            "columnName": "subCategoryId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "idMataUang",
-            "columnName": "idMataUang",
+            "fieldPath": "currencyId",
+            "columnName": "currencyId",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "nominalTransaksi",
-            "columnName": "nominalTransaksi",
+            "fieldPath": "transactionNominal",
+            "columnName": "transactionNominal",
             "affinity": "REAL",
             "notNull": true
           },
           {
-            "fieldPath": "tglTransaksi",
-            "columnName": "tglTransaksi",
+            "fieldPath": "transactionDate",
+            "columnName": "transactionDate",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "catatanTransaksi",
-            "columnName": "catatanTransaksi",
+            "fieldPath": "transactionNote",
+            "columnName": "transactionNote",
             "affinity": "TEXT",
             "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "idTransaksi"
+            "transactionId"
           ],
           "autoGenerate": true
         },
@@ -61,31 +61,31 @@
         "foreignKeys": []
       },
       {
-        "tableName": "mata_uang",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idMataUang` TEXT NOT NULL, `namaUang` TEXT, `symbolUang` TEXT, PRIMARY KEY(`idMataUang`))",
+        "tableName": "currency",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`currencyId` TEXT NOT NULL, `currencyName` TEXT, `currencySymbol` TEXT, PRIMARY KEY(`currencyId`))",
         "fields": [
           {
-            "fieldPath": "idMataUang",
-            "columnName": "idMataUang",
+            "fieldPath": "currencyId",
+            "columnName": "currencyId",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "namaUang",
-            "columnName": "namaUang",
+            "fieldPath": "currencyName",
+            "columnName": "currencyName",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "symbolUang",
-            "columnName": "symbolUang",
+            "fieldPath": "currencySymbol",
+            "columnName": "currencySymbol",
             "affinity": "TEXT",
             "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "idMataUang"
+            "currencyId"
           ],
           "autoGenerate": false
         },
@@ -93,31 +93,31 @@
         "foreignKeys": []
       },
       {
-        "tableName": "kategori",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idKategori` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `namaKategori` TEXT, `idIcon` INTEGER NOT NULL)",
+        "tableName": "category",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`categoryId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `categoryName` TEXT, `iconId` INTEGER NOT NULL)",
         "fields": [
           {
-            "fieldPath": "idKategori",
-            "columnName": "idKategori",
+            "fieldPath": "categoryId",
+            "columnName": "categoryId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "namaKategori",
-            "columnName": "namaKategori",
+            "fieldPath": "categoryName",
+            "columnName": "categoryName",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "idIcon",
-            "columnName": "idIcon",
+            "fieldPath": "iconId",
+            "columnName": "iconId",
             "affinity": "INTEGER",
             "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "idKategori"
+            "categoryId"
           ],
           "autoGenerate": true
         },
@@ -125,37 +125,37 @@
         "foreignKeys": []
       },
       {
-        "tableName": "sub_kategori",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idSubKategori` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `idKategori` INTEGER NOT NULL, `namaSubKategori` TEXT, `idIcon` INTEGER)",
+        "tableName": "sub_category",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subCategoryId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `categoryId` INTEGER NOT NULL, `subCategoryName` TEXT, `iconId` INTEGER)",
         "fields": [
           {
-            "fieldPath": "idSubKategori",
-            "columnName": "idSubKategori",
+            "fieldPath": "subCategoryId",
+            "columnName": "subCategoryId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "idKategori",
-            "columnName": "idKategori",
+            "fieldPath": "categoryId",
+            "columnName": "categoryId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "namaSubKategori",
-            "columnName": "namaSubKategori",
+            "fieldPath": "subCategoryName",
+            "columnName": "subCategoryName",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "idIcon",
-            "columnName": "idIcon",
+            "fieldPath": "iconId",
+            "columnName": "iconId",
             "affinity": "INTEGER",
             "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "idSubKategori"
+            "subCategoryId"
           ],
           "autoGenerate": true
         },
@@ -163,31 +163,31 @@
         "foreignKeys": []
       },
       {
-        "tableName": "icon_kategori",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`idIcon` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `namaIcon` TEXT NOT NULL, `lokasiIcon` TEXT NOT NULL)",
+        "tableName": "category_icon",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`iconId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `iconName` TEXT NOT NULL, `iconLocation` TEXT NOT NULL)",
         "fields": [
           {
-            "fieldPath": "idIcon",
-            "columnName": "idIcon",
+            "fieldPath": "iconId",
+            "columnName": "iconId",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "namaIcon",
-            "columnName": "namaIcon",
+            "fieldPath": "iconName",
+            "columnName": "iconName",
             "affinity": "TEXT",
             "notNull": true
           },
           {
-            "fieldPath": "lokasiIcon",
-            "columnName": "lokasiIcon",
+            "fieldPath": "iconLocation",
+            "columnName": "iconLocation",
             "affinity": "TEXT",
             "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "idIcon"
+            "iconId"
           ],
           "autoGenerate": true
         },
@@ -198,7 +198,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a8f3afb77fbeb30870d2076240bacfa0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '153d9a293d72088eec89902f54c90a80')"
     ]
   }
 }

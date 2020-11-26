@@ -9,39 +9,39 @@ import com.mibrahimuadev.spending.data.model.TransactionList
 interface TransactionDao {
 
     @Query(
-        """SELECT t.idTransaksi, t.tipeTransaksi, t.nominalTransaksi, t.tglTransaksi, k.namaKategori, sk.namaSubKategori, c.lokasiIcon, m.symbolUang , t.catatanTransaksi
-                FROM transaksi t
-                LEFT JOIN kategori k ON t.idSubKategori = k.idKategori
-				LEFT JOIN sub_kategori sk on sk.idKategori = k.idKategori
-                LEFT JOIN icon_kategori c ON c.idIcon = k.idIcon
-                LEFT JOIN mata_uang m ON m.idMataUang = t.idMataUang
-				WHERE t.tipeTransaksi = "PENGELUARAN"
-				GROUP BY t.idTransaksi"""
+        """SELECT t.transactionId, t.transactionType, t.transactionNominal, t.transactionDate, k.categoryName, sk.subCategoryName, c.iconLocation, m.currencySymbol , t.transactionNote
+                FROM transaction_spend t
+                LEFT JOIN category k ON t.subCategoryId = k.categoryId
+				LEFT JOIN sub_category sk on sk.categoryId = k.categoryId
+                LEFT JOIN category_icon c ON c.iconId = k.iconId
+                LEFT JOIN currency m ON m.currencyId = t.currencyId
+				WHERE t.transactionType = "EXPENSE"
+				GROUP BY t.transactionId"""
     )
-    fun observeAllTransaksi(): LiveData<List<TransactionList>>
+    fun observeAllTransactions(): LiveData<List<TransactionList>>
 
     @Query(
-        """SELECT t.idTransaksi, t.tipeTransaksi, t.nominalTransaksi, t.tglTransaksi, k.namaKategori, sk.namaSubKategori, c.lokasiIcon, m.symbolUang, t.catatanTransaksi 
-                FROM transaksi t
-                LEFT JOIN kategori k ON t.idSubKategori = k.idKategori
-				LEFT JOIN sub_kategori sk on sk.idKategori = k.idKategori
-                LEFT JOIN icon_kategori c ON c.idIcon = k.idIcon
-                LEFT JOIN mata_uang m ON m.idMataUang = t.idMataUang
-				WHERE t.tipeTransaksi = "PENGELUARAN"
-				GROUP BY t.idTransaksi"""
+        """SELECT t.transactionId, t.transactionType, t.transactionNominal, t.transactionDate, k.categoryName, sk.subCategoryName, c.iconLocation, m.currencySymbol , t.transactionNote
+                FROM transaction_spend t
+                LEFT JOIN category k ON t.subCategoryId = k.categoryId
+				LEFT JOIN sub_category sk on sk.categoryId = k.categoryId
+                LEFT JOIN category_icon c ON c.iconId = k.iconId
+                LEFT JOIN currency m ON m.currencyId = t.currencyId
+				WHERE t.transactionType = "EXPENSE"
+				GROUP BY t.transactionId"""
     )
-    suspend fun getAllTransaksi(): List<TransactionList>
+    suspend fun getAllTransactions(): List<TransactionList>
 
     @Insert
-    suspend fun insertTransaksi(transaction: Transaction)
+    suspend fun insertTransaction(transaction: Transaction)
 
     @Update
-    suspend fun updateTransaksi(transaction: Transaction)
+    suspend fun updateTransaction(transaction: Transaction)
 
     //    @Delete
-    @Query("DELETE FROM transaksi")
-    suspend fun deleteAllTransaksi()
+    @Query("DELETE FROM transaction_spend")
+    suspend fun deleteAllTransactions()
 
-    @Query("DELETE FROM transaksi WHERE idTransaksi = :idTransaksi")
-    suspend fun deleteTransaksi(idTransaksi: Long)
+    @Query("DELETE FROM transaction_spend WHERE transactionId = :transactionId")
+    suspend fun deleteTransaction(transactionId: Long)
 }

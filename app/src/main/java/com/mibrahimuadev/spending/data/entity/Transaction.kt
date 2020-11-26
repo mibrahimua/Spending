@@ -2,12 +2,12 @@ package com.mibrahimuadev.spending.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mibrahimuadev.spending.data.model.BaseTransaksi
-import com.mibrahimuadev.spending.data.model.TipeTransaksi
+import com.mibrahimuadev.spending.data.model.BaseTransaction
+import com.mibrahimuadev.spending.data.model.TransactionType
 import java.util.*
 
 @Entity(
-    tableName = "transaksi",
+    tableName = "transaction_spend",
 //    foreignKeys = arrayOf(
 //        ForeignKey(
 //            entity = MataUang::class,
@@ -19,22 +19,22 @@ import java.util.*
 )
 data class Transaction(
     @PrimaryKey(autoGenerate = true)
-    override val idTransaksi: Long,
+    override val transactionId: Long,
 
-    override val tipeTransaksi: TipeTransaksi,
+    override val transactionType: TransactionType,
 
-    val idSubKategori: Int,
+    val subCategoryId: Int,
 
-    val idMataUang: String,
+    val currencyId: String,
 
-    override val nominalTransaksi: Double,
+    override val transactionNominal: Double,
 
-    override val tglTransaksi: Date,
+    override val transactionDate: Date,
 
-    override val catatanTransaksi: String? = ""
+    override val transactionNote: String? = ""
 
-) : BaseTransaksi {
+) : BaseTransaction {
     override fun toString(): String {
-        return "Transaksi(idTransaksi=$idTransaksi, tipeTransaksi=$tipeTransaksi, idSubKategori=$idSubKategori, idMataUang='$idMataUang', nominalTransaksi=$nominalTransaksi, tglTransaksi=$tglTransaksi, catatanTransaksi=$catatanTransaksi)"
+        return "Transaction(transactionId=$transactionId, transactionType=$transactionType, subCategoryId=$subCategoryId, currencyId='$currencyId', transactionNominal=$transactionNominal, transactionDate=$transactionDate, transactionNote=$transactionNote)"
     }
 }

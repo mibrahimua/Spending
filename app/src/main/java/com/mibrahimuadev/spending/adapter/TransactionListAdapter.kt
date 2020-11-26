@@ -39,9 +39,9 @@ class TransactionListAdapter internal constructor(context: Context) :
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         val current = transaksi[position]
-        holder.tglTransaksi.text = current.lokasiIcon
-        holder.kategoriTransaksi.text = current.namaSubKategori
+        holder.tglTransaksi.text = current.iconLocation
+        holder.kategoriTransaksi.text = current.subCategoryName
         holder.nominalTransaksi.text =
-            current.symbolUang + " " + current.nominalTransaksi.toString()
+            current.currencySymbol + " " + current.transactionNominal.toString()
     }
 }

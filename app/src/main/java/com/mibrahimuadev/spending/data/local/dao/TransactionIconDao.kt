@@ -7,13 +7,13 @@ import androidx.room.Query
 import com.mibrahimuadev.spending.data.entity.CategoryIcon
 
 @Dao
-interface IconTransaksiDao {
-    @Query("SELECT * FROM icon_kategori")
-    fun lihatSemuaIcon(): LiveData<List<CategoryIcon>>
+interface TransactionIconDao {
+    @Query("SELECT * FROM category_icon")
+    fun getAllIcons(): LiveData<List<CategoryIcon>>
 
     @Insert
     suspend fun insertIcon(categoryIcon: CategoryIcon)
 
-    @Query("DELETE FROM icon_kategori")
+    @Query("DELETE FROM category_icon")
     suspend fun deleteAllIcon()
 }

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout="@layout/fragment_add_transaction"
-    tools:context=".ui.transaction.AddTransactionFragment">
+    tools:context=".ui.transaction.AddTransactionFragment"
+    tools:layout="@layout/fragment_add_transaction">
 
 
     <EditText
@@ -74,18 +74,25 @@
 
     <Button
         android:id="@+id/btnDate"
-        style="@style/DateButtonStyle"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="16/11/20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Date"
         android:textAlignment="center"
-        app:backgroundTint="@null"
-        app:layout_constraintBottom_toTopOf="@+id/guideline10"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline14"
         app:layout_constraintHeight_percent="0.10"
-        app:layout_constraintStart_toEndOf="@+id/btn9"
-        app:layout_constraintTop_toTopOf="@+id/guideline9"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintWidth_percent="0.23" />
+
+    <TextView
+        android:id="@+id/textDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="26 Nov 2020"
+        app:layout_constraintBottom_toTopOf="@+id/guideline14"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnDate" />
 
     <Button
         android:id="@+id/btn8"
@@ -112,7 +119,7 @@
         android:textAlignment="center"
         app:backgroundTint="@null"
         app:layout_constraintBottom_toTopOf="@+id/guideline10"
-        app:layout_constraintEnd_toStartOf="@+id/btnDate"
+        app:layout_constraintEnd_toStartOf="@+id/btnClear"
         app:layout_constraintHeight_percent="0.10"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btn8"
@@ -260,9 +267,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.10"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnClear"
+        app:layout_constraintStart_toEndOf="@+id/btnDivide"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        app:layout_constraintWidth_percent="0.23" />
+        app:layout_constraintWidth_percent="0.18" />
 
     <Button
         android:id="@+id/btnDecimal"
@@ -280,7 +287,7 @@
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        app:layout_constraintWidth_percent="0.23" />
+        app:layout_constraintWidth_percent="0.18" />
 
     <Button
         android:id="@+id/btn_0"
@@ -291,12 +298,12 @@
         android:textAlignment="center"
         app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnClear"
+        app:layout_constraintEnd_toStartOf="@+id/btnMultiply"
         app:layout_constraintHeight_percent="0.10"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnDecimal"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        app:layout_constraintWidth_percent="0.23" />
+        app:layout_constraintWidth_percent="0.18" />
 
     <Button
         android:id="@+id/btnClear"
@@ -307,13 +314,45 @@
         android:textAlignment="center"
         android:textSize="18sp"
         app:backgroundTint="@null"
+        app:layout_constraintBottom_toTopOf="@+id/guideline10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.10"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btn9"
+        app:layout_constraintTop_toTopOf="@+id/guideline9"
+        app:layout_constraintWidth_percent="0.23" />
+
+    <Button
+        android:id="@+id/btnMultiply"
+        style="@style/ActionButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="x"
+        android:textAlignment="center"
+        app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnEquals"
+        app:layout_constraintEnd_toStartOf="@+id/btnDivide"
         app:layout_constraintHeight_percent="0.10"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btn_0"
         app:layout_constraintTop_toTopOf="@+id/guideline12"
-        app:layout_constraintWidth_percent="0.23" />
+        app:layout_constraintWidth_percent="0.18" />
+
+    <Button
+        android:id="@+id/btnDivide"
+        style="@style/ActionButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="/"
+        android:textAlignment="center"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnEquals"
+        app:layout_constraintHeight_percent="0.10"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnMultiply"
+        app:layout_constraintTop_toTopOf="@+id/guideline12"
+        app:layout_constraintWidth_percent="0.18" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline9"
@@ -374,10 +413,10 @@
         app:layout_constraintTop_toTopOf="@+id/guideline14" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/categoryName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="Not Selected"
         app:layout_constraintBottom_toTopOf="@+id/guideline13"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_category"

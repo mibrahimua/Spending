@@ -18,39 +18,39 @@ class TransactionLocalDataSource internal constructor(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : TransactionDataSource {
 
-    override fun observeAllTransaksi(): LiveData<Result<List<TransactionList>>> {
-        return transactionDao.observeAllTransaksi().map {
+    override fun observeAllTransactions(): LiveData<Result<List<TransactionList>>> {
+        return transactionDao.observeAllTransactions().map {
             Success(it)
         }
     }
 
-    override suspend fun getAllTransaksi(): Result<List<TransactionList>> =
+    override suspend fun getAllTransactions(): Result<List<TransactionList>> =
         withContext(ioDispatcher) {
             return@withContext try {
-                Success(transactionDao.getAllTransaksi())
+                Success(transactionDao.getAllTransactions())
             } catch (e: Exception) {
                 Error(e)
             }
         }
 
 
-    override suspend fun getTransaksi(): Result<List<TransactionList>> {
+    override suspend fun getTransaction(): Result<List<TransactionList>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun insertTransaksi(transaction: Transaction) {
+    override suspend fun insertTransaction(transaction: Transaction) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteAllTransaksi() {
+    override suspend fun deleteAllTransactions() {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteTransaksi(idTransaksi: Long) {
+    override suspend fun deleteTransaction(transactionId: Long) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateTransaksi(transaction: Transaction) {
+    override suspend fun updateTransaction(transaction: Transaction) {
         TODO("Not yet implemented")
     }
 }

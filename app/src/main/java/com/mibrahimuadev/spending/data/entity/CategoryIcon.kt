@@ -3,12 +3,12 @@ package com.mibrahimuadev.spending.data.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "icon_kategori")
+@Entity(tableName = "category_icon")
 data class CategoryIcon (
     @PrimaryKey(autoGenerate = true)
-    val idIcon: Int,
+    val iconId: Int,
 
-    val namaIcon: String,
+    val iconName: String,
 
-    val lokasiIcon: String
+    val iconLocation: String
 )

@@ -6,8 +6,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mibrahimuadev.spending.data.Result.Success
 import com.mibrahimuadev.spending.data.entity.Category
 import com.mibrahimuadev.spending.data.entity.Transaction
+import com.mibrahimuadev.spending.data.repository.CategoryRepository
 import com.mibrahimuadev.spending.data.repository.TransactionRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,15 +21,15 @@ class AddTransactionViewModel(application: Application) : AndroidViewModel(appli
     private lateinit var allCategory: LiveData<List<Category>>
 
     private val transactionRepository: TransactionRepository
-//    private val kategoriRepository: KategoriRepository
+    private val categoryRepository: CategoryRepository
 
 
     init {
-        Log.i("PemasukanViewModel", "PemasukanViewModel created")
+        Log.i("AddTransactionViewModel", "AddTransactionViewModel created")
         transactionRepository = TransactionRepository(application)
+        categoryRepository = CategoryRepository(application)
     }
 
-    private val _navigateFromHome = MutableLiveData<Boolean?>()
 
     fun insertTransaksi(transaction: Transaction) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -35,18 +37,27 @@ class AddTransactionViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
-    val _dataCalculator = MutableLiveData<Double>()
-    val dataCalculator: LiveData<Double> = _dataCalculator
+    val _calcNewResult = MutableLiveData<String>()
+    val calcNewResult: LiveData<String> = _calcNewResult
 
-//    fun lihatSemuaKategori():LiveData<List<Kategori>> {
-//        return kategoriRepository.allKategori
-//    }
+    val _calcNewFormula = MutableLiveData<String>()
+    val calcNewFormula: LiveData<String> = _calcNewFormula
 
-    val navigateFromHome: LiveData<Boolean?>
-        get() = _navigateFromHome
+    val categoryName = MutableLiveData<String>()
+
+
+    fun getCategory(idKategori: Int){
+        viewModelScope.launch {
+            categoryRepository.getCategory(idKategori).let { result ->
+                if (result is Success) {
+                    categoryName.value = result.data.categoryName
+                }
+            }
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()
-        Log.i("PemasukanViewModel", "PemasukanViewModel destroyed")
+        Log.i("AddTransactionViewModel", "AddTransactionViewModel destroyed")
     }
 }

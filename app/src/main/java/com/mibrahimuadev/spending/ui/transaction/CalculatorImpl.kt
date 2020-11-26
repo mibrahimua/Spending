@@ -7,7 +7,6 @@ import org.jetbrains.anko.toast
 
 class CalculatorImpl(calculator: Calculator, private val context: Context) {
     private var callback: Calculator? = calculator
-
     private var baseValue = 0.0
     private var secondValue = 0.0
     private var inputDisplayedFormula = "0"
@@ -18,7 +17,7 @@ class CalculatorImpl(calculator: Calculator, private val context: Context) {
     private var numbersRegex = "[^0-9,.]".toRegex()
 
     init {
-        showNewResult("0")
+//        showNewResult("0")
     }
 
     private fun addDigit(number: Int) {
@@ -67,6 +66,10 @@ class CalculatorImpl(calculator: Calculator, private val context: Context) {
 
             inputDisplayedFormula = inputDisplayedFormula.replace(it, newString)
         }
+    }
+
+    fun setInputDisplayedFormula(operation: String) {
+        inputDisplayedFormula = operation
     }
 
     fun handleOperation(operation: String) {
@@ -157,7 +160,11 @@ class CalculatorImpl(calculator: Calculator, private val context: Context) {
         }
 
         if (lastOperation != "") {
-            val expression = "${baseValue.format()}${getSign(lastOperation)}${secondValue.format()}".replace("√", "sqrt")
+            val expression =
+                "${baseValue.format()}${getSign(lastOperation)}${secondValue.format()}".replace(
+                    "√",
+                    "sqrt"
+                )
             try {
                 val result = ExpressionBuilder(expression.replace(",", "")).build().evaluate()
                 showNewResult(result.format())
@@ -257,4 +264,6 @@ class CalculatorImpl(calculator: Calculator, private val context: Context) {
             R.id.btn9 -> addDigit(9)
         }
     }
+
+
 }

@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.data.model.CategoryList
+import com.mibrahimuadev.spending.ui.transaction.AddCategoryTranscFragmentDirections
 
 class CategoryListAdapter internal constructor(context: Context) :
     RecyclerView.Adapter<CategoryListAdapter.CategoryViewHolder>() {
@@ -33,7 +36,14 @@ class CategoryListAdapter internal constructor(context: Context) :
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val current = category[position]
 //        holder.categoryIcon = R.drawable.ic_launcher_background
-        holder.categoryName.text = current.namaKategori
+        holder.categoryName.text = current.categoryName
+        holder.itemView.setOnClickListener { view ->
+            val action =
+                AddCategoryTranscFragmentDirections.actionAddCategoryTranscFragmentToAddTransaksiFragment2()
+                    .setIdKategori(current.categoryId)
+            view.findNavController().navigate(action)
+            Toast.makeText(view.context, "selected ${current}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun getItemCount(): Int {

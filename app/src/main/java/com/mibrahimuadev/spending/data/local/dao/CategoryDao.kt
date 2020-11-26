@@ -10,27 +10,32 @@ import com.mibrahimuadev.spending.data.model.CategoryList
 @Dao
 interface CategoryDao {
     @Query(
-        """SELECT k.idKategori, k.namaKategori, c.namaIcon, c.lokasiIcon 
-            FROM kategori k 
-            LEFT JOIN icon_kategori c ON k.idIcon = c.idIcon 
-            GROUP BY k.idKategori"""
+        """SELECT k.categoryId, k.categoryName, c.iconName, c.iconLocation 
+            FROM category k 
+            LEFT JOIN category_icon c ON k.iconId = c.iconId 
+            GROUP BY k.categoryId"""
     )
     fun observeAllCategories(): LiveData<List<CategoryList>>
 
     @Query(
-        """SELECT k.idKategori, k.namaKategori, c.namaIcon, c.lokasiIcon 
-            FROM kategori k 
-            LEFT JOIN icon_kategori c ON k.idIcon = c.idIcon 
-            GROUP BY k.idKategori"""
+        """SELECT k.categoryId, k.categoryName, c.iconName, c.iconLocation 
+            FROM category k 
+            LEFT JOIN category_icon c ON k.iconId = c.iconId 
+            GROUP BY k.categoryId"""
     )
     fun getAllCategories(): List<CategoryList>
 
-    @Query("SELECT * FROM kategori WHERE idKategori = :idKategori")
-    fun getCategory(idKategori: Int): List<Category>
+    @Query(
+        """SELECT k.categoryId, k.categoryName, c.iconName, c.iconLocation 
+            FROM category k 
+            LEFT JOIN category_icon c ON k.iconId = c.iconId 
+            WHERE categoryId = :categoriId"""
+    )
+    fun getCategory(categoriId: Int): CategoryList?
 
     @Insert
     suspend fun insertCategory(category: Category)
 
-    @Query("DELETE FROM kategori")
+    @Query("DELETE FROM category")
     suspend fun deleteAllCategories()
 }

@@ -19,23 +19,23 @@ class TransactionRepository(
     }
 
     fun observeAllTransaksi(): LiveData<Result<List<TransactionList>>> {
-        return transactionLocalDataSource.observeAllTransaksi()
+        return transactionLocalDataSource.observeAllTransactions()
     }
 
     suspend fun getAllTransaksi(): Result<List<TransactionList>> {
-        return transactionLocalDataSource.getAllTransaksi()
+        return transactionLocalDataSource.getAllTransactions()
     }
 
     suspend fun insertTransaksi(transaction: Transaction) {
-        return transactionLocalDataSource.insertTransaksi(transaction)
+        return transactionLocalDataSource.insertTransaction(transaction)
     }
 
     suspend fun updateTransaksi(transaction: Transaction) {
-        return transactionLocalDataSource.updateTransaksi(transaction)
+        return transactionLocalDataSource.updateTransaction(transaction)
     }
 
     suspend fun deleteTransaksi(idTransaksi: Long) {
-        return transactionLocalDataSource.deleteTransaksi(idTransaksi)
+        return transactionLocalDataSource.deleteTransaction(idTransaksi)
     }
 
 }

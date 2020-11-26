@@ -1,17 +1,17 @@
 package com.mibrahimuadev.spending.data.entity
 
 import androidx.room.TypeConverter
-import com.mibrahimuadev.spending.data.model.TipeTransaksi
+import com.mibrahimuadev.spending.data.model.TransactionType
 import java.util.*
 
 class Converters {
     @TypeConverter
-    fun toTipeTransaksi(value: String): TipeTransaksi {
-        return TipeTransaksi.valueOf(value)
+    fun toTransactiontype(value: String): TransactionType {
+        return TransactionType.valueOf(value)
     }
 
     @TypeConverter
-    fun fromTipeTransaksi(value: TipeTransaksi): String {
+    fun fromTransactiontype(value: TransactionType): String {
         return value.name
     }
 

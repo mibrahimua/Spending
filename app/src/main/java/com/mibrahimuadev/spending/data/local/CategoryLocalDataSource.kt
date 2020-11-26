@@ -33,8 +33,19 @@ class CategoryLocalDataSource internal constructor(
             }
         }
 
-    override suspend fun getCategory(): Result<List<CategoryList>> {
-        TODO("Not yet implemented")
+    override suspend fun getCategory(idKategori: Int): Result<CategoryList> {
+        return withContext(ioDispatcher) {
+            try {
+                val category = categoryDao.getCategory(idKategori)
+                if (category != null) {
+                    return@withContext Success(category)
+                } else {
+                    return@withContext Error(Exception(""))
+                }
+            } catch (e: Exception) {
+                return@withContext Error(e)
+            }
+        }
     }
 
     override suspend fun insertCategory(category: Category) {

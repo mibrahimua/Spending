@@ -5,14 +5,14 @@ import androidx.room.PrimaryKey
 
 
 @Entity(
-    tableName = "kategori",
+    tableName = "category",
 )
 data class Category(
     @PrimaryKey(autoGenerate = true)
-    val idKategori: Int,
+    val categoryId: Int,
 
-    val namaKategori: String? = "",
+    val categoryName: String? = "",
 
-    val idIcon: Int
+    val iconId: Int
 
 )
