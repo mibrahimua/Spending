@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mibrahimuadev.spending.R
@@ -22,7 +23,7 @@ class AddCategoryTranscFragment : Fragment() {
     private val addTransactionViewModel: AddTransactionViewModel by navGraphViewModels(R.id.nav_add_transc) {
         defaultViewModelProviderFactory
     }
-
+    private val args: AddCategoryTranscFragmentArgs by navArgs()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,11 +40,9 @@ class AddCategoryTranscFragment : Fragment() {
 
         val categoryViewModel =
             ViewModelProvider(this, viewModelFactory).get(CategoryViewModel::class.java)
-
+        categoryViewModel.getAllCategories(args.typeCategory)
         categoryViewModel.allCategories.observe(viewLifecycleOwner, { categories ->
-            if (categories is Result.Success) {
-                adapter.setCategory(categories.data)
-            }
+                adapter.setCategory(categories)
         })
 
         return binding.root

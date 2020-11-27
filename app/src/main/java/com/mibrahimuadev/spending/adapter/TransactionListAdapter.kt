@@ -40,7 +40,7 @@ class TransactionListAdapter internal constructor(context: Context) :
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         val current = transaksi[position]
         holder.tglTransaksi.text = current.iconLocation
-        holder.kategoriTransaksi.text = current.subCategoryName
+        holder.kategoriTransaksi.text = current.categoryName
         holder.nominalTransaksi.text =
             current.currencySymbol + " " + current.transactionNominal.toString()
     }

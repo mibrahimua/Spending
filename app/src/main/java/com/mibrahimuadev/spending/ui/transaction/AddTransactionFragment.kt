@@ -61,7 +61,7 @@ class AddTransactionFragment : Fragment(), Calculator {
 
         binding.btnCategory.setOnClickListener {
             Navigation.findNavController(requireView())
-                .navigate(AddTransactionFragmentDirections.actionAddTransaksiFragmentToAddCategoryTranscFragment())
+                .navigate(AddTransactionFragmentDirections.actionAddTransaksiFragmentToAddCategoryTranscFragment(args.transactionType))
         }
 
         addTransactionViewModel.calcNewFormula.observe(viewLifecycleOwner) { formula ->

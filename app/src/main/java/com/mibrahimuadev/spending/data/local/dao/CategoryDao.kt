@@ -6,24 +6,27 @@ import androidx.room.Insert
 import androidx.room.Query
 import com.mibrahimuadev.spending.data.entity.Category
 import com.mibrahimuadev.spending.data.model.CategoryList
+import com.mibrahimuadev.spending.data.model.TransactionType
 
 @Dao
 interface CategoryDao {
     @Query(
-        """SELECT k.categoryId, k.categoryName, c.iconName, c.iconLocation 
+        """SELECT k.categoryId, k.categoryName, c.iconName, c.iconLocation, k.typeCategory 
             FROM category k 
             LEFT JOIN category_icon c ON k.iconId = c.iconId 
+            WHERE k.typeCategory = :typeCategory
             GROUP BY k.categoryId"""
     )
-    fun observeAllCategories(): LiveData<List<CategoryList>>
+    fun observeAllCategories(typeCategory: TransactionType): LiveData<List<CategoryList>>
 
     @Query(
-        """SELECT k.categoryId, k.categoryName, c.iconName, c.iconLocation 
+        """SELECT k.categoryId, k.categoryName, c.iconName, c.iconLocation, k.typeCategory 
             FROM category k 
             LEFT JOIN category_icon c ON k.iconId = c.iconId 
+            WHERE k.typeCategory = :typeCategory
             GROUP BY k.categoryId"""
     )
-    fun getAllCategories(): List<CategoryList>
+    fun getAllCategories(typeCategory: TransactionType): List<CategoryList>
 
     @Query(
         """SELECT k.categoryId, k.categoryName, c.iconName, c.iconLocation 

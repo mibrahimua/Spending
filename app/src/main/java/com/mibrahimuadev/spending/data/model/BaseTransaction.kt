@@ -13,4 +13,8 @@ interface BaseTransaction {
 
     val transactionNote: String?
 
+    val categoryId: Int
+
+    val currencyId: String
+
 }

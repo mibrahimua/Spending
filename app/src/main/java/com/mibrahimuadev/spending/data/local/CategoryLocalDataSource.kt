@@ -9,6 +9,7 @@ import com.mibrahimuadev.spending.data.entity.Category
 import com.mibrahimuadev.spending.data.local.dao.CategoryDao
 import com.mibrahimuadev.spending.data.model.CategoryDataSource
 import com.mibrahimuadev.spending.data.model.CategoryList
+import com.mibrahimuadev.spending.data.model.TransactionType
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,16 +19,16 @@ class CategoryLocalDataSource internal constructor(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : CategoryDataSource {
 
-    override fun observerAllCategories(): LiveData<Result<List<CategoryList>>> {
-        return categoryDao.observeAllCategories().map {
+    override fun observeAllCategories(typeCategory: TransactionType): LiveData<Result<List<CategoryList>>> {
+        return categoryDao.observeAllCategories(typeCategory).map {
             Success(it)
         }
     }
 
-    override suspend fun getAllCategories(): Result<List<CategoryList>> =
+    override suspend fun getAllCategories(typeCategory: TransactionType): Result<List<CategoryList>> =
         withContext(ioDispatcher) {
             return@withContext try {
-                Success(categoryDao.getAllCategories())
+                Success(categoryDao.getAllCategories(typeCategory))
             } catch (e: Exception) {
                 Error(e)
             }

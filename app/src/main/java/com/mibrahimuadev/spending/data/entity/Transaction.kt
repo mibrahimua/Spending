@@ -23,9 +23,9 @@ data class Transaction(
 
     override val transactionType: TransactionType,
 
-    val subCategoryId: Int,
+    override val categoryId: Int,
 
-    val currencyId: String,
+    override val currencyId: String,
 
     override val transactionNominal: Double,
 
@@ -35,6 +35,6 @@ data class Transaction(
 
 ) : BaseTransaction {
     override fun toString(): String {
-        return "Transaction(transactionId=$transactionId, transactionType=$transactionType, subCategoryId=$subCategoryId, currencyId='$currencyId', transactionNominal=$transactionNominal, transactionDate=$transactionDate, transactionNote=$transactionNote)"
+        return "Transaction(transactionId=$transactionId, transactionType=$transactionType, categoryId=$categoryId, currencyId='$currencyId', transactionNominal=$transactionNominal, transactionDate=$transactionDate, transactionNote=$transactionNote)"
     }
 }

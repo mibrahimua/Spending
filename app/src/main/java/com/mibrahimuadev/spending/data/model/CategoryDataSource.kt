@@ -6,9 +6,9 @@ import com.mibrahimuadev.spending.data.entity.Category
 
 interface CategoryDataSource {
 
-    fun observerAllCategories(): LiveData<Result<List<CategoryList>>>
+    fun observeAllCategories(typeCategory: TransactionType): LiveData<Result<List<CategoryList>>>
 
-    suspend fun getAllCategories(): Result<List<CategoryList>>
+    suspend fun getAllCategories(typeCategory: TransactionType): Result<List<CategoryList>>
 
     suspend fun getCategory(idKategori: Int): Result<CategoryList>
 

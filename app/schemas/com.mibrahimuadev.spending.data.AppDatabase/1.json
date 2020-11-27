@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "153d9a293d72088eec89902f54c90a80",
+    "identityHash": "2bb1a6f75bc075da4268c748903fecb1",
     "entities": [
       {
         "tableName": "transaction_spend",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`transactionId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `transactionType` TEXT NOT NULL, `subCategoryId` INTEGER NOT NULL, `currencyId` TEXT NOT NULL, `transactionNominal` REAL NOT NULL, `transactionDate` INTEGER NOT NULL, `transactionNote` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`transactionId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `transactionType` TEXT NOT NULL, `categoryId` INTEGER NOT NULL, `currencyId` TEXT NOT NULL, `transactionNominal` REAL NOT NULL, `transactionDate` INTEGER NOT NULL, `transactionNote` TEXT)",
         "fields": [
           {
             "fieldPath": "transactionId",
@@ -21,8 +21,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "subCategoryId",
-            "columnName": "subCategoryId",
+            "fieldPath": "categoryId",
+            "columnName": "categoryId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -94,7 +94,7 @@
       },
       {
         "tableName": "category",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`categoryId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `categoryName` TEXT, `iconId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`categoryId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `categoryName` TEXT, `iconId` INTEGER NOT NULL, `typeCategory` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "categoryId",
@@ -113,49 +113,17 @@
             "columnName": "iconId",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "typeCategory",
+            "columnName": "typeCategory",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
             "categoryId"
-          ],
-          "autoGenerate": true
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "sub_category",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`subCategoryId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `categoryId` INTEGER NOT NULL, `subCategoryName` TEXT, `iconId` INTEGER)",
-        "fields": [
-          {
-            "fieldPath": "subCategoryId",
-            "columnName": "subCategoryId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "categoryId",
-            "columnName": "categoryId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "subCategoryName",
-            "columnName": "subCategoryName",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "iconId",
-            "columnName": "iconId",
-            "affinity": "INTEGER",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "subCategoryId"
           ],
           "autoGenerate": true
         },
@@ -198,7 +166,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '153d9a293d72088eec89902f54c90a80')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2bb1a6f75bc075da4268c748903fecb1')"
     ]
   }
 }

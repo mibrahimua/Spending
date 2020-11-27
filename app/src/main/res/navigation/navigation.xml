@@ -55,6 +55,9 @@
                 app:destination="@id/addTransaksiFragment"
                 app:popUpTo="@id/addTransaksiFragment"
                 app:popUpToInclusive="true" />
+            <argument
+                android:name="typeCategory"
+                app:argType="com.mibrahimuadev.spending.data.model.TransactionType" />
         </fragment>
     </navigation>
 
