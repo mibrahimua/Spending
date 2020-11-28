@@ -19,7 +19,7 @@ import java.util.*
 )
 data class Transaction(
     @PrimaryKey(autoGenerate = true)
-    override val transactionId: Long,
+    override val transactionId: Long = 0L,
 
     override val transactionType: TransactionType,
 

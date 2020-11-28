@@ -7,16 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.adapter.TransactionListAdapter
 import com.mibrahimuadev.spending.data.Result
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.databinding.FragmentHomeBinding
+
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -66,6 +69,23 @@ class HomeFragment : Fragment() {
         rotate_forward = AnimationUtils.loadAnimation(application, R.anim.rotate_forward)
         rotate_backward = AnimationUtils.loadAnimation(application, R.anim.rotate_backward)
 
+//        recycleView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//
+//            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                super.onScrollStateChanged(recyclerView, newState)
+//                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+//                    Log.i("HomeFragment", "Last")
+//                    Toast.makeText(requireContext(), "Last", Toast.LENGTH_SHORT).show()
+////                    isFabOpen = false
+////                    animateFab()
+////                    fabTrans.hide()
+//
+//                } else {
+////                    fabTrans.show()
+//                }
+//            }
+//        })
+
         fabTrans.setOnClickListener {
             animateFab()
         }
@@ -73,13 +93,21 @@ class HomeFragment : Fragment() {
         fabExpense.setOnClickListener {
             isFabOpen = false
             Navigation.findNavController(requireView())
-                .navigate(HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment(TransactionType.EXPENSE))
+                .navigate(
+                    HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment(
+                        TransactionType.EXPENSE
+                    )
+                )
         }
 
         fabIncome.setOnClickListener {
             isFabOpen = false
             Navigation.findNavController(requireView())
-                .navigate(HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment(TransactionType.INCOME))
+                .navigate(
+                    HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment(
+                        TransactionType.INCOME
+                    )
+                )
         }
         return binding.root
     }

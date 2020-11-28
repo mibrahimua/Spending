@@ -1,4 +1,4 @@
-package com.mibrahimuadev.spending.ui.transaction
+package com.mibrahimuadev.spending.utils
 
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols

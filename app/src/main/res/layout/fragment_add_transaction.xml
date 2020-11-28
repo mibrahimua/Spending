@@ -89,10 +89,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
-        android:text="26 Nov 2020"
         app:layout_constraintBottom_toTopOf="@+id/guideline14"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnDate" />
+        app:layout_constraintStart_toEndOf="@+id/btnDate"
+        tools:text="26 Nov 2020" />
 
     <Button
         android:id="@+id/btn8"
@@ -328,6 +328,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:text="x"
+        android:textSize="24sp"
         android:textAlignment="center"
         app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -344,6 +345,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:text="/"
+        android:textSize="24sp"
         android:textAlignment="center"
         app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -416,11 +418,11 @@
         android:id="@+id/categoryName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Not Selected"
         app:layout_constraintBottom_toTopOf="@+id/guideline13"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_category"
-        app:layout_constraintTop_toTopOf="@+id/guideline14" />
+        app:layout_constraintTop_toTopOf="@+id/guideline14"
+        tools:text="Category Not Selected" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

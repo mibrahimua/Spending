@@ -16,7 +16,7 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
     private val categoryRepository: CategoryRepository
     private val _allCategories = MutableLiveData<List<CategoryList>>()
     val allCategories: LiveData<List<CategoryList>> = _allCategories
-
+    val categoryName = MutableLiveData<String>()
 
     init {
         Log.i("CategoryViewModel", "CategoryViewModel created")
@@ -32,5 +32,21 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
                 is Result.Success -> _allCategories.value = result.data
             }
         }
+    }
+
+
+    fun getCategory(idKategori: Int){
+        viewModelScope.launch {
+            categoryRepository.getCategory(idKategori).let { result ->
+                if (result is Result.Success) {
+                    categoryName.value = result.data?.categoryName
+                }
+            }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.i("CategoryViewModel", "CategoryViewModel destroyed")
     }
 }

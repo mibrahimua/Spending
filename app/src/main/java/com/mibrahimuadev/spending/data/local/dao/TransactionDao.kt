@@ -16,7 +16,8 @@ interface TransactionDao {
                 LEFT JOIN category_icon c ON c.iconId = k.iconId
                 LEFT JOIN currency m ON m.currencyId = t.currencyId
 				WHERE t.transactionType = "EXPENSE"
-				GROUP BY t.transactionId"""
+				GROUP BY t.transactionId
+                ORDER BY transactionDate DESC"""
     )
     fun observeAllTransactions(): LiveData<List<TransactionList>>
 
@@ -28,7 +29,8 @@ interface TransactionDao {
                 LEFT JOIN category_icon c ON c.iconId = k.iconId
                 LEFT JOIN currency m ON m.currencyId = t.currencyId
 				WHERE t.transactionType = "EXPENSE"
-				GROUP BY t.transactionId"""
+				GROUP BY t.transactionId
+                ORDER BY transactionDate DESC"""
     )
     suspend fun getAllTransactions(): List<TransactionList>
 

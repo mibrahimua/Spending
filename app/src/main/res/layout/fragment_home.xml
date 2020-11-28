@@ -26,6 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.92"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         app:layout_constraintTop_toTopOf="@+id/recycleview_transaksi"
         app:layout_constraintVertical_bias="0.95" />
 

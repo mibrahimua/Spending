@@ -2,6 +2,8 @@ package com.mibrahimuadev.spending.ui.transaction
 
 import android.content.Context
 import com.mibrahimuadev.spending.R
+import com.mibrahimuadev.spending.utils.Formatter
+import com.mibrahimuadev.spending.utils.format
 import net.objecthunter.exp4j.ExpressionBuilder
 import org.jetbrains.anko.toast
 
