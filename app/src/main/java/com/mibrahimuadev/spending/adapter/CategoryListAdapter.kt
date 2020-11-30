@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.data.model.CategoryList
+import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.ui.transaction.AddCategoryTranscFragmentDirections
 
 class CategoryListAdapter internal constructor(context: Context) :
@@ -17,6 +18,7 @@ class CategoryListAdapter internal constructor(context: Context) :
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var category = emptyList<CategoryList>()
+    private lateinit var transactionType: TransactionType
 
     inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         //        val categoryIcon: ImageView = itemView.findViewById(R.id.categoryIcon)
@@ -28,8 +30,9 @@ class CategoryListAdapter internal constructor(context: Context) :
         return CategoryViewHolder(itemView)
     }
 
-    internal fun setCategory(category: List<CategoryList>) {
+    internal fun setCategory(category: List<CategoryList>, transactionType: TransactionType) {
         this.category = category
+        this.transactionType = transactionType
         notifyDataSetChanged()
     }
 
@@ -39,7 +42,7 @@ class CategoryListAdapter internal constructor(context: Context) :
         holder.categoryName.text = current.categoryName
         holder.itemView.setOnClickListener { view ->
             val action =
-                AddCategoryTranscFragmentDirections.actionAddCategoryTranscFragmentToAddTransaksiFragment2()
+                AddCategoryTranscFragmentDirections.actionAddCategoryTranscFragmentToAddTransaksiFragment2(transactionType)
                     .setIdKategori(current.categoryId)
             view.findNavController().navigate(action)
             Toast.makeText(view.context, "selected ${current}", Toast.LENGTH_SHORT).show()

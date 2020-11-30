@@ -42,7 +42,7 @@ class AddCategoryTranscFragment : Fragment() {
             ViewModelProvider(this, viewModelFactory).get(CategoryViewModel::class.java)
         categoryViewModel.getAllCategories(args.typeCategory)
         categoryViewModel.allCategories.observe(viewLifecycleOwner, { categories ->
-                adapter.setCategory(categories)
+                adapter.setCategory(categories, args.typeCategory)
         })
 
         return binding.root

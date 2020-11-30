@@ -7,7 +7,7 @@ interface BaseTransaction {
 
     val transactionType: TransactionType
 
-    val transactionNominal: Double
+    val transactionNominal: Double?
 
     val transactionDate: Date
 

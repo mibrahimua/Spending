@@ -15,6 +15,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.mibrahimuadev.spending.R
@@ -22,8 +23,8 @@ import com.mibrahimuadev.spending.databinding.FragmentAddTransactionBinding
 import com.mibrahimuadev.spending.ui.categories.CategoryViewModel
 import com.mibrahimuadev.spending.ui.categories.CategoryViewModelFactory
 import com.mibrahimuadev.spending.utils.CurrentDate
+import com.mibrahimuadev.spending.utils.EventObserver
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
-import java.util.*
 
 class AddTransactionFragment : Fragment(), Calculator {
     private val TAG = "AddTransactionFragment"
@@ -42,13 +43,14 @@ class AddTransactionFragment : Fragment(), Calculator {
         savedInstanceState: Bundle?
     ): View? {
         Log.i(TAG, "AddTransactionFragment created")
-        val application = requireNotNull(this.activity).application
-        _binding = FragmentAddTransactionBinding.inflate(layoutInflater)
 
         /**
          * Set title fragment depend on transaction type (Expense, Income)
          */
         (activity as AppCompatActivity).supportActionBar?.title = args.transactionType.name
+
+        val application = requireNotNull(this.activity).application
+        _binding = FragmentAddTransactionBinding.inflate(layoutInflater)
 
         /**
          * Prevent layout to adjust when user use keyboard
@@ -77,6 +79,9 @@ class AddTransactionFragment : Fragment(), Calculator {
         binding.btnEquals.setOnClickListener { calc.handleEquals(); }
         binding.result.setOnLongClickListener { copyToClipboard(true) }
 
+        if (addTransactionViewModel.calcNewResult.value == null) {
+            addTransactionViewModel._calcNewResult.value = "0"
+        }
         addTransactionViewModel.calcNewFormula.observe(viewLifecycleOwner) { formula ->
             binding.formula.text = formula
         }
@@ -108,7 +113,7 @@ class AddTransactionFragment : Fragment(), Calculator {
          */
         val currentDate = CurrentDate()
 
-        if(addTransactionViewModel._dateTransaction.value == null) {
+        if (addTransactionViewModel.dateTransaction.value == null) {
             saveDatePickerToLiveData(currentDate.day, currentDate.month, currentDate.year)
         }
 
@@ -119,10 +124,10 @@ class AddTransactionFragment : Fragment(), Calculator {
                     "Datepickerdialog"
                 )
         }
-        addTransactionViewModel._dateTransaction.observe(viewLifecycleOwner) { date ->
-            val day = currentDate.getCustomDate(date,"dd")
-            val month = currentDate.getCustomDate(date,"MM")
-            val year = currentDate.getCustomDate(date,"yyyy")
+        addTransactionViewModel.dateTransaction.observe(viewLifecycleOwner) { date ->
+            val day = currentDate.getCustomDate(date, "dd")
+            val month = currentDate.getCustomDate(date, "MM")
+            val year = currentDate.getCustomDate(date, "yyyy")
             binding.textDate.text =
                 "${day} " + currentDate.monthName[month] + " ${year}"
         }
@@ -147,10 +152,16 @@ class AddTransactionFragment : Fragment(), Calculator {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.save_action) {
-
-            addTransactionViewModel.saveTransaction()
-//            Navigation.findNavController(requireView()).navigate(AddTransactionFragmentDirections.actionAddTransaksiFragmentToHomeFragment())
-            Toast.makeText(requireContext(), "save action clicked", Toast.LENGTH_SHORT).show()
+            addTransactionViewModel.validateTransaction()
+            addTransactionViewModel.errorMessage.observe(viewLifecycleOwner) { error ->
+                if (error.isNotEmpty()) {
+                    Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
+                }
+            }
+            addTransactionViewModel.navigateToHome.observe(viewLifecycleOwner, EventObserver {
+                val action = AddTransactionFragmentDirections.actionAddTransaksiFragmentToHomeFragment()
+                findNavController().navigate(action)
+            })
         }
         return super.onOptionsItemSelected(item)
     }

@@ -126,7 +126,7 @@ class CalculatorImpl(calculator: Calculator, private val context: Context) {
         }
 
         if (lastKey != DIGIT && lastKey != DECIMAL) {
-            context.toast(R.string.invalid_format_used)
+//            context.toast(R.string.invalid_format_used)
             return
         }
 

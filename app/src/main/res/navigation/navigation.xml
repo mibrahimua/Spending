@@ -42,8 +42,7 @@
                 app:popUpToInclusive="true" />
             <argument
                 android:name="transactionType"
-                app:argType="com.mibrahimuadev.spending.data.model.TransactionType"
-                android:defaultValue="EXPENSE" />
+                app:argType="com.mibrahimuadev.spending.data.model.TransactionType" />
         </fragment>
         <fragment
             android:id="@+id/addCategoryTranscFragment"

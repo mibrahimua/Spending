@@ -9,6 +9,7 @@ import com.mibrahimuadev.spending.data.local.TransactionLocalDataSource
 import com.mibrahimuadev.spending.data.local.dao.TransactionDao
 import com.mibrahimuadev.spending.data.model.TransactionList
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 
 class TransactionRepository(
@@ -32,7 +33,7 @@ class TransactionRepository(
     }
 
     suspend fun insertTransaksi(transaction: Transaction) {
-        return withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO + NonCancellable) {
             transactionDao.insertTransaction(transaction)
         }
     }

@@ -27,7 +27,7 @@ data class Transaction(
 
     override val currencyId: String,
 
-    override val transactionNominal: Double,
+    override val transactionNominal: Double?,
 
     override val transactionDate: Date,
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.mibrahimuadev.spending.data.entity.Transaction
 import com.mibrahimuadev.spending.data.model.TransactionList
+import com.mibrahimuadev.spending.data.model.TransactionType
 
 @Dao
 interface TransactionDao {
@@ -15,7 +16,6 @@ interface TransactionDao {
                 LEFT JOIN category k ON t.categoryId = k.categoryId
                 LEFT JOIN category_icon c ON c.iconId = k.iconId
                 LEFT JOIN currency m ON m.currencyId = t.currencyId
-				WHERE t.transactionType = "EXPENSE"
 				GROUP BY t.transactionId
                 ORDER BY transactionDate DESC"""
     )
@@ -28,7 +28,6 @@ interface TransactionDao {
                 LEFT JOIN category k ON t.categoryId = k.categoryId
                 LEFT JOIN category_icon c ON c.iconId = k.iconId
                 LEFT JOIN currency m ON m.currencyId = t.currencyId
-				WHERE t.transactionType = "EXPENSE"
 				GROUP BY t.transactionId
                 ORDER BY transactionDate DESC"""
     )

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "2bb1a6f75bc075da4268c748903fecb1",
+    "identityHash": "65a112a3fece5cc23934c290ae115b68",
     "entities": [
       {
         "tableName": "transaction_spend",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`transactionId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `transactionType` TEXT NOT NULL, `categoryId` INTEGER NOT NULL, `currencyId` TEXT NOT NULL, `transactionNominal` REAL NOT NULL, `transactionDate` INTEGER NOT NULL, `transactionNote` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`transactionId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `transactionType` TEXT NOT NULL, `categoryId` INTEGER NOT NULL, `currencyId` TEXT NOT NULL, `transactionNominal` REAL, `transactionDate` INTEGER NOT NULL, `transactionNote` TEXT)",
         "fields": [
           {
             "fieldPath": "transactionId",
@@ -36,7 +36,7 @@
             "fieldPath": "transactionNominal",
             "columnName": "transactionNominal",
             "affinity": "REAL",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "transactionDate",
@@ -166,7 +166,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2bb1a6f75bc075da4268c748903fecb1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '65a112a3fece5cc23934c290ae115b68')"
     ]
   }
 }
