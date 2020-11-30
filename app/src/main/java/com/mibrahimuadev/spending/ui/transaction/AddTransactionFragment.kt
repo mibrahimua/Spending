@@ -1,5 +1,6 @@
 package com.mibrahimuadev.spending.ui.transaction
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -20,15 +21,12 @@ import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.databinding.FragmentAddTransactionBinding
 import com.mibrahimuadev.spending.ui.categories.CategoryViewModel
 import com.mibrahimuadev.spending.ui.categories.CategoryViewModelFactory
-import com.mibrahimuadev.spending.utils.DateFormatter
+import com.mibrahimuadev.spending.utils.CurrentDate
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class AddTransactionFragment : Fragment(), Calculator {
-
+    private val TAG = "AddTransactionFragment"
     lateinit var calc: CalculatorImpl
     private var _binding: FragmentAddTransactionBinding? = null
     private val binding get() = _binding!!
@@ -36,18 +34,25 @@ class AddTransactionFragment : Fragment(), Calculator {
         AddTransactionViewModelFactory(requireActivity().application)
     }
     private val args: AddTransactionFragmentArgs by navArgs()
+
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        val application = requireNotNull(this.activity).application
-        Log.i("AddTransactionFragment", "AddTransactionFragment created")
-        _binding = FragmentAddTransactionBinding.inflate(layoutInflater)
+        Log.i(TAG, "AddTransactionFragment created")
         val application = requireNotNull(this.activity).application
+        _binding = FragmentAddTransactionBinding.inflate(layoutInflater)
 
+        /**
+         * Set title fragment depend on transaction type (Expense, Income)
+         */
         (activity as AppCompatActivity).supportActionBar?.title = args.transactionType.name
 
+        /**
+         * Prevent layout to adjust when user use keyboard
+         */
         getActivity()?.getWindow()
             ?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
 
@@ -56,22 +61,33 @@ class AddTransactionFragment : Fragment(), Calculator {
         val categoryViewModel =
             ViewModelProvider(this, viewModelFactory).get(CategoryViewModel::class.java)
 
+        /**
+         * Calculator Binding Section
+         */
         calc = CalculatorImpl(this, application)
-
         binding.btnPlus.setOnClickListener { calc.handleOperation(PLUS) }
         binding.btnMinus.setOnClickListener { calc.handleOperation(MINUS) }
         binding.btnMultiply.setOnClickListener { calc.handleOperation(MULTIPLY) }
         binding.btnDivide.setOnClickListener { calc.handleOperation(DIVIDE) }
-
         binding.btnClear.setOnClickListener { calc.handleClear(); }
         binding.btnClear.setOnLongClickListener { calc.handleReset(); true }
-        getButtonIds().forEach {
+        getNumberButtonIds().forEach {
             it.setOnClickListener { calc.numpadClicked(it.id); }
         }
-
         binding.btnEquals.setOnClickListener { calc.handleEquals(); }
         binding.result.setOnLongClickListener { copyToClipboard(true) }
 
+        addTransactionViewModel.calcNewFormula.observe(viewLifecycleOwner) { formula ->
+            binding.formula.text = formula
+        }
+        addTransactionViewModel.calcNewResult.observe(viewLifecycleOwner) { result ->
+            binding.result.text = result
+            calc.setInputDisplayedFormula(result)
+        }
+
+        /**
+         * Category Binding Section
+         */
         binding.btnCategory.setOnClickListener {
             Navigation.findNavController(requireView())
                 .navigate(
@@ -80,16 +96,6 @@ class AddTransactionFragment : Fragment(), Calculator {
                     )
                 )
         }
-
-        addTransactionViewModel.calcNewFormula.observe(viewLifecycleOwner) { formula ->
-            binding.formula.text = formula
-        }
-
-        addTransactionViewModel.calcNewResult.observe(viewLifecycleOwner) { result ->
-            binding.result.text = result
-            calc.setInputDisplayedFormula(result)
-        }
-
         categoryViewModel.getCategory(args.idKategori)
         categoryViewModel.categoryName.observe(viewLifecycleOwner) { result ->
             binding.categoryName.text = result ?: "Category Not Selected"
@@ -97,46 +103,35 @@ class AddTransactionFragment : Fragment(), Calculator {
         addTransactionViewModel._transactionType.value = args.transactionType
         addTransactionViewModel._transactionCategory.value = args.idKategori
 
-        val now = Calendar.getInstance()
-        val currentYear: Int = now.get(Calendar.YEAR)
-        val currentMonth: Int = now.get(Calendar.MONTH)
-        val currentDay: Int = now.get(Calendar.DAY_OF_MONTH)
-        val monthName = listOf(
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec"
-        )
+        /**
+         * Date Transaction Binding Section
+         */
+        val currentDate = CurrentDate()
 
-        binding.textDate.text = "$currentDay " + monthName[currentMonth] + " $currentYear"
-        val simpleDateFormat = SimpleDateFormat("dd MM yyyy", Locale.getDefault())
-        val date = simpleDateFormat.parse("$currentDay $currentMonth $currentYear")
-        addTransactionViewModel._dateTransaction.value = date
-        val datePickerDialog =
-            DatePickerDialog.newInstance({ view, year, monthOfYear, dayOfMonth ->
-
-                binding.textDate.text = "$dayOfMonth " + monthName[monthOfYear] + " $year"
-                val date = simpleDateFormat.parse("$dayOfMonth $monthOfYear $year")
-                addTransactionViewModel._dateTransaction.value = date
-            }, currentYear, currentMonth, currentDay)
+        if(addTransactionViewModel._dateTransaction.value == null) {
+            saveDatePickerToLiveData(currentDate.day, currentDate.month, currentDate.year)
+        }
 
         binding.btnDate.setOnClickListener {
-//            datePickerDialog.setTitle("INI JUDUL")
-//            datePickerDialog.setOkText("SIP")
-//            datePickerDialog.setCancelText("GA JADI")
-            datePickerDialog.show(requireActivity().supportFragmentManager, "Datepickerdialog")
+            showDatePicker(currentDate)
+                .show(
+                    requireActivity().supportFragmentManager,
+                    "Datepickerdialog"
+                )
         }
+        addTransactionViewModel._dateTransaction.observe(viewLifecycleOwner) { date ->
+            val day = currentDate.getCustomDate(date,"dd")
+            val month = currentDate.getCustomDate(date,"MM")
+            val year = currentDate.getCustomDate(date,"yyyy")
+            binding.textDate.text =
+                "${day} " + currentDate.monthName[month] + " ${year}"
+        }
+
+        /**
+         * Note Transaction Binding Section
+         */
         binding.noteTransc.setText(addTransactionViewModel.noteTransaction.value)
         binding.noteTransc.addTextChangedListener {
-
             addTransactionViewModel._noteTransaction.value = binding.noteTransc.text.toString()
         }
 
@@ -147,12 +142,11 @@ class AddTransactionFragment : Fragment(), Calculator {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.save_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
-        if(id == R.id.save_action){
+        if (id == R.id.save_action) {
 
             addTransactionViewModel.saveTransaction()
 //            Navigation.findNavController(requireView()).navigate(AddTransactionFragmentDirections.actionAddTransaksiFragmentToHomeFragment())
@@ -161,7 +155,7 @@ class AddTransactionFragment : Fragment(), Calculator {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun getButtonIds() = arrayOf(
+    private fun getNumberButtonIds() = arrayOf(
         binding.btnDecimal,
         binding.btn0,
         binding.btn1,
@@ -199,11 +193,28 @@ class AddTransactionFragment : Fragment(), Calculator {
 
     override fun showNewFormula(value: String, context: Context) {
         addTransactionViewModel._calcNewFormula.value = value
+    }
 
+    fun showDatePicker(currentDate: CurrentDate): DatePickerDialog {
+        val datePickerDialog =
+            DatePickerDialog.newInstance({ view, year, monthOfYear, dayOfMonth ->
+                saveDatePickerToLiveData(dayOfMonth, monthOfYear, year)
+            }, currentDate.year, currentDate.month, currentDate.day)
+
+        return datePickerDialog
+    }
+
+    fun saveDatePickerToLiveData(dayOfMonth: Int, monthOfYear: Int, year: Int) {
+        val currentDate = CurrentDate()
+        val date = currentDate
+            .dateFormat("dd MM yyyy")
+            .parse("$dayOfMonth $monthOfYear $year")
+        Log.i(TAG, "Saving date into live data $date")
+        addTransactionViewModel._dateTransaction.value = date
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.i("AddTransactionFragment", "AddTransactionFragment destroyed")
+        Log.i(TAG, "AddTransactionFragment destroyed")
     }
 }
