@@ -16,20 +16,24 @@
             app:destination="@id/homeFragment" />
         <action
             android:id="@+id/action_homeFragment_to_addTransaksiFragment"
-            app:destination="@id/nav_add_transc" />
+            app:destination="@id/nav_transc" />
+        <action
+            android:id="@+id/action_homeFragment_to_detailTransactionFragment2"
+            app:destination="@id/detailTransactionFragment2" />
     </fragment>
     <navigation
-        android:id="@+id/nav_add_transc"
-        app:startDestination="@id/addTransaksiFragment">
+        android:id="@+id/nav_transc"
+        app:startDestination="@id/addTransactionFragment">
         <argument
             android:name="transactionType"
             app:argType="com.mibrahimuadev.spending.data.model.TransactionType" />
         <fragment
-            android:id="@+id/addTransaksiFragment"
+            android:id="@+id/addTransactionFragment"
             android:name="com.mibrahimuadev.spending.ui.transaction.AddTransactionFragment"
-            android:label="AddTransaksiFragment">
+            android:label="AddTransaksiFragment"
+            tools:layout="@layout/fragment_add_transaction">
             <action
-                android:id="@+id/action_addTransaksiFragment_to_addCategoryTranscFragment"
+                android:id="@+id/action_addTransactionFragment_to_addCategoryTranscFragment"
                 app:destination="@id/addCategoryTranscFragment" />
             <argument
                 android:name="idKategori"
@@ -50,14 +54,26 @@
             android:label="fragment_add_category_transc"
             tools:layout="@layout/fragment_add_category_transc">
             <action
-                android:id="@+id/action_addCategoryTranscFragment_to_addTransaksiFragment2"
-                app:destination="@id/addTransaksiFragment"
-                app:popUpTo="@id/addTransaksiFragment"
+                android:id="@+id/action_addCategoryTranscFragment_to_addTransactionFragment2"
+                app:destination="@id/addTransactionFragment"
+                app:popUpTo="@id/addTransactionFragment"
                 app:popUpToInclusive="true" />
             <argument
                 android:name="typeCategory"
                 app:argType="com.mibrahimuadev.spending.data.model.TransactionType" />
         </fragment>
     </navigation>
+    <fragment
+        android:id="@+id/detailTransactionFragment2"
+        android:name="com.mibrahimuadev.spending.ui.transaction.DetailTransactionFragment"
+        android:label="fragment_detail_transaction"
+        tools:layout="@layout/fragment_detail_transaction" >
+        <action
+            android:id="@+id/action_detailTransactionFragment2_to_nav_transc"
+            app:destination="@id/nav_transc" />
+        <argument
+            android:name="transactionId"
+            app:argType="long" />
+    </fragment>
 
 </navigation>

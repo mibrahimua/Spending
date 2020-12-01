@@ -4,11 +4,11 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-class AddTransactionViewModelFactory(val application: Application) : ViewModelProvider.Factory {
+class TransactionViewModelFactory(val application: Application) : ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AddTransactionViewModel::class.java)) {
-            return AddTransactionViewModel(application) as T
+        if (modelClass.isAssignableFrom(TransactionViewModel::class.java)) {
+            return TransactionViewModel(application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

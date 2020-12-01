@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.data.model.TransactionList
+import com.mibrahimuadev.spending.ui.home.HomeFragmentDirections
+import com.mibrahimuadev.spending.utils.CurrentDate
 import com.mibrahimuadev.spending.utils.Formatter
-import java.text.SimpleDateFormat
 import java.util.*
 
 class TransactionListAdapter internal constructor(context: Context) :
@@ -42,30 +44,15 @@ class TransactionListAdapter internal constructor(context: Context) :
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         val current = transaksi[position]
-        holder.tglTransaksi.text = getDateString(current.transactionDate)
+        holder.tglTransaksi.text = CurrentDate.getDateString(current.transactionDate)
         holder.kategoriTransaksi.text = current.categoryName
         holder.nominalTransaksi.text =
-            current.currencySymbol + " " + addThousandsDelimiter(current.transactionNominal.toString())
-    }
+            current.currencySymbol + " " + Formatter.addThousandsDelimiter(current.transactionNominal.toString())
 
-    private fun getDateString(date: Date): String {
-        val simpleDateFormat = SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault())
-        return simpleDateFormat.format(date)
-    }
-
-    private fun addThousandsDelimiter(nominalTransaction: String): String {
-        var convertNominal = ""
-        val numbersRegex = "[^0-9,.]".toRegex()
-        val valueToCheck =
-            numbersRegex.split(nominalTransaction).filter { it.trim().isNotEmpty() }
-        valueToCheck.forEach {
-            var newString = Formatter.addGroupingSeparators(it)
-            // allow writing numbers like 0.0003 but not allow if number only like 0.0
-            if (it.contains(".") && it.substringAfter(".") != "0") {
-                newString = newString.substringBefore(".") + ".${it.substringAfter(".")}"
-            }
-            convertNominal = nominalTransaction.replace(it, newString)
+        holder.itemView.setOnClickListener { view ->
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToDetailTransactionFragment2(current.transactionId)
+            view.findNavController().navigate(action)
         }
-        return convertNominal
     }
 }

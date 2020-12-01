@@ -24,7 +24,7 @@ class TransactionRepository(
         transactionDao = database.transactionDao()
     }
 
-    fun observeAllTransaksi(): LiveData<Result<List<TransactionList>>> {
+    fun observeAllTransactions(): LiveData<Result<List<TransactionList>>> {
         return transactionLocalDataSource.observeAllTransactions()
     }
 
@@ -32,13 +32,24 @@ class TransactionRepository(
         return transactionLocalDataSource.getAllTransactions()
     }
 
-    suspend fun insertTransaksi(transaction: Transaction) {
+    suspend fun getTransaction(transactionId: Long): Result<TransactionList> {
+        return withContext(Dispatchers.IO) {
+            try {
+                Result.Success(transactionDao.getTransaction(transactionId))
+            } catch (e: Exception) {
+                Result.Error(e)
+            }
+
+        }
+    }
+
+    suspend fun insertTransaction(transaction: Transaction) {
         return withContext(Dispatchers.IO + NonCancellable) {
             transactionDao.insertTransaction(transaction)
         }
     }
 
-    suspend fun updateTransaksi(transaction: Transaction) {
+    suspend fun updateTransaction(transaction: Transaction) {
         return transactionLocalDataSource.updateTransaction(transaction)
     }
 

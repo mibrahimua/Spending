@@ -63,7 +63,7 @@ class CategoryListAdapter internal constructor(context: Context) :
         holder.categoryName.text = current.categoryName
         holder.itemView.setOnClickListener { view ->
             val action =
-                AddCategoryTranscFragmentDirections.actionAddCategoryTranscFragmentToAddTransaksiFragment2(
+                AddCategoryTranscFragmentDirections.actionAddCategoryTranscFragmentToAddTransactionFragment2(
                     transactionType
                 )
                     .setIdKategori(current.categoryId)

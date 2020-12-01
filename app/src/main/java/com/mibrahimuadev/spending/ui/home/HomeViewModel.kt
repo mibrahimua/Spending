@@ -11,7 +11,7 @@ import com.mibrahimuadev.spending.data.repository.TransactionRepository
 class HomeViewModel(application: Application): AndroidViewModel(application) {
     private val repository: TransactionRepository = TransactionRepository(application)
 
-    val allTransaction: LiveData<Result<List<TransactionList>>> = repository.observeAllTransaksi()
+    val allTransaction: LiveData<Result<List<TransactionList>>> = repository.observeAllTransactions()
     init {
         Log.i("HomeViewModel", "HomeViewModel created")
     }

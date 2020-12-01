@@ -3,7 +3,7 @@ package com.mibrahimuadev.spending.utils
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CurrentDate {
+object CurrentDate {
     val now = GregorianCalendar()
     val year: Int = now.get(Calendar.YEAR)
     val month: Int = now.get(Calendar.MONTH)
@@ -35,6 +35,11 @@ class CurrentDate {
             "yyyy" -> return now.get(Calendar.YEAR)
             else -> return 0
         }
+    }
+
+    fun getDateString(date: Date): String {
+        val simpleDateFormat = SimpleDateFormat("EEE, dd MMM yyyy", Locale.getDefault())
+        return simpleDateFormat.format(date)
     }
 
 

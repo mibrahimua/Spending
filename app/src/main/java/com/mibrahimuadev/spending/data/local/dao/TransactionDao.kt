@@ -1,10 +1,12 @@
 package com.mibrahimuadev.spending.data.local.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import com.mibrahimuadev.spending.data.entity.Transaction
 import com.mibrahimuadev.spending.data.model.TransactionList
-import com.mibrahimuadev.spending.data.model.TransactionType
 
 @Dao
 interface TransactionDao {
@@ -32,6 +34,17 @@ interface TransactionDao {
                 ORDER BY transactionDate DESC"""
     )
     suspend fun getAllTransactions(): List<TransactionList>
+
+    @Query(
+        """SELECT t.transactionId, t.transactionType, t.transactionNominal, t.transactionDate, k.categoryName, c.iconLocation, m.currencySymbol, t.transactionNote, 
+                k.categoryId, m.currencyId
+                FROM transaction_spend t
+                LEFT JOIN category k ON t.categoryId = k.categoryId
+                LEFT JOIN category_icon c ON c.iconId = k.iconId
+                LEFT JOIN currency m ON m.currencyId = t.currencyId
+                WHERE t.transactionId = :transactionId"""
+    )
+    suspend fun getTransaction(transactionId: Long): TransactionList
 
     @Insert
     suspend fun insertTransaction(transaction: Transaction)

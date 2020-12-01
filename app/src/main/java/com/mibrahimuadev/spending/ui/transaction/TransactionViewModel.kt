@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mibrahimuadev.spending.data.Result
 import com.mibrahimuadev.spending.data.entity.Transaction
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.data.repository.CategoryRepository
@@ -14,7 +15,7 @@ import com.mibrahimuadev.spending.utils.Event
 import kotlinx.coroutines.launch
 import java.util.*
 
-class AddTransactionViewModel(application: Application) : AndroidViewModel(application) {
+class TransactionViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "AddTransactionViewModel"
     private val transactionRepository: TransactionRepository
     private val categoryRepository: CategoryRepository
@@ -44,6 +45,9 @@ class AddTransactionViewModel(application: Application) : AndroidViewModel(appli
     val _transactionCategory = MutableLiveData<Int>()
     val transactionCategory = _transactionCategory
 
+    val _categoryName = MutableLiveData<String>()
+    val categoryName: LiveData<String> = _categoryName
+
     val _dateTransaction = MutableLiveData<Date>()
     val dateTransaction: LiveData<Date> = _dateTransaction
 
@@ -52,6 +56,19 @@ class AddTransactionViewModel(application: Application) : AndroidViewModel(appli
 
     val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
+
+    fun getDetailTransaction(transactionId: Long) {
+        viewModelScope.launch {
+            val result = transactionRepository.getTransaction(transactionId)
+            if (result is Result.Success) {
+                _transactionType.value = result.data.transactionType
+                _calcNewResult.value = result.data.transactionNominal.toString()
+                getCategory(result.data.categoryId)
+                _dateTransaction.value = result.data.transactionDate
+                _noteTransaction.value = result.data.transactionNote
+            }
+        }
+    }
 
     fun validateTransaction() {
         _dataLoading.value = true
@@ -81,7 +98,7 @@ class AddTransactionViewModel(application: Application) : AndroidViewModel(appli
         Log.i(TAG, "call function saveTransaction")
         viewModelScope.launch() {
             Log.i(TAG, "coroutine starting")
-            transactionRepository.insertTransaksi(
+            transactionRepository.insertTransaction(
                 Transaction(
                     transactionNominal = transactionNominal,
                     transactionType = transactionType,
@@ -93,6 +110,16 @@ class AddTransactionViewModel(application: Application) : AndroidViewModel(appli
             )
             _dataLoading.value = false
             Log.i(TAG, "coroutine end")
+        }
+    }
+
+    fun getCategory(idKategori: Int){
+        viewModelScope.launch {
+            categoryRepository.getCategory(idKategori).let { result ->
+                if (result is Result.Success) {
+                    _categoryName.value = result.data?.categoryName
+                }
+            }
         }
     }
 
