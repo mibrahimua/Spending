@@ -10,7 +10,7 @@ import com.mibrahimuadev.spending.data.model.TransactionType
 )
 data class Category(
     @PrimaryKey(autoGenerate = true)
-    val categoryId: Int,
+    val categoryId: Int = 0,
 
     val categoryName: String? = "",
 

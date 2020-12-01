@@ -1,7 +1,7 @@
 package com.mibrahimuadev.spending.data.model
 
 data class CategoryList(
-    val categoryId: Int,
+    val categoryId: Int = 0,
 
     val categoryName: String? = "",
 

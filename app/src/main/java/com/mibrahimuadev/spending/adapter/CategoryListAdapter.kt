@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.mibrahimuadev.spending.R
@@ -17,7 +16,8 @@ class CategoryListAdapter internal constructor(context: Context) :
     RecyclerView.Adapter<CategoryListAdapter.CategoryViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var category = emptyList<CategoryList>()
+    private var categories = mutableListOf<CategoryList>()
+    private var categoriesCopy = mutableListOf<CategoryList>()
     private lateinit var transactionType: TransactionType
 
     inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -31,25 +31,47 @@ class CategoryListAdapter internal constructor(context: Context) :
     }
 
     internal fun setCategory(category: List<CategoryList>, transactionType: TransactionType) {
-        this.category = category
+        this.categories.addAll(category)
+        categoriesCopy.addAll(category)
         this.transactionType = transactionType
         notifyDataSetChanged()
     }
 
+    internal fun setFilter(filterText: String?) {
+        categories.clear()
+        if (filterText?.isEmpty()!!) {
+            categories.addAll(categoriesCopy)
+        } else {
+            for (category in categoriesCopy) {
+                if (category.categoryName?.toLowerCase()?.contains(filterText.toLowerCase())!!) {
+                    categories.add(category)
+                }
+            }
+            /**
+             * if the category does not exist, then display the add category option
+             */
+            if (categories.size == 0) {
+                categories.add(CategoryList(categoryName = "Add category : " + filterText))
+            }
+        }
+        notifyDataSetChanged()
+    }
+
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        val current = category[position]
+        val current = categories[position]
 //        holder.categoryIcon = R.drawable.ic_launcher_background
         holder.categoryName.text = current.categoryName
         holder.itemView.setOnClickListener { view ->
             val action =
-                AddCategoryTranscFragmentDirections.actionAddCategoryTranscFragmentToAddTransaksiFragment2(transactionType)
+                AddCategoryTranscFragmentDirections.actionAddCategoryTranscFragmentToAddTransaksiFragment2(
+                    transactionType
+                )
                     .setIdKategori(current.categoryId)
             view.findNavController().navigate(action)
-            Toast.makeText(view.context, "selected ${current}", Toast.LENGTH_SHORT).show()
         }
     }
 
     override fun getItemCount(): Int {
-        return category.size
+        return categories.size
     }
 }
