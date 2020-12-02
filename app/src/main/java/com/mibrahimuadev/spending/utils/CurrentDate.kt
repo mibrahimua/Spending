@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object CurrentDate {
-    val now = GregorianCalendar()
+    val now = Calendar.getInstance()
     val year: Int = now.get(Calendar.YEAR)
     val month: Int = now.get(Calendar.MONTH)
     val day: Int = now.get(Calendar.DAY_OF_MONTH)

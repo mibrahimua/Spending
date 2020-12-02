@@ -19,6 +19,7 @@ class CategoryListAdapter internal constructor(context: Context) :
     private var categories = mutableListOf<CategoryList>()
     private var categoriesCopy = mutableListOf<CategoryList>()
     private lateinit var transactionType: TransactionType
+    private var transactionId: Long = 0L
 
     inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         //        val categoryIcon: ImageView = itemView.findViewById(R.id.categoryIcon)
@@ -30,10 +31,11 @@ class CategoryListAdapter internal constructor(context: Context) :
         return CategoryViewHolder(itemView)
     }
 
-    internal fun setCategory(category: List<CategoryList>, transactionType: TransactionType) {
+    internal fun setCategory(category: List<CategoryList>, transactionType: TransactionType, transactionId: Long) {
         this.categories.addAll(category)
         categoriesCopy.addAll(category)
         this.transactionType = transactionType
+        this.transactionId = transactionId
         notifyDataSetChanged()
     }
 
@@ -66,7 +68,8 @@ class CategoryListAdapter internal constructor(context: Context) :
                 AddCategoryTranscFragmentDirections.actionAddCategoryTranscFragmentToAddTransactionFragment2(
                     transactionType
                 )
-                    .setIdKategori(current.categoryId)
+                    .setCategoryId(current.categoryId)
+                    .setTransactionId(this.transactionId)
             view.findNavController().navigate(action)
         }
     }

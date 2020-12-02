@@ -50,7 +50,9 @@ class TransactionRepository(
     }
 
     suspend fun updateTransaction(transaction: Transaction) {
-        return transactionLocalDataSource.updateTransaction(transaction)
+        return withContext(Dispatchers.IO + NonCancellable) {
+            transactionDao.updateTransaction(transaction)
+        }
     }
 
     suspend fun deleteTransaksi(idTransaksi: Long) {

@@ -43,7 +43,7 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
             ViewModelProvider(this, viewModelFactory).get(CategoryViewModel::class.java)
         categoryViewModel.getAllCategories(args.typeCategory)
         categoryViewModel.allCategories.observe(viewLifecycleOwner, { categories ->
-            adapter.setCategory(categories, args.typeCategory)
+            adapter.setCategory(categories, args.typeCategory, args.transactionId)
         })
 
         setHasOptionsMenu(true)

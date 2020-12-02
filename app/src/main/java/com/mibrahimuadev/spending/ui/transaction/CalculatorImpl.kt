@@ -12,8 +12,8 @@ class CalculatorImpl(calculator: Calculator, private val context: Context) {
     private var baseValue = 0.0
     private var secondValue = 0.0
     private var inputDisplayedFormula = "0"
-    private var lastKey = ""
-    private var lastOperation = ""
+    var lastKey = ""
+    var lastOperation = ""
     private var operations = listOf("+", "-", "*", "/")
     private var operationsRegex = "[-+*/]".toPattern()
     private var numbersRegex = "[^0-9,.]".toRegex()

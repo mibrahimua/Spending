@@ -27,6 +27,10 @@
         <argument
             android:name="transactionType"
             app:argType="com.mibrahimuadev.spending.data.model.TransactionType" />
+        <argument
+            android:name="transactionId"
+            android:defaultValue="0L"
+            app:argType="long" />
         <fragment
             android:id="@+id/addTransactionFragment"
             android:name="com.mibrahimuadev.spending.ui.transaction.AddTransactionFragment"
@@ -36,7 +40,7 @@
                 android:id="@+id/action_addTransactionFragment_to_addCategoryTranscFragment"
                 app:destination="@id/addCategoryTranscFragment" />
             <argument
-                android:name="idKategori"
+                android:name="categoryId"
                 android:defaultValue="0"
                 app:argType="integer" />
             <action
@@ -47,6 +51,10 @@
             <argument
                 android:name="transactionType"
                 app:argType="com.mibrahimuadev.spending.data.model.TransactionType" />
+            <argument
+                android:name="transactionId"
+                android:defaultValue="0L"
+                app:argType="long" />
         </fragment>
         <fragment
             android:id="@+id/addCategoryTranscFragment"
@@ -61,13 +69,17 @@
             <argument
                 android:name="typeCategory"
                 app:argType="com.mibrahimuadev.spending.data.model.TransactionType" />
+            <argument
+                android:name="transactionId"
+                app:argType="long"
+                android:defaultValue="0L" />
         </fragment>
     </navigation>
     <fragment
         android:id="@+id/detailTransactionFragment2"
         android:name="com.mibrahimuadev.spending.ui.transaction.DetailTransactionFragment"
         android:label="fragment_detail_transaction"
-        tools:layout="@layout/fragment_detail_transaction" >
+        tools:layout="@layout/fragment_detail_transaction">
         <action
             android:id="@+id/action_detailTransactionFragment2_to_nav_transc"
             app:destination="@id/nav_transc" />

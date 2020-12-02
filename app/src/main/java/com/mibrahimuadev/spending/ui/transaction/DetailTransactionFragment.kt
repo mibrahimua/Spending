@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.mibrahimuadev.spending.databinding.FragmentDetailTransactionBinding
 import com.mibrahimuadev.spending.utils.CurrentDate
@@ -36,7 +37,7 @@ class DetailTransactionFragment : Fragment() {
             binding.tvTrancsType.text = it.name
         }
 
-        transactionViewModel.calcNewResult.observe(viewLifecycleOwner) {
+        transactionViewModel.transactionNominal.observe(viewLifecycleOwner) {
             binding.tvTranscNominal.text = Formatter.addThousandsDelimiter(it)
         }
 
@@ -46,6 +47,16 @@ class DetailTransactionFragment : Fragment() {
 
         transactionViewModel.noteTransaction.observe(viewLifecycleOwner) {
             binding.tvTranscNote.text = it
+        }
+
+        binding.btnEdit.setOnClickListener {
+            Navigation.findNavController(requireView())
+                .navigate(
+                    DetailTransactionFragmentDirections.actionDetailTransactionFragment2ToNavTransc(
+                        transactionViewModel.transactionType.value!!
+                    ).setTransactionId(args.transactionId)
+
+                )
         }
 
         setHasOptionsMenu(true)
