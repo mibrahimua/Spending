@@ -76,6 +76,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         categoryIdArgs: Int,
         transactionTypeArgs: TransactionType
     ) {
+        _dataLoading.value = true
         _transactionId.value = transactionIdArgs
 
         if (transactionId.value == 0L) {
@@ -83,10 +84,10 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             _transactionType.value = transactionTypeArgs
             _categoryId.value = categoryIdArgs
             categoryId.value?.let { getCategory(it) }
+            _dataLoading.value = false
             return
         } else {
             isNewTransaction.value = false
-            _dataLoading.value = true
             viewModelScope.launch {
                 transactionRepository.getTransaction(transactionIdArgs).let { result ->
                     if (result is Result.Success) {
