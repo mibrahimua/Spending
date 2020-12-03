@@ -1,9 +1,7 @@
 package com.mibrahimuadev.spending.data.local.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.mibrahimuadev.spending.data.entity.Category
 import com.mibrahimuadev.spending.data.model.CategoryList
 import com.mibrahimuadev.spending.data.model.TransactionType
@@ -36,8 +34,20 @@ interface CategoryDao {
     )
     fun getCategory(categoriId: Int): CategoryList?
 
-    @Insert
-    suspend fun insertCategory(category: Category)
+    @Query("SELECT MAX(categoryId)+1 AS lastCategoryId FROM category")
+    fun getLastCategoryId(): Int
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertCategory(category: Category): Long
+
+    @Update
+    suspend fun updateCategory(category: Category)
+
+    @Transaction
+    suspend fun insertOrUpdate(category: Category) {
+        val id = insertCategory(category)
+        if (id == -1L) updateCategory(category)
+    }
 
     @Query("DELETE FROM category")
     suspend fun deleteAllCategories()

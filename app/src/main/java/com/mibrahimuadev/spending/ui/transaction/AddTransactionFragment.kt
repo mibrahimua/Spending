@@ -1,6 +1,7 @@
 package com.mibrahimuadev.spending.ui.transaction
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -8,20 +9,28 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.mibrahimuadev.spending.R
+import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.databinding.FragmentAddTransactionBinding
 import com.mibrahimuadev.spending.utils.CurrentDate
 import com.mibrahimuadev.spending.utils.EventObserver
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+
 
 class AddTransactionFragment : Fragment(), Calculator {
     private val TAG = "AddTransactionFragment"
@@ -44,7 +53,7 @@ class AddTransactionFragment : Fragment(), Calculator {
         /**
          * Set title fragment depend on transaction type (Expense, Income)
          */
-        (activity as AppCompatActivity).supportActionBar?.title = args.transactionType.name
+        (activity as AppCompatActivity).supportActionBar?.title = args.transactionType
 
         val application = requireNotNull(this.activity).application
         _binding = FragmentAddTransactionBinding.inflate(layoutInflater)
@@ -58,11 +67,21 @@ class AddTransactionFragment : Fragment(), Calculator {
         /**
          * Init Transaction
          */
-        transactionViewModel.startTransaction(
-            args.transactionId,
-            args.categoryId,
-            args.transactionType
-        )
+        transactionViewModel.transactionTypeArgs = TransactionType.valueOf(args.transactionType!!)
+        transactionViewModel.transactionIdArgs = args.transactionId
+        transactionViewModel.categoryIdArgs = args.categoryId
+        transactionViewModel.categoryNameArgs = args.categoryName
+        runBlocking {
+            Log.i(TAG, "Coroutine cek if category exist starting")
+            val job = lifecycleScope.launch(Dispatchers.IO) {
+                transactionViewModel.isCategoryExist(args.categoryId)
+            }
+            job.join()
+
+            Log.i(TAG, "Coroutine ends " + job.isActive)
+        }
+        transactionViewModel.isCategoryExist(args.categoryId)
+        transactionViewModel.startTransaction()
 
         /**
          * Calculator View Binding Section
@@ -115,11 +134,13 @@ class AddTransactionFragment : Fragment(), Calculator {
          * Category View Binding Section
          */
         binding.btnCategory.setOnClickListener {
+            val imm = getActivity()?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view?.getWindowToken(), 0)
             Navigation.findNavController(requireView())
                 .navigate(
                     AddTransactionFragmentDirections.actionAddTransactionFragmentToAddCategoryTranscFragment(
-                        args.transactionType
-                    ).setTransactionId(args.transactionId)
+                        TransactionType.valueOf(args.transactionType!!)
+                    )
                 )
         }
         transactionViewModel.categoryName.observe(viewLifecycleOwner) { result ->
@@ -159,6 +180,15 @@ class AddTransactionFragment : Fragment(), Calculator {
 
         setHasOptionsMenu(true)
         return binding.root
+    }
+
+    fun checkCategory(categoryId: Int) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            val value = lifecycleScope.async(Dispatchers.Default) {
+                transactionViewModel.isCategoryExist(categoryId)
+            }
+            value.await()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -243,7 +273,9 @@ class AddTransactionFragment : Fragment(), Calculator {
     }
 
     override fun onDestroyView() {
+
         super.onDestroyView()
+
         Log.i(TAG, "AddTransactionFragment destroyed")
     }
 }

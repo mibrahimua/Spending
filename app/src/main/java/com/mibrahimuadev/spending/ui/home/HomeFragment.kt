@@ -7,12 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.adapter.TransactionListAdapter
@@ -94,9 +92,8 @@ class HomeFragment : Fragment() {
             isFabOpen = false
             Navigation.findNavController(requireView())
                 .navigate(
-                    HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment(
-                        TransactionType.EXPENSE
-                    )
+                    HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment()
+                        .setTransactionType(TransactionType.EXPENSE.name)
                 )
         }
 
@@ -104,9 +101,8 @@ class HomeFragment : Fragment() {
             isFabOpen = false
             Navigation.findNavController(requireView())
                 .navigate(
-                    HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment(
-                        TransactionType.INCOME
-                    )
+                    HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment()
+                        .setTransactionType(TransactionType.INCOME.name)
                 )
         }
         return binding.root

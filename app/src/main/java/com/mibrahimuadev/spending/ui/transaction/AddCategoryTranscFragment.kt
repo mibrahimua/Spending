@@ -7,7 +7,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.adapter.CategoryListAdapter
@@ -21,9 +20,11 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
     private var _binding: FragmentAddCategoryTranscBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: CategoryListAdapter
-    private val TransactionViewModel: TransactionViewModel by navGraphViewModels(R.id.nav_transc) {
-        defaultViewModelProviderFactory
-    }
+
+    //    private val TransactionViewModel: TransactionViewModel by navGraphViewModels(R.id.nav_transc) {
+//        defaultViewModelProviderFactory
+//    }
+    private lateinit var searchView: SearchView
     private val args: AddCategoryTranscFragmentArgs by navArgs()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,19 +34,24 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
         _binding = FragmentAddCategoryTranscBinding.inflate(layoutInflater)
         val application = requireNotNull(this.activity).application
         val recycleView = binding.recycleviewCategoryTransc
-        adapter = CategoryListAdapter(application)
-        recycleView.adapter = adapter
-        recycleView.layoutManager = LinearLayoutManager(application)
 
         val viewModelFactory = CategoryViewModelFactory(application)
 
         val categoryViewModel =
             ViewModelProvider(this, viewModelFactory).get(CategoryViewModel::class.java)
-        categoryViewModel.getAllCategories(args.typeCategory)
-        categoryViewModel.allCategories.observe(viewLifecycleOwner, { categories ->
-            adapter.setCategory(categories, args.typeCategory, args.transactionId)
-        })
 
+        adapter = CategoryListAdapter(application)
+        recycleView.adapter = adapter
+        recycleView.layoutManager = LinearLayoutManager(application)
+
+        categoryViewModel.getAllCategories(args.typeCategory)
+        categoryViewModel.getLastCategoryId()
+        categoryViewModel.allCategories.observe(viewLifecycleOwner, { categories ->
+            adapter.setCategory(categories, args.typeCategory)
+        })
+        categoryViewModel.lastCategoryId.observe(viewLifecycleOwner) {
+            adapter.setLastCategoryId(it)
+        }
         setHasOptionsMenu(true)
         return binding.root
     }
@@ -54,7 +60,7 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
         inflater.inflate(R.menu.search_category, menu)
         // Get the SearchView and set the searchable configuration
         val searchItem = menu.findItem(R.id.menu_search)
-        val searchView = searchItem.actionView as SearchView
+        searchView = searchItem.actionView as SearchView
         searchView.setOnQueryTextListener(this)
         searchView.onActionViewExpanded()
         searchView.clearFocus()
@@ -80,5 +86,10 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onQueryTextChange(newText: String?): Boolean {
         adapter.setFilter(newText)
         return true
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        searchView.clearFocus()
     }
 }

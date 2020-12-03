@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -18,8 +19,9 @@ class CategoryListAdapter internal constructor(context: Context) :
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var categories = mutableListOf<CategoryList>()
     private var categoriesCopy = mutableListOf<CategoryList>()
-    private lateinit var transactionType: TransactionType
-    private var transactionId: Long = 0L
+    private var lastCategoryId: Int = 0
+    private var isNewCategory: Boolean = false
+    private lateinit var typeCategory: TransactionType
 
     inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         //        val categoryIcon: ImageView = itemView.findViewById(R.id.categoryIcon)
@@ -31,11 +33,18 @@ class CategoryListAdapter internal constructor(context: Context) :
         return CategoryViewHolder(itemView)
     }
 
-    internal fun setCategory(category: List<CategoryList>, transactionType: TransactionType, transactionId: Long) {
+    internal fun setLastCategoryId(lastId: Int) {
+        this.lastCategoryId = lastId
+        notifyDataSetChanged()
+    }
+
+    internal fun setCategory(
+        category: List<CategoryList>,
+        typeCategory: TransactionType
+    ) {
         this.categories.addAll(category)
         categoriesCopy.addAll(category)
-        this.transactionType = transactionType
-        this.transactionId = transactionId
+        this.typeCategory = typeCategory
         notifyDataSetChanged()
     }
 
@@ -46,6 +55,7 @@ class CategoryListAdapter internal constructor(context: Context) :
         } else {
             for (category in categoriesCopy) {
                 if (category.categoryName?.toLowerCase()?.contains(filterText.toLowerCase())!!) {
+                    isNewCategory = false
                     categories.add(category)
                 }
             }
@@ -53,7 +63,13 @@ class CategoryListAdapter internal constructor(context: Context) :
              * if the category does not exist, then display the add category option
              */
             if (categories.size == 0) {
-                categories.add(CategoryList(categoryName = "Add category : " + filterText))
+                isNewCategory = true
+                categories.add(
+                    CategoryList(
+                        categoryId = lastCategoryId,
+                        categoryName = filterText
+                    )
+                )
             }
         }
         notifyDataSetChanged()
@@ -62,14 +78,20 @@ class CategoryListAdapter internal constructor(context: Context) :
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val current = categories[position]
 //        holder.categoryIcon = R.drawable.ic_launcher_background
-        holder.categoryName.text = current.categoryName
+        holder.categoryName.text = let {
+            if (isNewCategory) {
+                "Add Category : " + current.categoryName
+            } else {
+                current.categoryName
+            }
+        }
+
         holder.itemView.setOnClickListener { view ->
             val action =
-                AddCategoryTranscFragmentDirections.actionAddCategoryTranscFragmentToAddTransactionFragment2(
-                    transactionType
-                )
+                AddCategoryTranscFragmentDirections.actionAddCategoryTranscFragmentToAddTransactionFragment2()
                     .setCategoryId(current.categoryId)
-                    .setTransactionId(this.transactionId)
+                    .setCategoryName(current.categoryName)
+                    .setTransactionType(typeCategory.name)
             view.findNavController().navigate(action)
         }
     }

@@ -53,8 +53,9 @@ class DetailTransactionFragment : Fragment() {
             Navigation.findNavController(requireView())
                 .navigate(
                     DetailTransactionFragmentDirections.actionDetailTransactionFragment2ToNavTransc(
-                        transactionViewModel.transactionType.value!!
+
                     ).setTransactionId(args.transactionId)
+                        .setTransactionType(transactionViewModel.transactionType.value?.name!!)
 
                 )
         }

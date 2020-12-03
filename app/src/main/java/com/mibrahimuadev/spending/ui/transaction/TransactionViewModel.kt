@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mibrahimuadev.spending.data.Result
+import com.mibrahimuadev.spending.data.entity.Category
 import com.mibrahimuadev.spending.data.entity.Transaction
-import com.mibrahimuadev.spending.data.model.TransactionList
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.data.repository.CategoryRepository
 import com.mibrahimuadev.spending.data.repository.TransactionRepository
@@ -19,15 +19,23 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class TransactionViewModel(application: Application) : AndroidViewModel(application) {
-    private val TAG = "AddTransactionViewModel"
+    private val TAG = "TransactionViewModel"
     private val transactionRepository: TransactionRepository
     private val categoryRepository: CategoryRepository
 
     init {
-        Log.i(TAG, "AddTransactionViewModel created")
+        Log.i(TAG, "TransactionViewModel created")
         transactionRepository = TransactionRepository(application)
         categoryRepository = CategoryRepository(application)
     }
+
+    /**
+     * Variable navigation Args
+     */
+    var transactionIdArgs: Long = 0L
+    var transactionTypeArgs: TransactionType? = null
+    var categoryIdArgs: Int? = null
+    var categoryNameArgs: String? = null
 
     private val _navigateToHome = MutableLiveData<Event<Boolean>>()
     val navigateToHome: LiveData<Event<Boolean>>
@@ -39,7 +47,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     val _transactionId = MutableLiveData<Long>()
     var transactionId: LiveData<Long> = _transactionId
 
-    private var isNewTransaction = MutableLiveData<Boolean>()
+    var isNewTransaction: Boolean = true
 
     val _transactionType = MutableLiveData<TransactionType>()
     val transactionType: LiveData<TransactionType> = _transactionType
@@ -57,7 +65,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     val calcNewFormula: LiveData<String> = _calcNewFormula
 
     val _categoryId = MutableLiveData<Int>()
-    val categoryId = _categoryId
+    val categoryId: LiveData<Int> = _categoryId
 
     val _categoryName = MutableLiveData<String>()
     val categoryName: LiveData<String> = _categoryName
@@ -71,49 +79,67 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
-    fun startTransaction(
-        transactionIdArgs: Long,
-        categoryIdArgs: Int,
-        transactionTypeArgs: TransactionType
-    ) {
+    fun startTransaction() {
         _dataLoading.value = true
         _transactionId.value = transactionIdArgs
-
-        if (transactionId.value == 0L) {
-            isNewTransaction.value = true
-            _transactionType.value = transactionTypeArgs
-            _categoryId.value = categoryIdArgs
-            categoryId.value?.let { getCategory(it) }
-            _dataLoading.value = false
-            return
+        if (statusTransaction()) {
+            onNewTransactionLoaded()
         } else {
-            isNewTransaction.value = false
-            viewModelScope.launch {
-                transactionRepository.getTransaction(transactionIdArgs).let { result ->
-                    if (result is Result.Success) {
-                        withContext(Dispatchers.Main) {
-                            onTransactionLoaded(result.data, categoryIdArgs)
-                            categoryId.value?.let { getCategory(it) }
-                        }
-                    } else {
-                        onDataNotAvailable()
+            onExistTransactionLoaded()
+        }
+        onSelectedCategory()
+    }
+
+    fun statusTransaction(): Boolean {
+        isNewTransaction = transactionId.value == 0L
+        return isNewTransaction
+    }
+
+    private fun onNewTransactionLoaded() {
+        _transactionType.value = transactionTypeArgs
+        _dataLoading.value = false
+    }
+
+    private fun onExistTransactionLoaded() {
+        viewModelScope.launch {
+            transactionRepository.getTransaction(transactionId.value!!).let { result ->
+                if (result is Result.Success) {
+                    withContext(Dispatchers.Main) {
+                        _categoryId.value = result.data.categoryId
+                        _categoryName.value = result.data.categoryName
+                        _transactionType.value = result.data.transactionType
+                        _transactionNominal.value = result.data.transactionNominal.toString()
+                        _dateTransaction.value = result.data.transactionDate
+                        _noteTransaction.value = result.data.transactionNote
+                        _dataLoading.value = false
                     }
+                } else {
+                    onDataNotAvailable()
                 }
             }
         }
     }
 
-    private fun onTransactionLoaded(transaction: TransactionList, categoryIdArgs: Int) {
-        if (categoryIdArgs == 0) {
-            _categoryId.value = transaction.categoryId
-            _transactionType.value = transaction.transactionType
-            _transactionNominal.value = transaction.transactionNominal.toString()
-            _dateTransaction.value = transaction.transactionDate
-            _noteTransaction.value = transaction.transactionNote
-        } else {
+    private fun onSelectedCategory() {
+        if (categoryIdArgs != 0) {
             _categoryId.value = categoryIdArgs
+            _categoryName.value = categoryNameArgs
         }
-        _dataLoading.value = false
+    }
+
+    fun isCategoryExist(categoryId: Int) {
+        viewModelScope.launch() {
+            if (categoryId != 0) {
+                categoryRepository.insertOrUpdateCategory(
+                    Category(
+                        categoryId = categoryId,
+                        categoryName = categoryNameArgs,
+                        iconId = 1,
+                        typeCategory = transactionTypeArgs!!
+                    )
+                )
+            }
+        }
     }
 
     private fun onDataNotAvailable() {
@@ -134,7 +160,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             if (result is Result.Success) {
                 _transactionType.value = result.data.transactionType
                 _transactionNominal.value = result.data.transactionNominal.toString()
-                getCategory(result.data.categoryId)
+                _categoryName.value = result.data.categoryName
                 _dateTransaction.value = result.data.transactionDate
                 _noteTransaction.value = result.data.transactionNote
             }
@@ -155,7 +181,6 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         } catch (e: Exception) {
             _errorMessage.value = "Invalid format numbers"
         }
-
     }
 
     fun saveTransaction() {
@@ -167,7 +192,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         val transactionCurrency = "IDR"
         Log.i(TAG, "call function saveTransaction")
         val currentTransactionId = transactionId.value
-        if (isNewTransaction.value == true || currentTransactionId == 0L) {
+        if (statusTransaction() || currentTransactionId == 0L) {
             val newTransaction = Transaction(
                 transactionNominal = transactionNominal,
                 transactionType = transactionType,
@@ -205,13 +230,9 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    fun getCategory(idKategori: Int) {
+    fun getCategory(categoryId: Int) {
         viewModelScope.launch {
-            categoryRepository.getCategory(idKategori).let { result ->
-                if (result is Result.Success) {
-                    _categoryName.value = result.data?.categoryName
-                }
-            }
+
         }
     }
 
