@@ -7,6 +7,7 @@ import com.mibrahimuadev.spending.data.Result
 import com.mibrahimuadev.spending.data.entity.Transaction
 import com.mibrahimuadev.spending.data.local.TransactionLocalDataSource
 import com.mibrahimuadev.spending.data.local.dao.TransactionDao
+import com.mibrahimuadev.spending.data.model.SummaryTransaction
 import com.mibrahimuadev.spending.data.model.TransactionList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
@@ -40,6 +41,16 @@ class TransactionRepository(
                 Result.Error(e)
             }
 
+        }
+    }
+
+    suspend fun getSummaryTransaction(startDate: String, endDate: String) : Result<SummaryTransaction> {
+        return withContext(Dispatchers.IO) {
+            try {
+                Result.Success(transactionDao.getSummaryTransaction(startDate, endDate))
+            }catch (e: Exception) {
+                Result.Error(e)
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.mibrahimuadev.spending.data.entity.Transaction
+import com.mibrahimuadev.spending.data.model.SummaryTransaction
 import com.mibrahimuadev.spending.data.model.TransactionList
 
 @Dao
@@ -45,6 +46,18 @@ interface TransactionDao {
                 WHERE t.transactionId = :transactionId"""
     )
     suspend fun getTransaction(transactionId: Long): TransactionList
+
+    @Query(
+        """SELECT (SELECT SUM(transactionNominal) FROM transaction_spend WHERE transactionType = 'EXPENSE') AS expenseNominal, 
+                (SELECT SUM(transactionNominal) FROM transaction_spend WHERE transactionType = 'INCOME') AS incomeNominal,
+                ((SELECT SUM(transactionNominal) FROM transaction_spend WHERE transactionType = 'INCOME') - 
+                (SELECT SUM(transactionNominal) FROM transaction_spend WHERE transactionType = 'EXPENSE')) AS balanceNominal,
+                transactionDate as rangeTransaction
+                FROM transaction_spend
+                WHERE datetime(transactionDate/1000,'unixepoch', 'localtime') BETWEEN :startDate AND :endDate
+                LIMIT 1"""
+    )
+    suspend fun getSummaryTransaction(startDate: String, endDate: String): SummaryTransaction
 
     @Insert
     suspend fun insertTransaction(transaction: Transaction)
