@@ -30,7 +30,6 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentAddCategoryTranscBinding.inflate(layoutInflater)
         val application = requireNotNull(this.activity).application
         val recycleView = binding.recycleviewCategoryTransc

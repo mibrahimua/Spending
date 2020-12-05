@@ -1,10 +1,10 @@
 package com.mibrahimuadev.spending.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
@@ -37,11 +37,8 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentHomeBinding.inflate(layoutInflater)
         val application = requireNotNull(this.activity).application
-//        Log.i("HomeFragment", "Called ViewModelProvider.get")
-        Log.i("HomeFragment", "isFabOpen are $isFabOpen")
 
         val recycleView = binding.recycleviewTransaksi
         val adapter = TransactionListAdapter(application)

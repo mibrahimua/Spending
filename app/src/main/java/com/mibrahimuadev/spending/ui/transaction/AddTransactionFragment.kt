@@ -1,10 +1,10 @@
 package com.mibrahimuadev.spending.ui.transaction
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -12,7 +12,6 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -27,7 +26,6 @@ import com.mibrahimuadev.spending.utils.CurrentDate
 import com.mibrahimuadev.spending.utils.EventObserver
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
@@ -53,7 +51,7 @@ class AddTransactionFragment : Fragment(), Calculator {
         /**
          * Set title fragment depend on transaction type (Expense, Income)
          */
-        (activity as AppCompatActivity).supportActionBar?.title = args.transactionType
+//        (activity as AppCompatActivity).supportActionBar?.title = args.transactionType
 
         val application = requireNotNull(this.activity).application
         _binding = FragmentAddTransactionBinding.inflate(layoutInflater)
@@ -77,11 +75,40 @@ class AddTransactionFragment : Fragment(), Calculator {
                 transactionViewModel.isCategoryExist(args.categoryId)
             }
             job.join()
-
             Log.i(TAG, "Coroutine ends " + job.isActive)
         }
-        transactionViewModel.isCategoryExist(args.categoryId)
         transactionViewModel.startTransaction()
+
+        /**
+         *  Transaction Type View Binding Section
+         */
+        transactionViewModel.transactionType.observe(viewLifecycleOwner) {
+
+            if(it == TransactionType.EXPENSE) {
+                binding.radioExpense.isChecked = true
+            } else if (it == TransactionType.INCOME) {
+                binding.radioIncome.isChecked = true
+            }
+        }
+        binding.radioGroupTransc.setOnCheckedChangeListener { group, checkedId ->
+            var transactionType: TransactionType? = null
+            when (checkedId) {
+                R.id.radioExpense -> {
+                    binding.radioExpense.setTextColor(Color.WHITE)
+                    binding.radioIncome.setTextColor(Color.BLUE)
+                    transactionType = TransactionType.EXPENSE
+                }
+                R.id.radioIncome -> {
+                    binding.radioIncome.setTextColor(Color.WHITE)
+                    binding.radioExpense.setTextColor(Color.BLUE)
+                    transactionType = TransactionType.INCOME
+                }
+            }
+            if(transactionViewModel.transactionType.value != transactionType) {
+                transactionViewModel.resetCategory()
+            }
+            transactionViewModel._transactionType.value = transactionType
+        }
 
         /**
          * Calculator View Binding Section
@@ -134,12 +161,13 @@ class AddTransactionFragment : Fragment(), Calculator {
          * Category View Binding Section
          */
         binding.btnCategory.setOnClickListener {
-            val imm = getActivity()?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm =
+                getActivity()?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view?.getWindowToken(), 0)
             Navigation.findNavController(requireView())
                 .navigate(
                     AddTransactionFragmentDirections.actionAddTransactionFragmentToAddCategoryTranscFragment(
-                        TransactionType.valueOf(args.transactionType!!)
+                        transactionViewModel.transactionType.value!!
                     )
                 )
         }
@@ -182,17 +210,8 @@ class AddTransactionFragment : Fragment(), Calculator {
         return binding.root
     }
 
-    fun checkCategory(categoryId: Int) {
-        lifecycleScope.launch(Dispatchers.Main) {
-            val value = lifecycleScope.async(Dispatchers.Default) {
-                transactionViewModel.isCategoryExist(categoryId)
-            }
-            value.await()
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.save_menu, menu)
+        inflater.inflate(R.menu.add_transc_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

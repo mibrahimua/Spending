@@ -34,7 +34,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
      */
     var transactionIdArgs: Long = 0L
     var transactionTypeArgs: TransactionType? = null
-    var categoryIdArgs: Int? = null
+    var categoryIdArgs: Int = 0
     var categoryNameArgs: String? = null
 
     private val _navigateToHome = MutableLiveData<Event<Boolean>>()
@@ -97,6 +97,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
 
     private fun onNewTransactionLoaded() {
         _transactionType.value = transactionTypeArgs
+        _categoryName.value = null
         _dataLoading.value = false
     }
 
@@ -127,6 +128,11 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    fun resetCategory() {
+        _categoryId.value = null
+        _categoryName.value = null
+    }
+
     fun isCategoryExist(categoryId: Int) {
         viewModelScope.launch() {
             if (categoryId != 0) {
@@ -135,7 +141,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
                         categoryId = categoryId,
                         categoryName = categoryNameArgs,
                         iconId = 1,
-                        typeCategory = transactionTypeArgs!!
+                        typeCategory = transactionType.value!!
                     )
                 )
             }
@@ -169,7 +175,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
 
     fun validateTransaction() {
         _dataLoading.value = true
-        val categoryId = categoryId.value!!
+        val categoryId = categoryId.value ?: 0
         if (categoryId == 0) {
             _errorMessage.value = "Category cannot empty"
             return
@@ -227,12 +233,6 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             transactionRepository.updateTransaction(transaction)
             _dataLoading.value = false
-        }
-    }
-
-    fun getCategory(categoryId: Int) {
-        viewModelScope.launch {
-
         }
     }
 
