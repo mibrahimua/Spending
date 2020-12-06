@@ -128,7 +128,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
                             _categoryId.value = result.data.categoryId
                             _categoryName.value = result.data.categoryName
                             _transactionType.value = result.data.transactionType
-                            _transactionNominal.value = result.data.transactionNominal.toString()
+                            _transactionNominal.value = result.data.transactionNominalFormat
                             _dateTransaction.value = result.data.transactionDate
                             _noteTransaction.value = result.data.transactionNote
                             _dataLoading.value = false
@@ -187,7 +187,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             val result = transactionRepository.getTransaction(transactionId)
             if (result is Result.Success) {
                 _transactionType.value = result.data.transactionType
-                _transactionNominal.value = result.data.transactionNominal.toString()
+                _transactionNominal.value = result.data.transactionNominalFormat
                 _categoryName.value = result.data.categoryName
                 _dateTransaction.value = result.data.transactionDate
                 _noteTransaction.value = result.data.transactionNote
@@ -228,7 +228,6 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             currencyId = transactionCurrency,
             transactionNote = noteTransaction
         )
-//        dataTransaction.transactionId = 0L
         viewModelScope.launch {
             transactionRepository.insertOrUpdateTransaction(dataTransaction)
         }

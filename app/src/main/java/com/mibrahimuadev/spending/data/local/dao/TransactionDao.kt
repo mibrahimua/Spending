@@ -11,7 +11,7 @@ interface TransactionDao {
 
     @Query(
         """SELECT t.transactionId, t.transactionType, t.transactionNominal, t.transactionDate, k.categoryName, c.iconLocation, m.currencySymbol, t.transactionNote, 
-                k.categoryId, m.currencyId
+                k.categoryId, m.currencyId,CAST(transactionNominal AS text) AS transactionNominalFormat
                 FROM transaction_spend t
                 LEFT JOIN category k ON t.categoryId = k.categoryId
                 LEFT JOIN category_icon c ON c.iconId = k.iconId
@@ -23,7 +23,7 @@ interface TransactionDao {
 
     @Query(
         """SELECT t.transactionId, t.transactionType, t.transactionNominal, t.transactionDate, k.categoryName, c.iconLocation, m.currencySymbol, t.transactionNote, 
-                k.categoryId, m.currencyId
+                k.categoryId, m.currencyId,CAST(transactionNominal AS text) AS transactionNominalFormat
                 FROM transaction_spend t
                 LEFT JOIN category k ON t.categoryId = k.categoryId
                 LEFT JOIN category_icon c ON c.iconId = k.iconId
@@ -35,7 +35,7 @@ interface TransactionDao {
 
     @Query(
         """SELECT t.transactionId, t.transactionType, t.transactionNominal, t.transactionDate, k.categoryName, c.iconLocation, m.currencySymbol, t.transactionNote, 
-                k.categoryId, m.currencyId
+                k.categoryId, m.currencyId, CAST(transactionNominal AS text) AS transactionNominalFormat
                 FROM transaction_spend t
                 LEFT JOIN category k ON t.categoryId = k.categoryId
                 LEFT JOIN category_icon c ON c.iconId = k.iconId
@@ -45,10 +45,10 @@ interface TransactionDao {
     suspend fun getTransaction(transactionId: Long): TransactionList
 
     @Query(
-        """SELECT (SELECT SUM(transactionNominal) FROM transaction_spend WHERE transactionType = 'EXPENSE') AS expenseNominal, 
-                (SELECT SUM(transactionNominal) FROM transaction_spend WHERE transactionType = 'INCOME') AS incomeNominal,
-                ((SELECT SUM(transactionNominal) FROM transaction_spend WHERE transactionType = 'INCOME') - 
-                (SELECT SUM(transactionNominal) FROM transaction_spend WHERE transactionType = 'EXPENSE')) AS balanceNominal,
+        """SELECT (SELECT CAST(SUM(transactionNominal) AS text) FROM transaction_spend WHERE transactionType = 'EXPENSE') AS expenseNominal, 
+                (SELECT CAST(SUM(transactionNominal) AS text) FROM transaction_spend WHERE transactionType = 'INCOME') AS incomeNominal,
+                CAST(((SELECT SUM(transactionNominal) FROM transaction_spend WHERE transactionType = 'INCOME') - 
+                (SELECT SUM(transactionNominal) FROM transaction_spend WHERE transactionType = 'EXPENSE')) AS TEXT) AS balanceNominal,
                 transactionDate as rangeTransaction
                 FROM transaction_spend
                 WHERE datetime(transactionDate/1000,'unixepoch', 'localtime') BETWEEN :startDate AND :endDate

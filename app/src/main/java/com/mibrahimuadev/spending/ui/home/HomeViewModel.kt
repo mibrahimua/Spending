@@ -22,14 +22,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         Log.i("HomeViewModel", "HomeViewModel created")
     }
 
-    val _expenseNominal = MutableLiveData<Double>()
-    val expenseNominal: LiveData<Double> = _expenseNominal
+    val _expenseNominal = MutableLiveData<String>()
+    val expenseNominal: LiveData<String> = _expenseNominal
 
-    val _incomeNominal = MutableLiveData<Double>()
-    val incomeNominal: LiveData<Double> = _incomeNominal
+    val _incomeNominal = MutableLiveData<String>()
+    val incomeNominal: LiveData<String> = _incomeNominal
 
-    val _balanceNominal = MutableLiveData<Double>()
-    val balanceNominal: LiveData<Double> = _balanceNominal
+    val _balanceNominal = MutableLiveData<String>()
+    val balanceNominal: LiveData<String> = _balanceNominal
 
     fun getSummaryTransaction(startDate: String, endDate: String) {
         viewModelScope.launch {

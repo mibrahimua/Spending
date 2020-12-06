@@ -58,13 +58,13 @@ class HomeFragment : Fragment() {
 
         })
         homeViewModel.expenseNominal.observe(viewLifecycleOwner) {
-            binding.tvExpense.text = Formatter.addThousandsDelimiter(it.toString())
+            binding.tvExpense.text = Formatter.addThousandsDelimiter(it)
         }
         homeViewModel.incomeNominal.observe(viewLifecycleOwner) {
-            binding.tvIncome.text = Formatter.addThousandsDelimiter(it.toString())
+            binding.tvIncome.text = Formatter.addThousandsDelimiter(it)
         }
         homeViewModel.balanceNominal.observe(viewLifecycleOwner) {
-            binding.tvBalancce.text = Formatter.addThousandsDelimiter(it.toString())
+            binding.tvBalancce.text = Formatter.addThousandsDelimiter(it)
         }
 
         fabTrans = binding.floatingActionButtonTrans

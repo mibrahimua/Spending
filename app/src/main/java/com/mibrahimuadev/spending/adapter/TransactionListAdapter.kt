@@ -47,7 +47,7 @@ class TransactionListAdapter internal constructor(context: Context) :
         holder.tglTransaksi.text = CurrentDate.getDateString(current.transactionDate)
         holder.kategoriTransaksi.text = current.categoryName
         holder.nominalTransaksi.text =
-            current.currencySymbol + " " + Formatter.addThousandsDelimiter(current.transactionNominal.toString())
+            current.currencySymbol + " " + Formatter.addThousandsDelimiter(current.transactionNominalFormat!!)
 
         holder.itemView.setOnClickListener { view ->
             val action =

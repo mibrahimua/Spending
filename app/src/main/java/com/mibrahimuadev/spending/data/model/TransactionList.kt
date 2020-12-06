@@ -5,6 +5,7 @@ import java.util.*
 data class TransactionList(
     override val transactionId: Long,
     override val transactionDate: Date,
+    val transactionNominalFormat: String?,
     override val transactionNominal: Double?,
     override val transactionType: TransactionType,
     override val transactionNote: String? = "",
