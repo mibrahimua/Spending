@@ -54,6 +54,12 @@ class TransactionRepository(
         }
     }
 
+    suspend fun insertOrUpdateTransaction(transaction: Transaction) {
+        return withContext(Dispatchers.IO + NonCancellable) {
+            transactionDao.insertOrUpdate(transaction)
+        }
+    }
+
     suspend fun insertTransaction(transaction: Transaction) {
         return withContext(Dispatchers.IO + NonCancellable) {
             transactionDao.insertTransaction(transaction)

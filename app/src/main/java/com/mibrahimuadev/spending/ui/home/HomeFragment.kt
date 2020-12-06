@@ -114,6 +114,7 @@ class HomeFragment : Fragment() {
                 .navigate(
                     HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment()
                         .setTransactionType(TransactionType.EXPENSE.name)
+                        .setActionType("INSERT")
                 )
         }
 
@@ -123,6 +124,7 @@ class HomeFragment : Fragment() {
                 .navigate(
                     HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment()
                         .setTransactionType(TransactionType.INCOME.name)
+                        .setActionType("INSERT")
                 )
         }
         return binding.root

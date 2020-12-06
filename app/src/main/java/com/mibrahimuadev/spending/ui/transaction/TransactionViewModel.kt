@@ -32,17 +32,22 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     /**
      * Variable navigation Args
      */
+    var actionTypeArgs: String? = null
     var transactionIdArgs: Long = 0L
     var transactionTypeArgs: TransactionType? = null
     var categoryIdArgs: Int = 0
     var categoryNameArgs: String? = null
 
+    private var isFirstLoaded: Boolean = true
     private val _navigateToHome = MutableLiveData<Event<Boolean>>()
     val navigateToHome: LiveData<Event<Boolean>>
         get() = _navigateToHome
 
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
+
+    val _actionType = MutableLiveData<String>()
+    val actionType: LiveData<String> = _actionType
 
     val _transactionId = MutableLiveData<Long>()
     var transactionId: LiveData<Long> = _transactionId
@@ -81,8 +86,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
 
     fun startTransaction() {
         _dataLoading.value = true
-        _transactionId.value = transactionIdArgs
-        if (statusTransaction()) {
+        if (actionType()) {
             onNewTransactionLoaded()
         } else {
             onExistTransactionLoaded()
@@ -90,8 +94,21 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         onSelectedCategory()
     }
 
-    fun statusTransaction(): Boolean {
-        isNewTransaction = transactionId.value == 0L
+    fun onFirstLoaded() {
+        if (isFirstLoaded) {
+            isFirstLoaded = false
+            _actionType.value = actionTypeArgs
+            _transactionId.value = transactionIdArgs
+        }
+    }
+
+    fun actionType(): Boolean {
+        if (actionTypeArgs == "INSERT") {
+            isNewTransaction = true
+        }
+        if (actionTypeArgs == "UPDATE") {
+            isNewTransaction = false
+        }
         return isNewTransaction
     }
 
@@ -102,22 +119,27 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     private fun onExistTransactionLoaded() {
-        viewModelScope.launch {
-            transactionRepository.getTransaction(transactionId.value!!).let { result ->
-                if (result is Result.Success) {
-                    withContext(Dispatchers.Main) {
-                        _categoryId.value = result.data.categoryId
-                        _categoryName.value = result.data.categoryName
-                        _transactionType.value = result.data.transactionType
-                        _transactionNominal.value = result.data.transactionNominal.toString()
-                        _dateTransaction.value = result.data.transactionDate
-                        _noteTransaction.value = result.data.transactionNote
-                        _dataLoading.value = false
+        if (isFirstLoaded) {
+            onFirstLoaded()
+            viewModelScope.launch {
+                transactionRepository.getTransaction(transactionId.value!!).let { result ->
+                    if (result is Result.Success) {
+                        withContext(Dispatchers.Main) {
+                            _categoryId.value = result.data.categoryId
+                            _categoryName.value = result.data.categoryName
+                            _transactionType.value = result.data.transactionType
+                            _transactionNominal.value = result.data.transactionNominal.toString()
+                            _dateTransaction.value = result.data.transactionDate
+                            _noteTransaction.value = result.data.transactionNote
+                            _dataLoading.value = false
+                        }
+                    } else {
+                        onDataNotAvailable()
                     }
-                } else {
-                    onDataNotAvailable()
                 }
             }
+        } else {
+            onNewTransactionLoaded()
         }
     }
 
@@ -196,30 +218,44 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         val dateTransaction = dateTransaction.value!!
         val noteTransaction = noteTransaction.value
         val transactionCurrency = "IDR"
-        Log.i(TAG, "call function saveTransaction")
         val currentTransactionId = transactionId.value
-        if (statusTransaction() || currentTransactionId == 0L) {
-            val newTransaction = Transaction(
-                transactionNominal = transactionNominal,
-                transactionType = transactionType,
-                transactionDate = dateTransaction,
-                categoryId = transactionCategory,
-                currencyId = transactionCurrency,
-                transactionNote = noteTransaction
-            )
-            createTransaction(newTransaction)
-        } else {
-            val updateTransaction = Transaction(
-                transactionId = currentTransactionId!!,
-                transactionNominal = transactionNominal,
-                transactionType = transactionType,
-                transactionDate = dateTransaction,
-                categoryId = transactionCategory,
-                currencyId = transactionCurrency,
-                transactionNote = noteTransaction
-            )
-            updateTransaction(updateTransaction)
+        val dataTransaction = Transaction(
+            transactionId = currentTransactionId ?: 0L,
+            transactionNominal = transactionNominal,
+            transactionType = transactionType,
+            transactionDate = dateTransaction,
+            categoryId = transactionCategory,
+            currencyId = transactionCurrency,
+            transactionNote = noteTransaction
+        )
+//        dataTransaction.transactionId = 0L
+        viewModelScope.launch {
+            transactionRepository.insertOrUpdateTransaction(dataTransaction)
         }
+
+
+//        if (statusTransaction() || currentTransactionId == 0L) {
+//            val newTransaction = Transaction(
+//                transactionNominal = transactionNominal,
+//                transactionType = transactionType,
+//                transactionDate = dateTransaction,
+//                categoryId = transactionCategory,
+//                currencyId = transactionCurrency,
+//                transactionNote = noteTransaction
+//            )
+//            createTransaction(newTransaction)
+//        } else {
+//            val updateTransaction = Transaction(
+//                transactionId = currentTransactionId!!,
+//                transactionNominal = transactionNominal,
+//                transactionType = transactionType,
+//                transactionDate = dateTransaction,
+//                categoryId = transactionCategory,
+//                currencyId = transactionCurrency,
+//                transactionNote = noteTransaction
+//            )
+//            updateTransaction(updateTransaction)
+//        }
     }
 
     private fun createTransaction(transaction: Transaction) {

@@ -65,6 +65,7 @@ class AddTransactionFragment : Fragment(), Calculator {
         /**
          * Init Transaction
          */
+        transactionViewModel.actionTypeArgs = args.actionType
         transactionViewModel.transactionTypeArgs = TransactionType.valueOf(args.transactionType!!)
         transactionViewModel.transactionIdArgs = args.transactionId
         transactionViewModel.categoryIdArgs = args.categoryId

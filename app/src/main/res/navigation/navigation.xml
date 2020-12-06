@@ -25,6 +25,10 @@
         android:id="@+id/nav_transc"
         app:startDestination="@id/addTransactionFragment">
         <argument
+            android:name="actionType"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
             android:name="transactionType"
             android:defaultValue=""
             app:argType="string" />
@@ -49,6 +53,10 @@
                 app:destination="@id/homeFragment"
                 app:popUpTo="@id/homeFragment"
                 app:popUpToInclusive="true" />
+            <argument
+                android:name="actionType"
+                android:defaultValue=""
+                app:argType="string" />
             <argument
                 android:name="transactionType"
                 android:defaultValue="@null"

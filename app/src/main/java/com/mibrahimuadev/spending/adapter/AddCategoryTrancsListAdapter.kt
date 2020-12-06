@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -13,8 +12,8 @@ import com.mibrahimuadev.spending.data.model.CategoryList
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.ui.transaction.AddCategoryTranscFragmentDirections
 
-class CategoryListAdapter internal constructor(context: Context) :
-    RecyclerView.Adapter<CategoryListAdapter.CategoryViewHolder>() {
+class AddCategoryTrancsListAdapter internal constructor(context: Context) :
+    RecyclerView.Adapter<AddCategoryTrancsListAdapter.CategoryViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var categories = mutableListOf<CategoryList>()

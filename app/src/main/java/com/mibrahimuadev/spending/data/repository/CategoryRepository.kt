@@ -19,9 +19,15 @@ class CategoryRepository(application: Application) {
         categoryDao = database.categoryDao()
     }
 
-    suspend fun getAllCategories(typeCategory: TransactionType): Result<List<CategoryList>> {
+    suspend fun getAllCategories(): Result<List<CategoryList>> {
         return withContext(Dispatchers.IO) {
-            Result.Success(categoryDao.getAllCategories(typeCategory))
+            Result.Success(categoryDao.getAllCategories())
+        }
+    }
+
+    suspend fun getAllCategoriesByType(typeCategory: TransactionType): Result<List<CategoryList>> {
+        return withContext(Dispatchers.IO) {
+            Result.Success(categoryDao.getAllCategoriesByType(typeCategory))
         }
     }
 

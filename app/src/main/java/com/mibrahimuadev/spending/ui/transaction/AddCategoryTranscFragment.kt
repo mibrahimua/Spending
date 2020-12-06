@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mibrahimuadev.spending.R
-import com.mibrahimuadev.spending.adapter.CategoryListAdapter
+import com.mibrahimuadev.spending.adapter.AddCategoryTrancsListAdapter
 import com.mibrahimuadev.spending.databinding.FragmentAddCategoryTranscBinding
 import com.mibrahimuadev.spending.ui.categories.CategoryViewModel
 import com.mibrahimuadev.spending.ui.categories.CategoryViewModelFactory
@@ -19,7 +19,7 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private var _binding: FragmentAddCategoryTranscBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: CategoryListAdapter
+    private lateinit var adapter: AddCategoryTrancsListAdapter
 
     //    private val TransactionViewModel: TransactionViewModel by navGraphViewModels(R.id.nav_transc) {
 //        defaultViewModelProviderFactory
@@ -39,11 +39,11 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
         val categoryViewModel =
             ViewModelProvider(this, viewModelFactory).get(CategoryViewModel::class.java)
 
-        adapter = CategoryListAdapter(application)
+        adapter = AddCategoryTrancsListAdapter(application)
         recycleView.adapter = adapter
         recycleView.layoutManager = LinearLayoutManager(application)
 
-        categoryViewModel.getAllCategories(args.typeCategory)
+        categoryViewModel.getAllCategoriesByType(args.typeCategory)
         categoryViewModel.getLastCategoryId()
         categoryViewModel.allCategories.observe(viewLifecycleOwner, { categories ->
             adapter.setCategory(categories, args.typeCategory)

@@ -20,7 +20,7 @@ class CategoryLocalDataSource internal constructor(
 ) : CategoryDataSource {
 
     override fun observeAllCategories(typeCategory: TransactionType): LiveData<Result<List<CategoryList>>> {
-        return categoryDao.observeAllCategories(typeCategory).map {
+        return categoryDao.observeAllCategoriesByType(typeCategory).map {
             Success(it)
         }
     }
@@ -28,7 +28,7 @@ class CategoryLocalDataSource internal constructor(
     override suspend fun getAllCategories(typeCategory: TransactionType): Result<List<CategoryList>> =
         withContext(ioDispatcher) {
             return@withContext try {
-                Success(categoryDao.getAllCategories(typeCategory))
+                Success(categoryDao.getAllCategoriesByType(typeCategory))
             } catch (e: Exception) {
                 Error(e)
             }

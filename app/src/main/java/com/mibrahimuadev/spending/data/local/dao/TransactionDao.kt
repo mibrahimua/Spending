@@ -1,10 +1,7 @@
 package com.mibrahimuadev.spending.data.local.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.mibrahimuadev.spending.data.entity.Transaction
 import com.mibrahimuadev.spending.data.model.SummaryTransaction
 import com.mibrahimuadev.spending.data.model.TransactionList
@@ -59,8 +56,14 @@ interface TransactionDao {
     )
     suspend fun getSummaryTransaction(startDate: String, endDate: String): SummaryTransaction
 
-    @Insert
-    suspend fun insertTransaction(transaction: Transaction)
+    @androidx.room.Transaction
+    suspend fun insertOrUpdate(transaction: Transaction) {
+        val id = insertTransaction(transaction)
+        if (id == -1L) updateTransaction(transaction)
+    }
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertTransaction(transaction: Transaction): Long
 
     @Update
     suspend fun updateTransaction(transaction: Transaction)

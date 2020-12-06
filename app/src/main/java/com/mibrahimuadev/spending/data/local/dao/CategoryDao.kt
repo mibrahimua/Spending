@@ -15,7 +15,7 @@ interface CategoryDao {
             WHERE k.typeCategory = :typeCategory
             GROUP BY k.categoryId"""
     )
-    fun observeAllCategories(typeCategory: TransactionType): LiveData<List<CategoryList>>
+    fun observeAllCategoriesByType(typeCategory: TransactionType): LiveData<List<CategoryList>>
 
     @Query(
         """SELECT k.categoryId, k.categoryName, c.iconName, c.iconLocation, k.typeCategory 
@@ -24,7 +24,15 @@ interface CategoryDao {
             WHERE k.typeCategory = :typeCategory
             GROUP BY k.categoryId"""
     )
-    fun getAllCategories(typeCategory: TransactionType): List<CategoryList>
+    fun getAllCategoriesByType(typeCategory: TransactionType): List<CategoryList>
+
+    @Query(
+        """SELECT k.categoryId, k.categoryName, c.iconName, c.iconLocation, k.typeCategory 
+            FROM category k 
+            LEFT JOIN category_icon c ON k.iconId = c.iconId 
+            GROUP BY k.categoryId"""
+    )
+    fun getAllCategories(): List<CategoryList>
 
     @Query(
         """SELECT k.categoryId, k.categoryName, c.iconName, c.iconLocation 

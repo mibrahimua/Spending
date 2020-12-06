@@ -26,6 +26,16 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
     val _lastCategoryId = MutableLiveData<Int>()
     val lastCategoryId: LiveData<Int> = _lastCategoryId
 
+    fun getAllCategories() {
+        viewModelScope.launch {
+            categoryRepository.getAllCategories().let {
+                if (it is Result.Success) {
+                    _allCategories.value = it.data
+                }
+            }
+        }
+    }
+
     fun getLastCategoryId() {
         viewModelScope.launch {
             categoryRepository.getLastCategoryId().let {
@@ -36,15 +46,14 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun getAllCategories(typeCategory: TransactionType) {
+    fun getAllCategoriesByType(typeCategory: TransactionType) {
         viewModelScope.launch() {
-            val result = categoryRepository.getAllCategories(typeCategory)
+            val result = categoryRepository.getAllCategoriesByType(typeCategory)
             when (result) {
                 is Result.Success -> _allCategories.value = result.data
             }
         }
     }
-
 
     fun getCategory(idKategori: Int) {
         viewModelScope.launch {
