@@ -121,9 +121,9 @@ class CalculatorImpl(calculator: Calculator, private val context: Context) {
     }
 
     fun handleEquals() {
-        if (lastKey == EQUALS) {
-            calculateResult()
-        }
+//        if (lastKey == EQUALS) {
+//            calculateResult()
+//        }
 
         if (lastKey != DIGIT && lastKey != DECIMAL) {
 //            context.toast(R.string.invalid_format_used)
