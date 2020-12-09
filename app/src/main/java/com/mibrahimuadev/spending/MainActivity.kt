@@ -2,6 +2,10 @@ package com.mibrahimuadev.spending
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -26,6 +30,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         Log.i("MainActivity", "MainActivity Created")
+        setSupportActionBar(findViewById(R.id.mainToolbar))
+        supportActionBar?.setDisplayShowCustomEnabled(false)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHostFragment

@@ -3,6 +3,7 @@ package com.mibrahimuadev.spending.ui.transaction
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -20,12 +21,9 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
     private var _binding: FragmentAddCategoryTranscBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: AddCategoryTrancsListAdapter
-
-    //    private val TransactionViewModel: TransactionViewModel by navGraphViewModels(R.id.nav_transc) {
-//        defaultViewModelProviderFactory
-//    }
     private lateinit var searchView: SearchView
     private val args: AddCategoryTranscFragmentArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

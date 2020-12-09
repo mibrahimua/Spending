@@ -7,13 +7,32 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/myNavHostFragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+    <!-- Your normal content view -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/navigation" />
+        android:orientation="vertical">
+
+        <!-- We use a Toolbar so that our drawer can be displayed
+             in front of the action bar -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/mainToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:minHeight="?attr/actionBarSize">
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <!-- The rest of your content view -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/myNavHostFragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/navigation" />
+    </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigationView"

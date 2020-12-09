@@ -48,4 +48,13 @@ object CurrentDate {
             .parse("${day} ${month} ${year}")
         return initialDate
     }
+
+    fun getEndOfDay(date: String): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM")
+        val convertedDate = dateFormat.parse(date)
+        val c = Calendar.getInstance()
+        c.time = convertedDate
+        c[Calendar.DAY_OF_MONTH] = c.getActualMaximum(Calendar.DAY_OF_MONTH)
+        return c[Calendar.DAY_OF_MONTH].toString()
+    }
 }

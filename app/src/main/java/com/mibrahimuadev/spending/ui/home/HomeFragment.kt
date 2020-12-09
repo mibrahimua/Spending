@@ -1,21 +1,23 @@
 package com.mibrahimuadev.spending.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import androidx.core.view.isVisible
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.adapter.TransactionListAdapter
-import com.mibrahimuadev.spending.data.Result
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.databinding.FragmentHomeBinding
 import com.mibrahimuadev.spending.utils.Formatter
@@ -24,7 +26,10 @@ import com.mibrahimuadev.spending.utils.Formatter
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
+    private val homeViewModel: HomeViewModel by navGraphViewModels(R.id.navigation) {
+        HomeViewModelFactory(requireActivity().application)
+    }
+    private lateinit var toolbarTitle: TextView
     private var isFabOpen = false
     private lateinit var fabTrans: FloatingActionButton
     private lateinit var fabExpense: FloatingActionButton
@@ -35,27 +40,37 @@ class HomeFragment : Fragment() {
     private lateinit var rotate_forward: Animation
     private lateinit var rotate_backward: Animation
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater)
         val application = requireNotNull(this.activity).application
+        Log.i("HomeFragment", "HomeFragment Createdd")
 
         val recycleView = binding.recycleviewTransaksi
         val adapter = TransactionListAdapter(application)
         recycleView.adapter = adapter
         recycleView.layoutManager = LinearLayoutManager(application)
+        val actionbar = (activity as AppCompatActivity).supportActionBar
+        actionbar?.title = ""
+        actionbar?.setDisplayShowCustomEnabled(true)
+        actionbar?.setCustomView(R.layout.custom_toolbar)
+        toolbarTitle = actionbar?.customView?.findViewById(R.id.toolbarTitle)!!
 
-        val viewModelFactory = HomeViewModelFactory(application)
+        toolbarTitle.setOnClickListener {
+            CustomDatePickerDialog().show(parentFragmentManager, "MyCustomDialog")
+        }
 
-        val homeViewModel = ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java)
-        homeViewModel.getSummaryTransaction("2020-09-20 00:00:00", "2020-10-20 23:59:59")
-        homeViewModel.allTransaction.observe(viewLifecycleOwner, { transaksi ->
-            if (transaksi is Result.Success) {
-                adapter.setTransaksi(transaksi.data)
-            }
+        homeViewModel.onFirstLoaded()
+        homeViewModel.selectedMonth.observe(viewLifecycleOwner) { month ->
+            homeViewModel.displayData()
+            toolbarTitle.text = month + " " + homeViewModel.selectedYear.value
+        }
 
+        homeViewModel.allTransactions.observe(viewLifecycleOwner, { transaksi ->
+            adapter.setTransaksi(transaksi)
         })
         homeViewModel.expenseNominal.observe(viewLifecycleOwner) {
             binding.tvExpense.text = Formatter.addThousandsDelimiter(it)
@@ -81,7 +96,7 @@ class HomeFragment : Fragment() {
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy > 0 || dy < 0 && getStatusFab()) {
                     fabTrans.hide()
-                    if(isFabOpen) {
+                    if (isFabOpen) {
                         fabExpense.startAnimation(fab_close)
                         fabIncome.startAnimation(fab_close)
                         fabExpense.isClickable = false
@@ -93,7 +108,7 @@ class HomeFragment : Fragment() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     fabTrans.show()
-                    if(isFabOpen) {
+                    if (isFabOpen) {
                         fabExpense.startAnimation(fab_open)
                         fabIncome.startAnimation(fab_open)
                         fabExpense.isClickable = true
@@ -154,6 +169,8 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.i("HomeFragment", "HomeFragment destroyed")
         _binding = null
+        toolbarTitle.text = ""
     }
 }

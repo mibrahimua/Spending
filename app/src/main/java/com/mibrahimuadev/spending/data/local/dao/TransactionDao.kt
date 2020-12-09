@@ -16,10 +16,12 @@ interface TransactionDao {
                 LEFT JOIN category k ON t.categoryId = k.categoryId
                 LEFT JOIN category_icon c ON c.iconId = k.iconId
                 LEFT JOIN currency m ON m.currencyId = t.currencyId
+                WHERE datetime(t.transactionDate/1000,'unixepoch', 'localtime') 
+                BETWEEN :startDate AND :endDate
 				GROUP BY t.transactionId
                 ORDER BY transactionDate DESC"""
     )
-    fun observeAllTransactions(): LiveData<List<TransactionList>>
+    fun observeAllTransactions(startDate: String, endDate: String): List<TransactionList>
 
     @Query(
         """SELECT t.transactionId, t.transactionType, t.transactionNominal, t.transactionDate, k.categoryName, c.iconLocation, m.currencySymbol, t.transactionNote, 
@@ -45,14 +47,15 @@ interface TransactionDao {
     suspend fun getTransaction(transactionId: Long): TransactionList
 
     @Query(
-        """SELECT (SELECT CAST(SUM(transactionNominal) AS text) FROM transaction_spend WHERE transactionType = 'EXPENSE') AS expenseNominal, 
-                (SELECT CAST(SUM(transactionNominal) AS text) FROM transaction_spend WHERE transactionType = 'INCOME') AS incomeNominal,
-                CAST(((SELECT SUM(transactionNominal) FROM transaction_spend WHERE transactionType = 'INCOME') - 
-                (SELECT SUM(transactionNominal) FROM transaction_spend WHERE transactionType = 'EXPENSE')) AS TEXT) AS balanceNominal,
-                transactionDate as rangeTransaction
+        """SELECT datetime(transactionDate/1000,'unixepoch', 'localtime') as rangeTransaction, 
+                (SELECT COALESCE(SUM(transactionNominal),0) FROM transaction_spend 
+                WHERE transactionType = 'EXPENSE' AND datetime(transactionDate/1000,'unixepoch', 'localtime') 
+                BETWEEN :startDate AND :endDate) as expenseNominal,
+                (SELECT COALESCE(SUM(transactionNominal),0) FROM transaction_spend 
+                WHERE transactionType = 'INCOME' AND datetime(transactionDate/1000,'unixepoch', 'localtime') 
+                BETWEEN :startDate AND :endDate) as incomeNominal
                 FROM transaction_spend
-                WHERE datetime(transactionDate/1000,'unixepoch', 'localtime') BETWEEN :startDate AND :endDate
-                LIMIT 1"""
+                GROUP BY expenseNominal, incomeNominal"""
     )
     suspend fun getSummaryTransaction(startDate: String, endDate: String): SummaryTransaction
 

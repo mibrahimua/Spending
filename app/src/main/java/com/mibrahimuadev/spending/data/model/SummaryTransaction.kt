@@ -4,7 +4,6 @@ import java.util.*
 
 data class SummaryTransaction(
     val rangeTransaction: Date,
-    val expenseNominal: String,
-    val incomeNominal: String,
-    val balanceNominal: String
+    val expenseNominal: Int,
+    val incomeNominal: Int,
 )

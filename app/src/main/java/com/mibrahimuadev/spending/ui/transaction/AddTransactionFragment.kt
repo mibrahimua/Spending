@@ -12,6 +12,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -51,7 +52,8 @@ class AddTransactionFragment : Fragment(), Calculator {
         /**
          * Set title fragment depend on transaction type (Expense, Income)
          */
-//        (activity as AppCompatActivity).supportActionBar?.title = args.transactionType
+//        (activity as AppCompatActivity).supportActionBar?.title = ""
+//        (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val application = requireNotNull(this.activity).application
         _binding = FragmentAddTransactionBinding.inflate(layoutInflater)
@@ -85,7 +87,7 @@ class AddTransactionFragment : Fragment(), Calculator {
          */
         transactionViewModel.transactionType.observe(viewLifecycleOwner) {
 
-            if(it == TransactionType.EXPENSE) {
+            if (it == TransactionType.EXPENSE) {
                 binding.radioExpense.isChecked = true
             } else if (it == TransactionType.INCOME) {
                 binding.radioIncome.isChecked = true
@@ -105,7 +107,7 @@ class AddTransactionFragment : Fragment(), Calculator {
                     transactionType = TransactionType.INCOME
                 }
             }
-            if(transactionViewModel.transactionType.value != transactionType) {
+            if (transactionViewModel.transactionType.value != transactionType) {
                 transactionViewModel.resetCategory()
             }
             transactionViewModel._transactionType.value = transactionType
@@ -294,9 +296,8 @@ class AddTransactionFragment : Fragment(), Calculator {
     }
 
     override fun onDestroyView() {
-
         super.onDestroyView()
-
+        _binding = null
         Log.i(TAG, "AddTransactionFragment destroyed")
     }
 }
