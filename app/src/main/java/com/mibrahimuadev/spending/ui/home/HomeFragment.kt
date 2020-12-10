@@ -21,6 +21,7 @@ import com.mibrahimuadev.spending.adapter.TransactionListAdapter
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.databinding.FragmentHomeBinding
 import com.mibrahimuadev.spending.utils.Formatter
+import kotlinx.android.synthetic.*
 
 
 class HomeFragment : Fragment() {
@@ -56,7 +57,7 @@ class HomeFragment : Fragment() {
         val actionbar = (activity as AppCompatActivity).supportActionBar
         actionbar?.title = ""
         actionbar?.setDisplayShowCustomEnabled(true)
-        actionbar?.setCustomView(R.layout.custom_toolbar)
+        actionbar?.setCustomView(R.layout.custom_toolbar_title)
         toolbarTitle = actionbar?.customView?.findViewById(R.id.toolbarTitle)!!
 
         toolbarTitle.setOnClickListener {
@@ -172,5 +173,6 @@ class HomeFragment : Fragment() {
         Log.i("HomeFragment", "HomeFragment destroyed")
         _binding = null
         toolbarTitle.text = ""
+        clearFindViewByIdCache()
     }
 }

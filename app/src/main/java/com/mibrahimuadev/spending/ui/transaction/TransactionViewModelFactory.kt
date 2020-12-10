@@ -1,6 +1,7 @@
 package com.mibrahimuadev.spending.ui.transaction
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 

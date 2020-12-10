@@ -72,4 +72,10 @@ class TransactionRepository(
             transactionDao.updateTransaction(transaction)
         }
     }
+
+    suspend fun deleteTransaction(transactionId: Long) {
+        return withContext(Dispatchers.IO) {
+            transactionDao.deleteTransaction(transactionId)
+        }
+    }
 }

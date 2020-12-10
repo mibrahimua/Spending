@@ -219,8 +219,7 @@ class AddTransactionFragment : Fragment(), Calculator {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        if (id == R.id.save_action) {
+        if (item.itemId == R.id.save_action) {
             calc.handleEquals()
             transactionViewModel.validateTransaction()
             transactionViewModel.errorMessage.observe(viewLifecycleOwner) { error ->

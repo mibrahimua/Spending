@@ -231,30 +231,6 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         viewModelScope.launch {
             transactionRepository.insertOrUpdateTransaction(dataTransaction)
         }
-
-
-//        if (statusTransaction() || currentTransactionId == 0L) {
-//            val newTransaction = Transaction(
-//                transactionNominal = transactionNominal,
-//                transactionType = transactionType,
-//                transactionDate = dateTransaction,
-//                categoryId = transactionCategory,
-//                currencyId = transactionCurrency,
-//                transactionNote = noteTransaction
-//            )
-//            createTransaction(newTransaction)
-//        } else {
-//            val updateTransaction = Transaction(
-//                transactionId = currentTransactionId!!,
-//                transactionNominal = transactionNominal,
-//                transactionType = transactionType,
-//                transactionDate = dateTransaction,
-//                categoryId = transactionCategory,
-//                currencyId = transactionCurrency,
-//                transactionNote = noteTransaction
-//            )
-//            updateTransaction(updateTransaction)
-//        }
     }
 
     private fun createTransaction(transaction: Transaction) {
@@ -264,15 +240,16 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    private fun updateTransaction(transaction: Transaction) {
+    fun deleteTransaction(transactionId: Long) {
         viewModelScope.launch {
-            transactionRepository.updateTransaction(transaction)
+            transactionRepository.deleteTransaction(transactionId)
+            _navigateToHome.value = Event(true)
             _dataLoading.value = false
         }
     }
 
     override fun onCleared() {
         super.onCleared()
-        Log.i("AddTransactionViewModel", "AddTransactionViewModel destroyed")
+        Log.i("TransactionViewModel", "TransactionViewModel destroyed")
     }
 }
