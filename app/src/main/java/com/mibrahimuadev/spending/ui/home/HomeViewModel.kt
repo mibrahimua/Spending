@@ -6,8 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.mibrahimuadev.spending.data.Result
-import com.mibrahimuadev.spending.data.model.TransactionList
+import com.mibrahimuadev.spending.utils.Result
+import com.mibrahimuadev.spending.data.model.Transaction
 import com.mibrahimuadev.spending.data.repository.TransactionRepository
 import com.mibrahimuadev.spending.utils.CurrentDate
 import com.mibrahimuadev.spending.utils.CurrentDate.getEndOfDay
@@ -28,8 +28,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val _selectedEndDate = MutableLiveData<String>()
     val selectedEndDate: LiveData<String> = _selectedEndDate
 
-    val _allTransactions = MutableLiveData<List<TransactionList>>()
-    val allTransactions: LiveData<List<TransactionList>> = _allTransactions
+    val _allTransactions = MutableLiveData<List<Transaction>>()
+    val allTransactions: LiveData<List<Transaction>> = _allTransactions
 
     init {
         Log.i("HomeViewModel", "HomeViewModel created")

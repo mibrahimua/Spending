@@ -12,9 +12,4 @@ interface BaseTransaction {
     val transactionDate: Date
 
     val transactionNote: String?
-
-    val categoryId: Int
-
-    val currencyId: String
-
 }

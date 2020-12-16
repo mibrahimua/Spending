@@ -71,6 +71,10 @@
                 android:defaultValue="@null"
                 app:argType="string"
                 app:nullable="true" />
+            <argument
+                android:name="iconId"
+                app:argType="integer"
+                android:defaultValue="0" />
         </fragment>
         <fragment
             android:id="@+id/addCategoryTranscFragment"
@@ -101,6 +105,34 @@
         <action
             android:id="@+id/action_detailTransactionFragment2_to_homeFragment"
             app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categorySettingFragment"
+        android:name="com.mibrahimuadev.spending.ui.categories.CategorySettingFragment"
+        android:label="fragment_category_setting"
+        tools:layout="@layout/fragment_category_setting" >
+        <action
+            android:id="@+id/action_categorySettingFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_categorySettingFragment_to_addEditCategoryFragment"
+            app:destination="@id/addEditCategoryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditCategoryFragment"
+        android:name="com.mibrahimuadev.spending.ui.categories.AddEditCategoryFragment"
+        android:label="fragment_addedit_category"
+        tools:layout="@layout/fragment_addedit_category" >
+        <action
+            android:id="@+id/action_addEditCategoryFragment_to_categorySettingFragment"
+            app:destination="@id/categorySettingFragment" />
+        <argument
+            android:name="categoryId"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument android:name="actionType"
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
 
 </navigation>

@@ -5,12 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.mibrahimuadev.spending.data.dao.CategoryDao
+import com.mibrahimuadev.spending.data.dao.CurrencyDao
+import com.mibrahimuadev.spending.data.dao.TransactionDao
+import com.mibrahimuadev.spending.data.dao.TransactionIconDao
 import com.mibrahimuadev.spending.data.entity.*
-import com.mibrahimuadev.spending.data.local.dao.*
+import com.mibrahimuadev.spending.utils.Converters
 
 
 @Database(
-    entities = [(Transaction::class), (Currency::class), (Category::class), (CategoryIcon::class)],
+    entities = [(TransactionEntity::class), (CurrencyEntity::class), (CategoryEntity::class), (CategoryIconEntity::class)],
     version = 1,
     exportSchema = true
 )

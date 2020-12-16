@@ -69,7 +69,7 @@ class DetailTransactionFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.delete_transc_menu, menu)
+        inflater.inflate(R.menu.delete_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

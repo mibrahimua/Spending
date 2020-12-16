@@ -3,7 +3,6 @@ package com.mibrahimuadev.spending.ui.transaction
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -30,16 +29,15 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
     ): View? {
         _binding = FragmentAddCategoryTranscBinding.inflate(layoutInflater)
         val application = requireNotNull(this.activity).application
-        val recycleView = binding.recycleviewCategoryTransc
+        val recyclerView = binding.recycleviewCategoryTransc
 
         val viewModelFactory = CategoryViewModelFactory(application)
 
         val categoryViewModel =
             ViewModelProvider(this, viewModelFactory).get(CategoryViewModel::class.java)
-
         adapter = AddCategoryTrancsListAdapter(application)
-        recycleView.adapter = adapter
-        recycleView.layoutManager = LinearLayoutManager(application)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(application)
 
         categoryViewModel.getAllCategoriesByType(args.typeCategory)
         categoryViewModel.getLastCategoryId()
@@ -54,7 +52,7 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_category, menu)
+        inflater.inflate(R.menu.search_menu, menu)
         // Get the SearchView and set the searchable configuration
         val searchItem = menu.findItem(R.id.menu_search)
         searchView = searchItem.actionView as SearchView
@@ -64,15 +62,6 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
         searchView.queryHint = "Search or add category"
         super.onCreateOptionsMenu(menu, inflater)
 
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        if (id == R.id.menu_search) {
-            Toast.makeText(activity, "Grid item touched", Toast.LENGTH_SHORT).show()
-            return true
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

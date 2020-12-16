@@ -20,6 +20,7 @@ import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.adapter.TransactionListAdapter
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.databinding.FragmentHomeBinding
+import com.mibrahimuadev.spending.utils.CurrentDate
 import com.mibrahimuadev.spending.utils.Formatter
 import kotlinx.android.synthetic.*
 
@@ -67,7 +68,7 @@ class HomeFragment : Fragment() {
         homeViewModel.onFirstLoaded()
         homeViewModel.selectedMonth.observe(viewLifecycleOwner) { month ->
             homeViewModel.displayData()
-            toolbarTitle.text = month + " " + homeViewModel.selectedYear.value
+            toolbarTitle.text = CurrentDate.monthName[month.toInt().minus(1)] + " " + homeViewModel.selectedYear.value
         }
 
         homeViewModel.allTransactions.observe(viewLifecycleOwner, { transaksi ->

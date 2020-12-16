@@ -6,45 +6,30 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.mibrahimuadev.spending.data.Result
-import com.mibrahimuadev.spending.data.model.CategoryList
+import com.mibrahimuadev.spending.utils.Result
+import com.mibrahimuadev.spending.data.model.Category
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.data.repository.CategoryRepository
 import kotlinx.coroutines.launch
 
 class CategoryViewModel(application: Application) : AndroidViewModel(application) {
     private val categoryRepository: CategoryRepository
-    private val _allCategories = MutableLiveData<List<CategoryList>>()
-    val allCategories: LiveData<List<CategoryList>> = _allCategories
-    val categoryName = MutableLiveData<String>()
 
     init {
         Log.i("CategoryViewModel", "CategoryViewModel created")
         categoryRepository = CategoryRepository(application)
     }
 
+    private val _allCategories = MutableLiveData<List<Category>>()
+    val allCategories: LiveData<List<Category>> = _allCategories
+
+    val categoryName = MutableLiveData<String>()
+
     val _lastCategoryId = MutableLiveData<Int>()
     val lastCategoryId: LiveData<Int> = _lastCategoryId
 
-    fun getAllCategories() {
-        viewModelScope.launch {
-            categoryRepository.getAllCategories().let {
-                if (it is Result.Success) {
-                    _allCategories.value = it.data
-                }
-            }
-        }
-    }
-
-    fun getLastCategoryId() {
-        viewModelScope.launch {
-            categoryRepository.getLastCategoryId().let {
-                if(it is Result.Success) {
-                    _lastCategoryId.value = it.data
-                }
-            }
-        }
-    }
+    val _typeCategory = MutableLiveData<TransactionType>()
+    val typeCategory: LiveData<TransactionType> = _typeCategory
 
     fun getAllCategoriesByType(typeCategory: TransactionType) {
         viewModelScope.launch() {
@@ -55,9 +40,19 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun getCategory(idKategori: Int) {
+    fun getLastCategoryId() {
         viewModelScope.launch {
-            categoryRepository.getCategory(idKategori).let { result ->
+            categoryRepository.getLastCategoryId().let {
+                if (it is Result.Success) {
+                    _lastCategoryId.value = it.data
+                }
+            }
+        }
+    }
+
+    fun getDetailCategory(idKategori: Int) {
+        viewModelScope.launch {
+            categoryRepository.getDetailCategory(idKategori).let { result ->
                 if (result is Result.Success) {
                     categoryName.value = result.data?.categoryName
                 }

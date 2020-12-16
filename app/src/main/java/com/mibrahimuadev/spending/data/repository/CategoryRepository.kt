@@ -2,16 +2,17 @@ package com.mibrahimuadev.spending.data.repository
 
 import android.app.Application
 import com.mibrahimuadev.spending.data.AppDatabase
-import com.mibrahimuadev.spending.data.Result
-import com.mibrahimuadev.spending.data.entity.Category
-import com.mibrahimuadev.spending.data.local.dao.CategoryDao
-import com.mibrahimuadev.spending.data.model.CategoryList
+import com.mibrahimuadev.spending.utils.Result
+import com.mibrahimuadev.spending.data.entity.CategoryEntity
+import com.mibrahimuadev.spending.data.dao.CategoryDao
+import com.mibrahimuadev.spending.data.source.CategoryDataSource
+import com.mibrahimuadev.spending.data.model.Category
 import com.mibrahimuadev.spending.data.model.TransactionType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 
-class CategoryRepository(application: Application) {
+class CategoryRepository(application: Application) : CategoryDataSource {
     private val categoryDao: CategoryDao
 
     init {
@@ -19,21 +20,15 @@ class CategoryRepository(application: Application) {
         categoryDao = database.categoryDao()
     }
 
-    suspend fun getAllCategories(): Result<List<CategoryList>> {
-        return withContext(Dispatchers.IO) {
-            Result.Success(categoryDao.getAllCategories())
-        }
-    }
-
-    suspend fun getAllCategoriesByType(typeCategory: TransactionType): Result<List<CategoryList>> {
+    override suspend fun getAllCategoriesByType(typeCategory: TransactionType): Result<List<Category>> {
         return withContext(Dispatchers.IO) {
             Result.Success(categoryDao.getAllCategoriesByType(typeCategory))
         }
     }
 
-    suspend fun getCategory(idKategori: Int): Result<CategoryList?> {
+    override suspend fun getDetailCategory(idKategori: Int): Result<Category?> {
         return withContext(Dispatchers.IO) {
-            Result.Success(categoryDao.getCategory(idKategori))
+            Result.Success(categoryDao.getDetailCategory(idKategori))
         }
     }
 
@@ -43,9 +38,17 @@ class CategoryRepository(application: Application) {
         }
     }
 
-    suspend fun insertOrUpdateCategory(category: Category) {
+    override suspend fun insertOrUpdateCategory(categoryEntity: CategoryEntity) {
         return withContext(Dispatchers.IO + NonCancellable) {
-            categoryDao.insertOrUpdate(category)
+            categoryDao.insertOrUpdate(categoryEntity)
         }
+    }
+
+    override suspend fun insertCategory(categoryEntity: CategoryEntity) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateCategory(categoryEntity: CategoryEntity) {
+        TODO("Not yet implemented")
     }
 }

@@ -2,18 +2,19 @@ package com.mibrahimuadev.spending.data.repository
 
 import android.app.Application
 import com.mibrahimuadev.spending.data.AppDatabase
-import com.mibrahimuadev.spending.data.Result
-import com.mibrahimuadev.spending.data.entity.Transaction
-import com.mibrahimuadev.spending.data.local.dao.TransactionDao
-import com.mibrahimuadev.spending.data.model.SummaryTransaction
-import com.mibrahimuadev.spending.data.model.TransactionList
+import com.mibrahimuadev.spending.utils.Result
+import com.mibrahimuadev.spending.data.entity.TransactionEntity
+import com.mibrahimuadev.spending.data.dao.TransactionDao
+import com.mibrahimuadev.spending.data.model.Transaction
+import com.mibrahimuadev.spending.data.source.TransactionDataSource
+import com.mibrahimuadev.spending.data.model.TransactionSummary
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 
 class TransactionRepository(
     application: Application
-) {
+) : TransactionDataSource {
     private val transactionDao: TransactionDao
 
     init {
@@ -21,31 +22,33 @@ class TransactionRepository(
         transactionDao = database.transactionDao()
     }
 
-    suspend fun getAllTransactions(startDate: String, endDate: String): Result<List<TransactionList>> {
+    override suspend fun getAllTransactions(
+        startDate: String,
+        endDate: String
+    ): Result<List<Transaction>> {
         return withContext(Dispatchers.IO) {
             try {
-                Result.Success(transactionDao.observeAllTransactions(startDate, endDate))
+                Result.Success(transactionDao.getAllTransactions(startDate, endDate))
             } catch (e: Exception) {
                 Result.Error(e)
             }
         }
     }
 
-    suspend fun getTransaction(transactionId: Long): Result<TransactionList> {
+    override suspend fun getTransaction(transactionId: Long): Result<Transaction> {
         return withContext(Dispatchers.IO) {
             try {
                 Result.Success(transactionDao.getTransaction(transactionId))
             } catch (e: Exception) {
                 Result.Error(e)
             }
-
         }
     }
 
-    suspend fun getSummaryTransaction(
+    override suspend fun getSummaryTransaction(
         startDate: String,
         endDate: String
-    ): Result<SummaryTransaction> {
+    ): Result<TransactionSummary> {
         return withContext(Dispatchers.IO) {
             try {
                 Result.Success(transactionDao.getSummaryTransaction(startDate, endDate))
@@ -55,25 +58,25 @@ class TransactionRepository(
         }
     }
 
-    suspend fun insertOrUpdateTransaction(transaction: Transaction) {
+    override suspend fun insertOrUpdateTransaction(transactionEntity: TransactionEntity) {
         return withContext(Dispatchers.IO + NonCancellable) {
-            transactionDao.insertOrUpdate(transaction)
+            transactionDao.insertOrUpdate(transactionEntity)
         }
     }
 
-    suspend fun insertTransaction(transaction: Transaction) {
+    override suspend fun insertTransaction(transactionEntity: TransactionEntity) {
         return withContext(Dispatchers.IO + NonCancellable) {
-            transactionDao.insertTransaction(transaction)
+            transactionDao.insertTransaction(transactionEntity)
         }
     }
 
-    suspend fun updateTransaction(transaction: Transaction) {
+    override suspend fun updateTransaction(transactionEntity: TransactionEntity) {
         return withContext(Dispatchers.IO + NonCancellable) {
-            transactionDao.updateTransaction(transaction)
+            transactionDao.updateTransaction(transactionEntity)
         }
     }
 
-    suspend fun deleteTransaction(transactionId: Long) {
+    override suspend fun deleteTransaction(transactionId: Long) {
         return withContext(Dispatchers.IO) {
             transactionDao.deleteTransaction(transactionId)
         }

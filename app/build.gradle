@@ -13,7 +13,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         // used by Room, to test migrations
@@ -93,6 +93,9 @@ dependencies {
 
     //Anko do async
     implementation "org.jetbrains.anko:anko:0.10.4"
+
+    //Leak Canary (Memory Leak Detection)
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
 
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "65a112a3fece5cc23934c290ae115b68",
+    "identityHash": "d48795fc9115d992df61780bd13dd40e",
     "entities": [
       {
         "tableName": "transaction_spend",
@@ -132,7 +132,7 @@
       },
       {
         "tableName": "category_icon",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`iconId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `iconName` TEXT NOT NULL, `iconLocation` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`iconId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `iconName` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "iconId",
@@ -143,12 +143,6 @@
           {
             "fieldPath": "iconName",
             "columnName": "iconName",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "iconLocation",
-            "columnName": "iconLocation",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -166,7 +160,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '65a112a3fece5cc23934c290ae115b68')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd48795fc9115d992df61780bd13dd40e')"
     ]
   }
 }

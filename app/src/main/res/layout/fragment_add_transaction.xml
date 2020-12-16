@@ -26,17 +26,19 @@
             android:background="@drawable/radio_btn_expense_selector"
             android:button="@android:color/transparent"
             android:gravity="center"
-            android:text="Expense" />
+            android:text="Expense"
+            android:textSize="16sp" />
 
         <RadioButton
             android:id="@+id/radioIncome"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:button="@android:color/transparent"
             android:background="@drawable/radio_btn_income_selector"
+            android:button="@android:color/transparent"
             android:gravity="center"
-            android:text="Income" />
+            android:text="Income"
+            android:textSize="16sp" />
 
     </RadioGroup>
 
@@ -48,7 +50,7 @@
         android:hint="@string/note"
         android:inputType="text"
         android:textAlignment="center"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +67,7 @@
         android:singleLine="false"
         android:text="@string/number_0"
         android:textAlignment="viewEnd"
-        android:textColor="@color/number_action_button"
+        android:textColor="@color/black"
         android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/noteTransc"
         app:layout_constraintEnd_toEndOf="parent"
@@ -102,48 +104,68 @@
         app:layout_constraintTop_toTopOf="@+id/guideline9"
         app:layout_constraintWidth_percent="0.23" />
 
-    <Button
-        android:id="@+id/btnDate"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/labelDate"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="32dp"
+        android:background="@color/white"
         android:text="Date"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/textDate"
-        app:layout_constraintHeight_percent="0.10"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline10"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_category"
-        app:layout_constraintWidth_percent="0.23" />
+        app:layout_constraintTop_toBottomOf="@+id/labelCategory" />
 
     <TextView
-        android:id="@+id/textDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btnDate"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnDate"
+        android:id="@+id/dateTransaction"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/textview_border"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/labelDate"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline10"
         tools:text="26 Nov 2020" />
 
-    <Button
-        android:id="@+id/btn_category"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/labelCategory"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/white"
         android:text="Category"
-        app:layout_constraintEnd_toStartOf="@+id/categoryName"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline10"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupTransc" />
 
     <TextView
         android:id="@+id/categoryName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBaseline_toBaselineOf="@+id/btn_category"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btn_category"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/textview_border"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/labelCategory"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="@+id/guideline10"
         tools:text="Category Not Selected" />
 
     <Button
@@ -410,7 +432,7 @@
         android:id="@+id/group_calc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="btnDate,btnClear,btn6,btn_0,guideline9,btn3,btn4,btn5,btnEquals,btn8,btn9,btn2,btnMinus,btn7,btnPlus,btn1,btnDecimal" />
+        app:constraint_referenced_ids="labelDate,btnClear,btn6,btn_0,guideline9,btn3,btn4,btn5,btnEquals,btn8,btn9,btn2,btnMinus,btn7,btnPlus,btn1,btnDecimal" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
@@ -446,6 +468,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.98" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

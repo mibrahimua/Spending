@@ -12,7 +12,6 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -32,6 +31,7 @@ import kotlinx.coroutines.runBlocking
 
 
 class AddTransactionFragment : Fragment(), Calculator {
+
     private val TAG = "AddTransactionFragment"
     lateinit var calc: CalculatorImpl
     private var _binding: FragmentAddTransactionBinding? = null
@@ -48,12 +48,6 @@ class AddTransactionFragment : Fragment(), Calculator {
         savedInstanceState: Bundle?
     ): View? {
         Log.i(TAG, "AddTransactionFragment created")
-
-        /**
-         * Set title fragment depend on transaction type (Expense, Income)
-         */
-//        (activity as AppCompatActivity).supportActionBar?.title = ""
-//        (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val application = requireNotNull(this.activity).application
         _binding = FragmentAddTransactionBinding.inflate(layoutInflater)
@@ -72,6 +66,7 @@ class AddTransactionFragment : Fragment(), Calculator {
         transactionViewModel.transactionIdArgs = args.transactionId
         transactionViewModel.categoryIdArgs = args.categoryId
         transactionViewModel.categoryNameArgs = args.categoryName
+        transactionViewModel.iconIdArgs = args.iconId
         runBlocking {
             Log.i(TAG, "Coroutine cek if category exist starting")
             val job = lifecycleScope.launch(Dispatchers.IO) {
@@ -98,12 +93,12 @@ class AddTransactionFragment : Fragment(), Calculator {
             when (checkedId) {
                 R.id.radioExpense -> {
                     binding.radioExpense.setTextColor(Color.WHITE)
-                    binding.radioIncome.setTextColor(Color.BLUE)
+                    binding.radioIncome.setTextColor(Color.BLACK)
                     transactionType = TransactionType.EXPENSE
                 }
                 R.id.radioIncome -> {
                     binding.radioIncome.setTextColor(Color.WHITE)
-                    binding.radioExpense.setTextColor(Color.BLUE)
+                    binding.radioExpense.setTextColor(Color.BLACK)
                     transactionType = TransactionType.INCOME
                 }
             }
@@ -119,29 +114,39 @@ class AddTransactionFragment : Fragment(), Calculator {
         calc = CalculatorImpl(this, application)
         binding.btnPlus.setOnClickListener {
             calc.handleOperation(PLUS)
-            transactionViewModel._calcOperation.value = calc.lastOperation
+            transactionViewModel.saveCalculatorState(calc.lastOperation, calc.lastKey)
         }
         binding.btnMinus.setOnClickListener {
             calc.handleOperation(MINUS)
-            transactionViewModel._calcOperation.value = calc.lastOperation
+            transactionViewModel.saveCalculatorState(calc.lastOperation, calc.lastKey)
         }
         binding.btnMultiply.setOnClickListener {
             calc.handleOperation(MULTIPLY)
-            transactionViewModel._calcOperation.value = calc.lastOperation
+            transactionViewModel.saveCalculatorState(calc.lastOperation, calc.lastKey)
         }
         binding.btnDivide.setOnClickListener {
             calc.handleOperation(DIVIDE)
-            transactionViewModel._calcOperation.value = calc.lastOperation
+            transactionViewModel.saveCalculatorState(calc.lastOperation, calc.lastKey)
         }
-        binding.btnClear.setOnClickListener { calc.handleClear(); }
-        binding.btnClear.setOnLongClickListener { calc.handleReset(); true }
+        binding.btnClear.setOnClickListener {
+            calc.handleClear()
+            transactionViewModel.saveCalculatorState(calc.lastOperation, calc.lastKey)
+        }
+        binding.btnClear.setOnLongClickListener {
+            calc.handleReset()
+            transactionViewModel.saveCalculatorState(calc.lastOperation, calc.lastKey)
+            true
+        }
         getNumberButtonIds().forEach {
             it.setOnClickListener {
                 calc.numpadClicked(it.id);
-                transactionViewModel._calcLastKey.value = calc.lastKey
+                transactionViewModel.saveCalculatorState(calc.lastOperation, calc.lastKey)
             }
         }
-        binding.btnEquals.setOnClickListener { calc.handleEquals(); }
+        binding.btnEquals.setOnClickListener {
+            calc.handleEquals()
+            transactionViewModel.saveCalculatorState(calc.lastOperation, calc.lastKey)
+        }
         binding.result.setOnLongClickListener { copyToClipboard(true) }
         if (transactionViewModel.transactionNominal.value == null) {
             transactionViewModel._transactionNominal.value = "0"
@@ -163,7 +168,7 @@ class AddTransactionFragment : Fragment(), Calculator {
         /**
          * Category View Binding Section
          */
-        binding.btnCategory.setOnClickListener {
+        binding.categoryName.setOnClickListener {
             val imm =
                 getActivity()?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view?.getWindowToken(), 0)
@@ -185,7 +190,7 @@ class AddTransactionFragment : Fragment(), Calculator {
         if (transactionViewModel.dateTransaction.value == null) {
             saveDatePickerToLiveData(CurrentDate.day, CurrentDate.month, CurrentDate.year)
         }
-        binding.btnDate.setOnClickListener {
+        binding.dateTransaction.setOnClickListener {
             showDatePicker(CurrentDate)
                 .show(
                     requireActivity().supportFragmentManager,
@@ -194,7 +199,7 @@ class AddTransactionFragment : Fragment(), Calculator {
         }
         transactionViewModel.dateTransaction.observe(viewLifecycleOwner) { date ->
             val dateTransaction = CurrentDate.getDateString(date)
-            binding.textDate.text = "$dateTransaction"
+            binding.dateTransaction.text = "$dateTransaction"
         }
 
         /**
@@ -214,7 +219,7 @@ class AddTransactionFragment : Fragment(), Calculator {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.add_transc_menu, menu)
+        inflater.inflate(R.menu.save_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

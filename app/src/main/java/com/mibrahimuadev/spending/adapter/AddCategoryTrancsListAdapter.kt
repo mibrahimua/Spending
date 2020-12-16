@@ -4,26 +4,26 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.mibrahimuadev.spending.R
-import com.mibrahimuadev.spending.data.model.CategoryList
+import com.mibrahimuadev.spending.data.model.Category
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.ui.transaction.AddCategoryTranscFragmentDirections
 
-class AddCategoryTrancsListAdapter internal constructor(context: Context) :
+class AddCategoryTrancsListAdapter internal constructor(private val context: Context) :
     RecyclerView.Adapter<AddCategoryTrancsListAdapter.CategoryViewHolder>() {
-
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var categories = mutableListOf<CategoryList>()
-    private var categoriesCopy = mutableListOf<CategoryList>()
+    private var categories = mutableListOf<Category>()
+    private var categoriesCopy = mutableListOf<Category>()
     private var lastCategoryId: Int = 0
     private var isNewCategory: Boolean = false
-    private lateinit var typeCategory: TransactionType
+    private lateinit var categoryType: TransactionType
 
     inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        //        val categoryIcon: ImageView = itemView.findViewById(R.id.categoryIcon)
+        var categoryIcon: ImageView = itemView.findViewById(R.id.categoryIcon)
         val categoryName: TextView = itemView.findViewById(R.id.categoryName)
     }
 
@@ -38,12 +38,12 @@ class AddCategoryTrancsListAdapter internal constructor(context: Context) :
     }
 
     internal fun setCategory(
-        category: List<CategoryList>,
+        category: List<Category>,
         typeCategory: TransactionType
     ) {
         this.categories.addAll(category)
         categoriesCopy.addAll(category)
-        this.typeCategory = typeCategory
+        this.categoryType = typeCategory
         notifyDataSetChanged()
     }
 
@@ -64,9 +64,11 @@ class AddCategoryTrancsListAdapter internal constructor(context: Context) :
             if (categories.size == 0) {
                 isNewCategory = true
                 categories.add(
-                    CategoryList(
+                    Category(
                         categoryId = lastCategoryId,
-                        categoryName = filterText
+                        categoryName = filterText,
+                        iconId = 3,
+                        iconName = "ic_food_candy_12"
                     )
                 )
             }
@@ -76,7 +78,8 @@ class AddCategoryTrancsListAdapter internal constructor(context: Context) :
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val current = categories[position]
-//        holder.categoryIcon = R.drawable.ic_launcher_background
+        val resId = this.context.resources.getIdentifier(current.iconName,"drawable", this.context.packageName)
+        holder.categoryIcon.setImageResource(resId)
         holder.categoryName.text = let {
             if (isNewCategory) {
                 "Add Category : " + current.categoryName
@@ -90,7 +93,8 @@ class AddCategoryTrancsListAdapter internal constructor(context: Context) :
                 AddCategoryTranscFragmentDirections.actionAddCategoryTranscFragmentToAddTransactionFragment2()
                     .setCategoryId(current.categoryId)
                     .setCategoryName(current.categoryName)
-                    .setTransactionType(typeCategory.name)
+                    .setTransactionType(categoryType.name)
+                    .setIconId(current.iconId!!)
             view.findNavController().navigate(action)
         }
     }
