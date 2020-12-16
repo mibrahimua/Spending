@@ -28,7 +28,7 @@ class AddCategoryTrancsListAdapter internal constructor(private val context: Con
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val itemView = inflater.inflate(R.layout.recycleview_category_transc, parent, false)
+        val itemView = inflater.inflate(R.layout.recycleview_category, parent, false)
         return CategoryViewHolder(itemView)
     }
 
