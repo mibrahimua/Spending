@@ -7,7 +7,6 @@
     tools:context=".ui.home.HomeFragment">
 
 
-
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
         android:layout_width="match_parent"
@@ -107,6 +106,7 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@android:drawable/ic_input_add"
+        app:elevation="0dp"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -122,6 +122,7 @@
         android:layout_marginBottom="16dp"
         android:src="@android:drawable/ic_input_add"
         android:visibility="invisible"
+        app:elevation="0dp"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonTrans"
         app:layout_constraintEnd_toEndOf="@+id/floatingActionButtonTrans"
         app:layout_constraintStart_toStartOf="@+id/floatingActionButtonTrans"
@@ -134,6 +135,7 @@
         android:layout_marginBottom="16dp"
         android:src="@android:drawable/ic_input_add"
         android:visibility="invisible"
+        app:elevation="0dp"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButtonExpense"
         app:layout_constraintEnd_toEndOf="@+id/floatingActionButtonExpense"
         app:layout_constraintStart_toStartOf="@+id/floatingActionButtonExpense"
