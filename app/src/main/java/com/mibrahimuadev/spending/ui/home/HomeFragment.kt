@@ -172,8 +172,8 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         Log.i("HomeFragment", "HomeFragment destroyed")
-        _binding = null
         toolbarTitle.text = ""
         clearFindViewByIdCache()
+        _binding = null
     }
 }

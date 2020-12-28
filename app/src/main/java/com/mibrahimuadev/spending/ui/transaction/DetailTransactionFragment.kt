@@ -4,6 +4,8 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -76,6 +78,7 @@ class DetailTransactionFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.delete_action) {
             AlertDialog.Builder(context)
+                .setTitle("Warning")
                 .setMessage("Are you sure want to delete this transaction ?")
                 .setNegativeButton("No") { _, _ ->
                 }

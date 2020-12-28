@@ -12,5 +12,5 @@ data class Transaction(
     val currencyId: String,
     val iconName: String,
     val categoryName: String? = "",
-    val currencySymbol: String? = ""
+    val currencySymbol: String? = "",
 ) : BaseTransaction

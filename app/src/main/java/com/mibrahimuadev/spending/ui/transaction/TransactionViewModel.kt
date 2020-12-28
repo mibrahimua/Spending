@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class TransactionViewModel(application: Application) : AndroidViewModel(application) {
+class TransactionViewModel(application: Application) : AndroidViewModel(application),
+    PrepareTransaction {
     private val TAG = "TransactionViewModel"
     private val transactionRepository: TransactionRepository
     private val categoryRepository: CategoryRepository
@@ -89,40 +90,23 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     val _noteTransaction = MutableLiveData<String?>()
     val noteTransaction: LiveData<String?> = _noteTransaction
 
-    fun startTransaction() {
+    override fun displayDataTransaction() {
         _dataLoading.value = true
         if (actionType()) {
-            onNewTransactionLoaded()
+            onCreateNewTransaction()
         } else {
-            onExistTransactionLoaded()
+            onEditTransaction()
         }
         onSelectedCategory()
     }
 
-    fun onFirstLoaded() {
-        if (isFirstLoaded) {
-            isFirstLoaded = false
-            _transactionId.value = transactionIdArgs
-        }
-    }
-
-    fun actionType(): Boolean {
-        if (actionTypeArgs == "INSERT") {
-            isNewTransaction = true
-        }
-        if (actionTypeArgs == "UPDATE") {
-            isNewTransaction = false
-        }
-        return isNewTransaction
-    }
-
-    private fun onNewTransactionLoaded() {
+    override fun onCreateNewTransaction() {
         _transactionType.value = transactionTypeArgs
         _categoryName.value = null
         _dataLoading.value = false
     }
 
-    private fun onExistTransactionLoaded() {
+    override fun onEditTransaction() {
         if (isFirstLoaded) {
             onFirstLoaded()
             viewModelScope.launch {
@@ -143,8 +127,25 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
                 }
             }
         } else {
-            onNewTransactionLoaded()
+            onCreateNewTransaction()
         }
+    }
+
+    fun onFirstLoaded() {
+        if (isFirstLoaded) {
+            isFirstLoaded = false
+            _transactionId.value = transactionIdArgs
+        }
+    }
+
+    fun actionType(): Boolean {
+        if (actionTypeArgs == "INSERT") {
+            isNewTransaction = true
+        }
+        if (actionTypeArgs == "UPDATE") {
+            isNewTransaction = false
+        }
+        return isNewTransaction
     }
 
     private fun onSelectedCategory() {
@@ -164,12 +165,9 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         _calcLastKey.value = lastKey
     }
 
-    fun isCategoryExist(categoryId: Int) {
+    fun insertOrUpdateCategory(categoryId: Int) {
         viewModelScope.launch() {
             if (categoryId != 0) {
-                /**
-                 * ini menjadi masalah jika kategori yang dipilih kategori lama
-                 */
                 categoryRepository.insertOrUpdateCategory(
                     CategoryEntity(
                         categoryId = categoryId,
@@ -182,7 +180,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
-    private fun onDataNotAvailable() {
+    override fun onDataNotAvailable() {
         _dataLoading.value = false
     }
 
@@ -257,4 +255,8 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         super.onCleared()
         Log.i("TransactionViewModel", "TransactionViewModel destroyed")
     }
+
+
+
+
 }

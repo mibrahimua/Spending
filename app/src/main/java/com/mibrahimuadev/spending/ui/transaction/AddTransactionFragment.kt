@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 
-class AddTransactionFragment : Fragment(), Calculator {
+class AddTransactionFragment : Fragment(), Calculator, StartTransaction {
 
     private val TAG = "AddTransactionFragment"
     lateinit var calc: CalculatorImpl
@@ -49,7 +49,6 @@ class AddTransactionFragment : Fragment(), Calculator {
     ): View? {
         Log.i(TAG, "AddTransactionFragment created")
 
-        val application = requireNotNull(this.activity).application
         _binding = FragmentAddTransactionBinding.inflate(layoutInflater)
 
         /**
@@ -58,6 +57,18 @@ class AddTransactionFragment : Fragment(), Calculator {
         getActivity()?.getWindow()
             ?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
 
+        startTransaction()
+
+        setHasOptionsMenu(true)
+        return binding.root
+    }
+
+    override fun startTransaction() {
+        setupDataTransaction()
+        displayDataTransaction()
+    }
+
+    override fun setupDataTransaction() {
         /**
          * Init Transaction
          */
@@ -70,13 +81,24 @@ class AddTransactionFragment : Fragment(), Calculator {
         runBlocking {
             Log.i(TAG, "Coroutine cek if category exist starting")
             val job = lifecycleScope.launch(Dispatchers.IO) {
-                transactionViewModel.isCategoryExist(args.categoryId)
+                transactionViewModel.insertOrUpdateCategory(args.categoryId)
             }
             job.join()
             Log.i(TAG, "Coroutine ends " + job.isActive)
         }
-        transactionViewModel.startTransaction()
 
+        setupTypeTransaction()
+        setupCalculator()
+        setupCategory()
+        setupDateTransaction()
+        setupNoteTransaction()
+    }
+
+    override fun displayDataTransaction() {
+        transactionViewModel.displayDataTransaction()
+    }
+
+    override fun setupTypeTransaction() {
         /**
          *  Transaction Type View Binding Section
          */
@@ -107,10 +129,13 @@ class AddTransactionFragment : Fragment(), Calculator {
             }
             transactionViewModel._transactionType.value = transactionType
         }
+    }
 
+    override fun setupCalculator() {
         /**
          * Calculator View Binding Section
          */
+        val application = requireNotNull(this.activity).application
         calc = CalculatorImpl(this, application)
         binding.btnPlus.setOnClickListener {
             calc.handleOperation(PLUS)
@@ -164,7 +189,9 @@ class AddTransactionFragment : Fragment(), Calculator {
             binding.result.text = result
             calc.setInputDisplayedFormula(result)
         }
+    }
 
+    override fun setupCategory() {
         /**
          * Category View Binding Section
          */
@@ -183,7 +210,9 @@ class AddTransactionFragment : Fragment(), Calculator {
             binding.categoryName.text = result ?: "Category Not Selected"
         }
 
+    }
 
+    override fun setupDateTransaction() {
         /**
          * Date Transaction View Binding Section
          */
@@ -201,7 +230,9 @@ class AddTransactionFragment : Fragment(), Calculator {
             val dateTransaction = CurrentDate.getDateString(date)
             binding.dateTransaction.text = "$dateTransaction"
         }
+    }
 
+    override fun setupNoteTransaction() {
         /**
          * Note Transaction View Binding Section
          */
@@ -213,9 +244,6 @@ class AddTransactionFragment : Fragment(), Calculator {
         binding.noteTransc.addTextChangedListener {
             transactionViewModel.editTextNoteTransactionChanged(it.toString())
         }
-
-        setHasOptionsMenu(true)
-        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -227,6 +255,9 @@ class AddTransactionFragment : Fragment(), Calculator {
         if (item.itemId == R.id.save_action) {
             calc.handleEquals()
             transactionViewModel.validateTransaction()
+            transactionViewModel.errorMessage.observe(viewLifecycleOwner, {
+
+            })
             transactionViewModel.errorMessage.observe(viewLifecycleOwner) { error ->
                 if (error.isNotEmpty()) {
                     Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
@@ -304,4 +335,5 @@ class AddTransactionFragment : Fragment(), Calculator {
         _binding = null
         Log.i(TAG, "AddTransactionFragment destroyed")
     }
+
 }
