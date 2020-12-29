@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mibrahimuadev.spending.data.entity.CategoryEntity
 import com.mibrahimuadev.spending.utils.Result
 import com.mibrahimuadev.spending.data.model.Category
 import com.mibrahimuadev.spending.data.model.TransactionType
@@ -56,6 +57,21 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
                 if (result is Result.Success) {
                     categoryName.value = result.data?.categoryName
                 }
+            }
+        }
+    }
+
+    fun insertOrUpdateCategory(category: Category) {
+        viewModelScope.launch() {
+            if (category.categoryId != 0) {
+                categoryRepository.insertOrUpdateCategory(
+                    CategoryEntity(
+                        categoryId = category.categoryId,
+                        categoryName = category.categoryName,
+                        iconId = category.iconId!!,
+                        categoryType = category.categoryType
+                    )
+                )
             }
         }
     }

@@ -9,25 +9,16 @@ import com.mibrahimuadev.spending.data.model.TransactionType
 @Dao
 interface CategoryDao {
     @Query(
-        """SELECT k.categoryId, k.categoryName, c.iconId,c.iconName, k.typeCategory 
+        """SELECT k.categoryId, k.categoryName, c.iconId, c.iconName, k.categoryType 
             FROM category k 
             LEFT JOIN category_icon c ON k.iconId = c.iconId 
-            WHERE k.typeCategory = :typeCategory
+            WHERE k.categoryType = :categoryType
             GROUP BY k.categoryId"""
     )
-    fun observeAllCategoriesByType(typeCategory: TransactionType): LiveData<List<Category>>
+    fun getAllCategoriesByType(categoryType: TransactionType): List<Category>
 
     @Query(
-        """SELECT k.categoryId, k.categoryName, c.iconId, c.iconName, k.typeCategory 
-            FROM category k 
-            LEFT JOIN category_icon c ON k.iconId = c.iconId 
-            WHERE k.typeCategory = :typeCategory
-            GROUP BY k.categoryId"""
-    )
-    fun getAllCategoriesByType(typeCategory: TransactionType): List<Category>
-
-    @Query(
-        """SELECT k.categoryId, k.categoryName, c.iconId, c.iconName 
+        """SELECT k.categoryId, k.categoryName, c.iconId, c.iconName, k.categoryType 
             FROM category k 
             LEFT JOIN category_icon c ON k.iconId = c.iconId 
             WHERE categoryId = :categoriId"""

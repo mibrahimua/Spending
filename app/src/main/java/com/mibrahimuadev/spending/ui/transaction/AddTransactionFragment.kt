@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -25,9 +24,6 @@ import com.mibrahimuadev.spending.databinding.FragmentAddTransactionBinding
 import com.mibrahimuadev.spending.utils.CurrentDate
 import com.mibrahimuadev.spending.utils.EventObserver
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 
 class AddTransactionFragment : Fragment(), Calculator, StartTransaction {
@@ -72,20 +68,8 @@ class AddTransactionFragment : Fragment(), Calculator, StartTransaction {
         /**
          * Init Transaction
          */
-        transactionViewModel.actionTypeArgs = args.actionType
         transactionViewModel.transactionTypeArgs = TransactionType.valueOf(args.transactionType!!)
         transactionViewModel.transactionIdArgs = args.transactionId
-        transactionViewModel.categoryIdArgs = args.categoryId
-        transactionViewModel.categoryNameArgs = args.categoryName
-        transactionViewModel.iconIdArgs = args.iconId
-        runBlocking {
-            Log.i(TAG, "Coroutine cek if category exist starting")
-            val job = lifecycleScope.launch(Dispatchers.IO) {
-                transactionViewModel.insertOrUpdateCategory(args.categoryId)
-            }
-            job.join()
-            Log.i(TAG, "Coroutine ends " + job.isActive)
-        }
 
         setupTypeTransaction()
         setupCalculator()
@@ -191,6 +175,7 @@ class AddTransactionFragment : Fragment(), Calculator, StartTransaction {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun setupCategory() {
         /**
          * Category View Binding Section
@@ -205,6 +190,9 @@ class AddTransactionFragment : Fragment(), Calculator, StartTransaction {
                         transactionViewModel.transactionType.value!!
                     )
                 )
+        }
+        if (transactionViewModel.categoryName.value == null) {
+            binding.categoryName.text = "Category Not Selected"
         }
         transactionViewModel.categoryName.observe(viewLifecycleOwner) { result ->
             binding.categoryName.text = result ?: "Category Not Selected"

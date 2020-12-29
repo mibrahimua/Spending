@@ -44,10 +44,6 @@
             <action
                 android:id="@+id/action_addTransactionFragment_to_addCategoryTranscFragment"
                 app:destination="@id/addCategoryTranscFragment" />
-            <argument
-                android:name="categoryId"
-                android:defaultValue="0"
-                app:argType="integer" />
             <action
                 android:id="@+id/action_addTransaksiFragment_to_homeFragment"
                 app:destination="@id/homeFragment"
@@ -64,17 +60,8 @@
                 app:nullable="true" />
             <argument
                 android:name="transactionId"
-                android:defaultValue="0L"
-                app:argType="long" />
-            <argument
-                android:name="categoryName"
-                android:defaultValue="@null"
-                app:argType="string"
-                app:nullable="true" />
-            <argument
-                android:name="iconId"
-                app:argType="integer"
-                android:defaultValue="0" />
+                app:argType="long"
+                android:defaultValue="0L" />
         </fragment>
         <fragment
             android:id="@+id/addCategoryTranscFragment"
@@ -87,7 +74,7 @@
                 app:popUpTo="@id/addTransactionFragment"
                 app:popUpToInclusive="true" />
             <argument
-                android:name="typeCategory"
+                android:name="categoryType"
                 app:argType="com.mibrahimuadev.spending.data.model.TransactionType" />
         </fragment>
     </navigation>

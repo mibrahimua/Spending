@@ -15,7 +15,7 @@ data class CategoryEntity(
     val categoryName: String? = "",
 
     val iconId: Int,
-
-    val typeCategory: TransactionType
+//nama variable tidak sesuai
+    val categoryType: TransactionType
 
 )

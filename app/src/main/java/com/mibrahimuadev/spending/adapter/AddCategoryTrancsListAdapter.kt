@@ -13,7 +13,10 @@ import com.mibrahimuadev.spending.data.model.Category
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.ui.transaction.AddCategoryTranscFragmentDirections
 
-class AddCategoryTrancsListAdapter internal constructor(private val context: Context) :
+class AddCategoryTrancsListAdapter internal constructor(
+    private val context: Context,
+    private val listener: (Category) -> Unit
+) :
     RecyclerView.Adapter<AddCategoryTrancsListAdapter.CategoryViewHolder>() {
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var categories = mutableListOf<Category>()
@@ -39,7 +42,7 @@ class AddCategoryTrancsListAdapter internal constructor(private val context: Con
 
     internal fun setCategory(
         category: List<Category>,
-        typeCategory: TransactionType
+        typeCategory: TransactionType,
     ) {
         this.categories.addAll(category)
         categoriesCopy.addAll(category)
@@ -67,6 +70,7 @@ class AddCategoryTrancsListAdapter internal constructor(private val context: Con
                     Category(
                         categoryId = lastCategoryId,
                         categoryName = filterText,
+                        categoryType = categoryType,
                         iconId = 3,
                         iconName = "ic_food_candy_12"
                     )
@@ -77,25 +81,28 @@ class AddCategoryTrancsListAdapter internal constructor(private val context: Con
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        val current = categories[position]
-        val resId = this.context.resources.getIdentifier(current.iconName,"drawable", this.context.packageName)
+        val item = categories[position]
+        val resId = this.context.resources.getIdentifier(
+            item.iconName,
+            "drawable",
+            this.context.packageName
+        )
         holder.categoryIcon.setImageResource(resId)
         holder.categoryName.text = let {
             if (isNewCategory) {
-                "Add Category : " + current.categoryName
+                "Add Category : " + item.categoryName
             } else {
-                current.categoryName
+                item.categoryName
             }
         }
 
         holder.itemView.setOnClickListener { view ->
+            listener(item)
             val action =
                 AddCategoryTranscFragmentDirections.actionAddCategoryTranscFragmentToAddTransactionFragment2()
-                    .setCategoryId(current.categoryId)
-                    .setCategoryName(current.categoryName)
                     .setTransactionType(categoryType.name)
-                    .setIconId(current.iconId!!)
             view.findNavController().navigate(action)
+
         }
     }
 

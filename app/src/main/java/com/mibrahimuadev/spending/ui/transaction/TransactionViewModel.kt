@@ -6,7 +6,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.mibrahimuadev.spending.data.entity.CategoryEntity
 import com.mibrahimuadev.spending.data.entity.TransactionEntity
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.data.repository.CategoryRepository
@@ -18,8 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-class TransactionViewModel(application: Application) : AndroidViewModel(application),
-    PrepareTransaction {
+class TransactionViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "TransactionViewModel"
     private val transactionRepository: TransactionRepository
     private val categoryRepository: CategoryRepository
@@ -33,16 +31,8 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     /**
      * Variable navigation Args
      */
-    var actionTypeArgs: String? = null
     var transactionIdArgs: Long = 0L
     var transactionTypeArgs: TransactionType? = null
-    var categoryIdArgs: Int = 0
-    var categoryNameArgs: String? = null
-    var iconIdArgs: Int = 0
-
-    private var isFirstLoaded: Boolean = true
-
-    var isNewTransaction: Boolean = true
 
     private val _navigateToHome = MutableLiveData<Event<Boolean>>()
     val navigateToHome: LiveData<Event<Boolean>>
@@ -90,68 +80,30 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     val _noteTransaction = MutableLiveData<String?>()
     val noteTransaction: LiveData<String?> = _noteTransaction
 
-    override fun displayDataTransaction() {
+    fun displayDataTransaction() {
         _dataLoading.value = true
-        if (actionType()) {
-            onCreateNewTransaction()
+        if (transactionIdArgs != 0L) {
+            getDetailTransaction(transactionIdArgs)
         } else {
-            onEditTransaction()
+            _transactionType.value = transactionTypeArgs
+            _dataLoading.value = false
         }
-        onSelectedCategory()
+
     }
 
-    override fun onCreateNewTransaction() {
-        _transactionType.value = transactionTypeArgs
-        _categoryName.value = null
-        _dataLoading.value = false
-    }
-
-    override fun onEditTransaction() {
-        if (isFirstLoaded) {
-            onFirstLoaded()
-            viewModelScope.launch {
-                transactionRepository.getTransaction(transactionId.value!!).let { result ->
-                    if (result is Result.Success) {
-                        withContext(Dispatchers.Main) {
-                            _categoryId.value = result.data.categoryId
-                            _categoryName.value = result.data.categoryName
-                            _transactionType.value = result.data.transactionType
-                            _transactionNominal.value = result.data.transactionNominal.toString()
-                            _dateTransaction.value = result.data.transactionDate
-                            _noteTransaction.value = result.data.transactionNote
-                            _dataLoading.value = false
-                        }
-                    } else {
-                        onDataNotAvailable()
-                    }
-                }
+    fun getDetailTransaction(transactionId: Long) {
+        viewModelScope.launch {
+            val result = transactionRepository.getTransaction(transactionId)
+            if (result is Result.Success) {
+                _transactionId.value = result.data.transactionId
+                _transactionType.value = result.data.transactionType
+                _transactionNominal.value = result.data.transactionNominal.toString()
+                _categoryId.value = result.data.categoryId
+                _categoryName.value = result.data.categoryName
+                _dateTransaction.value = result.data.transactionDate
+                _noteTransaction.value = result.data.transactionNote
+                _dataLoading.value = false
             }
-        } else {
-            onCreateNewTransaction()
-        }
-    }
-
-    fun onFirstLoaded() {
-        if (isFirstLoaded) {
-            isFirstLoaded = false
-            _transactionId.value = transactionIdArgs
-        }
-    }
-
-    fun actionType(): Boolean {
-        if (actionTypeArgs == "INSERT") {
-            isNewTransaction = true
-        }
-        if (actionTypeArgs == "UPDATE") {
-            isNewTransaction = false
-        }
-        return isNewTransaction
-    }
-
-    private fun onSelectedCategory() {
-        if (categoryIdArgs != 0) {
-            _categoryId.value = categoryIdArgs
-            _categoryName.value = categoryNameArgs
         }
     }
 
@@ -165,22 +117,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         _calcLastKey.value = lastKey
     }
 
-    fun insertOrUpdateCategory(categoryId: Int) {
-        viewModelScope.launch() {
-            if (categoryId != 0) {
-                categoryRepository.insertOrUpdateCategory(
-                    CategoryEntity(
-                        categoryId = categoryId,
-                        categoryName = categoryNameArgs,
-                        iconId = iconIdArgs,
-                        typeCategory = transactionType.value!!
-                    )
-                )
-            }
-        }
-    }
-
-    override fun onDataNotAvailable() {
+    fun onDataNotAvailable() {
         _dataLoading.value = false
     }
 
@@ -189,19 +126,6 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             return
         } else {
             _noteTransaction.value = newText
-        }
-    }
-
-    fun getDetailTransaction(transactionId: Long) {
-        viewModelScope.launch {
-            val result = transactionRepository.getTransaction(transactionId)
-            if (result is Result.Success) {
-                _transactionType.value = result.data.transactionType
-                _transactionNominal.value = result.data.transactionNominal.toString()
-                _categoryName.value = result.data.categoryName
-                _dateTransaction.value = result.data.transactionDate
-                _noteTransaction.value = result.data.transactionNote
-            }
         }
     }
 
@@ -255,8 +179,6 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         super.onCleared()
         Log.i("TransactionViewModel", "TransactionViewModel destroyed")
     }
-
-
 
 
 }
