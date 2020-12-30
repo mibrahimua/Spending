@@ -1,0 +1,646 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/food_label"
+            style="@style/CategoryIconLabel"
+            android:layout_marginTop="32dp"
+            android:text="Food"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ic_food_candy_12"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_food_candy_12"
+            app:layout_constraintEnd_toStartOf="@+id/ic_food_fast_food_10"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_food_fast_food_2"
+            app:layout_constraintTop_toTopOf="@+id/ic_food_fast_food_10" />
+
+        <ImageView
+            android:id="@+id/ic_food_candy_14"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_food_candy_14"
+            app:layout_constraintEnd_toStartOf="@+id/ic_food_eat_6_thin"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_food_candy_8"
+            app:layout_constraintTop_toTopOf="@+id/ic_food_eat_6_thin" />
+
+        <ImageView
+            android:id="@+id/ic_food_candy_18"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_food_candy_18"
+            app:layout_constraintEnd_toStartOf="@+id/ic_food_fast_food_20"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/ic_food_fast_food_20" />
+
+        <ImageView
+            android:id="@+id/ic_food_candy_2"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_food_candy_2"
+            app:layout_constraintEnd_toStartOf="@+id/ic_food_candy_8"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/ic_food_candy_8" />
+
+        <ImageView
+            android:id="@+id/ic_food_candy_22"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_food_candy_22"
+            app:layout_constraintEnd_toStartOf="@+id/ic_food_fast_food_2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_food_candy_24"
+            app:layout_constraintTop_toTopOf="@+id/ic_food_fast_food_2" />
+
+        <ImageView
+            android:id="@+id/ic_food_candy_24"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_food_candy_24"
+            app:layout_constraintEnd_toStartOf="@+id/ic_food_candy_22"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/ic_food_candy_22" />
+
+        <ImageView
+            android:id="@+id/ic_food_candy_30"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_food_candy_30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_food_eat_6_thin"
+            app:layout_constraintTop_toBottomOf="@+id/food_label" />
+
+        <ImageView
+            android:id="@+id/ic_food_candy_8"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_food_candy_8"
+            app:layout_constraintEnd_toStartOf="@+id/ic_food_candy_14"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_food_candy_2"
+            app:layout_constraintTop_toTopOf="@+id/ic_food_candy_14" />
+
+        <ImageView
+            android:id="@+id/ic_food_eat_6_thin"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_food_eat_6_thin"
+            app:layout_constraintEnd_toStartOf="@+id/ic_food_candy_30"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_food_candy_14"
+            app:layout_constraintTop_toTopOf="@+id/ic_food_candy_30" />
+
+        <ImageView
+            android:id="@+id/ic_food_fast_food_10"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_food_fast_food_10"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_food_candy_12"
+            app:layout_constraintTop_toBottomOf="@+id/ic_food_candy_30" />
+
+        <ImageView
+            android:id="@+id/ic_food_fast_food_14"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_food_fast_food_14"
+            app:layout_constraintEnd_toStartOf="@+id/ic_food_fast_food_8"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/ic_food_fast_food_8" />
+
+        <ImageView
+            android:id="@+id/ic_food_fast_food_16"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_food_fast_food_16"
+            app:layout_constraintEnd_toStartOf="@+id/ic_food_fast_food_6"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_food_fast_food_20"
+            app:layout_constraintTop_toTopOf="@+id/ic_food_fast_food_6" />
+
+        <ImageView
+            android:id="@+id/ic_food_fast_food_18"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_food_fast_food_18"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_food_fast_food_6"
+            app:layout_constraintTop_toBottomOf="@+id/ic_food_fast_food_10" />
+
+        <ImageView
+            android:id="@+id/ic_food_fast_food_2"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_food_fast_food_2"
+            app:layout_constraintEnd_toStartOf="@+id/ic_food_candy_12"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_food_candy_22"
+            app:layout_constraintTop_toTopOf="@+id/ic_food_candy_12" />
+
+        <ImageView
+            android:id="@+id/ic_food_fast_food_20"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_food_fast_food_20"
+            app:layout_constraintEnd_toStartOf="@+id/ic_food_fast_food_16"
+            app:layout_constraintHeight_percent="0.05"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_food_candy_18"
+            app:layout_constraintTop_toTopOf="@+id/ic_food_fast_food_16"
+            app:layout_constraintWidth_percent="0.08" />
+
+        <ImageView
+            android:id="@+id/ic_food_fast_food_6"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_food_fast_food_6"
+            app:layout_constraintEnd_toStartOf="@+id/ic_food_fast_food_18"
+            app:layout_constraintHeight_percent="0.05"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_food_fast_food_16"
+            app:layout_constraintTop_toTopOf="@+id/ic_food_fast_food_18"
+            app:layout_constraintWidth_percent="0.08" />
+
+        <ImageView
+            android:id="@+id/ic_food_fast_food_8"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_food_fast_food_8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_food_fast_food_14"
+            app:layout_constraintTop_toBottomOf="@+id/ic_food_fast_food_18" />
+
+        <TextView
+            android:id="@+id/shopping_label"
+            style="@style/CategoryIconLabel"
+            android:layout_marginTop="24dp"
+            android:text="Shopping"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ic_food_fast_food_8" />
+
+        <ImageView
+            android:id="@+id/ic_shopping_shopping_bag_2"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_shopping_shopping_bag_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_shopping_shopping_cart_24"
+            app:layout_constraintTop_toBottomOf="@+id/shopping_label" />
+
+        <ImageView
+            android:id="@+id/ic_shopping_shopping_bag_5"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_shopping_shopping_bag_5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_shopping_glasses_7"
+            app:layout_constraintTop_toTopOf="@+id/ic_shopping_glasses_7" />
+
+        <ImageView
+            android:id="@+id/ic_shopping_glasses_7"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_shopping_glasses_7"
+            app:layout_constraintEnd_toStartOf="@+id/ic_shopping_shopping_bag_5"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ic_transportation_basket_4" />
+
+        <ImageView
+            android:id="@+id/ic_shopping_shopping_bag_6"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_shopping_shopping_bag_6"
+            app:layout_constraintEnd_toStartOf="@+id/ic_shopping_shopping_cart_2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_transportation_basket_4"
+            app:layout_constraintTop_toTopOf="@+id/ic_shopping_shopping_cart_2" />
+
+        <ImageView
+            android:id="@+id/ic_shopping_shopping_cart_2"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_shopping_shopping_cart_2"
+            app:layout_constraintEnd_toStartOf="@+id/ic_shopping_shopping_cart_24"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_shopping_shopping_bag_6"
+            app:layout_constraintTop_toTopOf="@+id/ic_shopping_shopping_cart_24" />
+
+        <ImageView
+            android:id="@+id/ic_shopping_shopping_cart_24"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_shopping_shopping_cart_24"
+            app:layout_constraintEnd_toStartOf="@+id/ic_shopping_shopping_bag_2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_shopping_shopping_cart_2"
+            app:layout_constraintTop_toTopOf="@+id/ic_shopping_shopping_bag_2" />
+
+        <TextView
+            android:id="@+id/transportation_label"
+            style="@style/CategoryIconLabel"
+            android:layout_marginTop="24dp"
+            android:text="Transportation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ic_shopping_glasses_7" />
+
+        <ImageView
+            android:id="@+id/ic_transportation_basket_4"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_transportation_basket_4"
+            app:layout_constraintEnd_toStartOf="@+id/ic_shopping_shopping_bag_6"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/ic_shopping_shopping_bag_6" />
+
+        <ImageView
+            android:id="@+id/ic_transportation_bus_8"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_transportation_bus_8"
+            app:layout_constraintEnd_toStartOf="@+id/ic_transportation_airport_19"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ic_transportation_car_23" />
+
+        <ImageView
+            android:id="@+id/ic_transportation_car_2"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_transportation_car_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_transportation_car_20"
+            app:layout_constraintTop_toBottomOf="@+id/transportation_label" />
+
+        <ImageView
+            android:id="@+id/ic_transportation_airport_15"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_transportation_airport_15"
+            app:layout_constraintEnd_toStartOf="@+id/ic_transportation_car_20"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_transportation_airport_17"
+            app:layout_constraintTop_toTopOf="@+id/ic_transportation_car_20" />
+
+        <ImageView
+            android:id="@+id/ic_transportation_airport_17"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_transportation_airport_17"
+            app:layout_constraintEnd_toStartOf="@+id/ic_transportation_airport_15"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_transportation_car_23"
+            app:layout_constraintTop_toTopOf="@+id/ic_transportation_airport_15" />
+
+        <ImageView
+            android:id="@+id/ic_transportation_car_23"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_transportation_car_23"
+            app:layout_constraintEnd_toStartOf="@+id/ic_transportation_airport_17"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/ic_transportation_airport_17" />
+
+        <ImageView
+            android:id="@+id/ic_transportation_car_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_transportation_car_6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_transportation_airport_19"
+            app:layout_constraintTop_toTopOf="@+id/ic_transportation_airport_19" />
+
+        <ImageView
+            android:id="@+id/ic_transportation_car_20"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_transportation_car_20"
+            app:layout_constraintEnd_toStartOf="@+id/ic_transportation_car_2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_transportation_airport_15"
+            app:layout_constraintTop_toTopOf="@+id/ic_transportation_car_2" />
+
+        <ImageView
+            android:id="@+id/ic_transportation_airport_19"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_transportation_airport_19"
+            app:layout_constraintEnd_toStartOf="@+id/ic_transportation_car_6"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_transportation_bus_8"
+            app:layout_constraintTop_toTopOf="@+id/ic_transportation_bus_8" />
+
+        <TextView
+            android:id="@+id/label_entertainments"
+            style="@style/CategoryIconLabel"
+            android:layout_marginTop="24dp"
+            android:text="Entertainments"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ic_transportation_bus_8" />
+
+        <ImageView
+            android:id="@+id/ic_entertainments_video_camera_thin"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_entertainments_video_camera_thin"
+            app:layout_constraintEnd_toStartOf="@+id/ic_entertainments_video_camera_12"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label_entertainments" />
+
+        <ImageView
+            android:id="@+id/ic_entertainments_video_camera_12"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_entertainments_video_camera_12"
+            app:layout_constraintEnd_toStartOf="@+id/ic_entertainments_paintbrush_7"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_entertainments_video_camera_thin"
+            app:layout_constraintTop_toTopOf="@+id/ic_entertainments_video_camera_thin" />
+
+        <ImageView
+            android:id="@+id/ic_entertainments_paintbrush_7"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_entertainments_paintbrush_7"
+            app:layout_constraintEnd_toStartOf="@+id/ic_entertainments_video_9"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_entertainments_video_camera_12"
+            app:layout_constraintTop_toTopOf="@+id/ic_entertainments_video_camera_12" />
+
+        <ImageView
+            android:id="@+id/ic_entertainments_video_12"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_entertainments_video_12"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ic_entertainments_video_camera_thin" />
+
+        <ImageView
+            android:id="@+id/ic_entertainments_video_3"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_entertainments_video_3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_entertainments_video_9"
+            app:layout_constraintTop_toTopOf="@+id/ic_entertainments_video_9" />
+
+        <ImageView
+            android:id="@+id/ic_entertainments_video_9"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_entertainments_video_9"
+            app:layout_constraintEnd_toStartOf="@+id/ic_entertainments_video_3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_entertainments_paintbrush_7"
+            app:layout_constraintTop_toTopOf="@+id/ic_entertainments_paintbrush_7" />
+
+        <TextView
+            android:id="@+id/label_games"
+            style="@style/CategoryIconLabel"
+            android:layout_marginTop="24dp"
+            android:text="Games"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ic_entertainments_video_12" />
+
+        <ImageView
+            android:id="@+id/ic_games_steam_5"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_games_steam_5"
+            app:layout_constraintEnd_toStartOf="@+id/ic_games_gamepad_4"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_games_puzzle_2"
+            app:layout_constraintTop_toTopOf="@+id/ic_games_puzzle_2" />
+
+        <ImageView
+            android:id="@+id/ic_games_puzzle_2"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_games_puzzle_2"
+            app:layout_constraintEnd_toStartOf="@+id/ic_games_steam_5"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label_games" />
+
+        <ImageView
+            android:id="@+id/ic_games_gamepad_4"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_games_gamepad_4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_games_steam_5"
+            app:layout_constraintTop_toTopOf="@+id/ic_games_steam_5" />
+
+        <TextView
+            android:id="@+id/label_medical"
+            style="@style/CategoryIconLabel"
+            android:layout_marginTop="24dp"
+            android:text="Sports"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ic_games_gamepad_4" />
+
+        <ImageView
+            android:id="@+id/ic_health_medical_7"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_health_medical_7"
+            app:layout_constraintEnd_toStartOf="@+id/ic_health_medical_5"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/label_medical" />
+
+        <ImageView
+            android:id="@+id/ic_health_medical_11"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_health_medical_11"
+            app:layout_constraintEnd_toStartOf="@+id/ic_health_medical_15"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ic_health_medical_7" />
+
+        <ImageView
+            android:id="@+id/ic_health_medical_15"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_health_medical_15"
+            app:layout_constraintEnd_toStartOf="@+id/ic_health_medical_4"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_health_medical_11"
+            app:layout_constraintTop_toTopOf="@+id/ic_health_medical_11" />
+
+        <ImageView
+            android:id="@+id/ic_health_medical_4"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_health_medical_4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_health_medical_15"
+            app:layout_constraintTop_toTopOf="@+id/ic_health_medical_15" />
+
+        <ImageView
+            android:id="@+id/ic_health_medical_13"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_health_medical_13"
+            app:layout_constraintEnd_toStartOf="@+id/ic_health_medical_17"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_health_medical_5"
+            app:layout_constraintTop_toTopOf="@+id/ic_health_medical_5" />
+
+        <ImageView
+            android:id="@+id/ic_health_medical_16"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_health_medical_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_health_medical_17"
+            app:layout_constraintTop_toTopOf="@+id/ic_health_medical_17" />
+
+        <ImageView
+            android:id="@+id/ic_health_medical_17"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_health_medical_17"
+            app:layout_constraintEnd_toStartOf="@+id/ic_health_medical_16"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_health_medical_13"
+            app:layout_constraintTop_toTopOf="@+id/ic_health_medical_13" />
+
+        <ImageView
+            android:id="@+id/ic_health_medical_5"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_health_medical_5"
+            app:layout_constraintEnd_toStartOf="@+id/ic_health_medical_13"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_health_medical_7"
+            app:layout_constraintTop_toTopOf="@+id/ic_health_medical_7" />
+
+        <TextView
+            android:id="@+id/label_money"
+            style="@style/CategoryIconLabel"
+            android:layout_marginTop="24dp"
+            android:text="Money"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ic_health_medical_11" />
+
+        <ImageView
+            android:id="@+id/ic_money_christmas_42"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_money_christmas_42"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_money_banknote_12"
+            app:layout_constraintTop_toTopOf="@+id/ic_money_banknote_12" />
+
+        <ImageView
+            android:id="@+id/ic_money_banknote_15"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_money_banknote_15"
+            app:layout_constraintEnd_toStartOf="@+id/ic_money_banknote_12"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_money_credit_card_16"
+            app:layout_constraintTop_toTopOf="@+id/ic_money_credit_card_16" />
+
+        <ImageView
+            android:id="@+id/ic_money_banknote_12"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_money_banknote_12"
+            app:layout_constraintEnd_toStartOf="@+id/ic_money_christmas_42"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_money_banknote_15"
+            app:layout_constraintTop_toTopOf="@+id/ic_money_banknote_15" />
+
+        <ImageView
+            android:id="@+id/ic_money_credit_card_16"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/ic_money_credit_card_16"
+            app:layout_constraintEnd_toStartOf="@+id/ic_money_banknote_15"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label_money" />
+
+        <TextView
+            android:id="@+id/label_sports"
+            style="@style/CategoryIconLabel"
+            android:layout_marginTop="24dp"
+            android:text="Sports"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ic_money_credit_card_16" />
+
+        <ImageView
+            android:id="@+id/ic_sports_soccer_1"
+            style="@style/CategoryIconStyle"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/ic_sports_soccer_1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ic_sports_building_40"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label_sports" />
+
+        <ImageView
+            android:id="@+id/ic_sports_golf_2"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_sports_golf_2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_sports_basketball_2"
+            app:layout_constraintTop_toTopOf="@+id/ic_sports_basketball_2" />
+
+        <ImageView
+            android:id="@+id/ic_sports_baseball_2"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_sports_baseball_2"
+            app:layout_constraintEnd_toStartOf="@+id/ic_sports_basketball_2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_sports_building_40"
+            app:layout_constraintTop_toTopOf="@+id/ic_sports_building_40" />
+
+        <ImageView
+            android:id="@+id/ic_sports_basketball_2"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_sports_basketball_2"
+            app:layout_constraintEnd_toStartOf="@+id/ic_sports_golf_2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_sports_baseball_2"
+            app:layout_constraintTop_toTopOf="@+id/ic_sports_baseball_2" />
+
+        <ImageView
+            android:id="@+id/ic_sports_building_40"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_sports_building_40"
+            app:layout_constraintEnd_toStartOf="@+id/ic_sports_baseball_2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ic_sports_soccer_1"
+            app:layout_constraintTop_toTopOf="@+id/ic_sports_soccer_1" />
+
+        <ImageView
+            android:id="@+id/ic_transportation_bicycle_1"
+            style="@style/CategoryIconStyle"
+            android:background="@drawable/ic_transportation_bicycle_1"
+            tools:layout_editor_absoluteX="365dp"
+            tools:layout_editor_absoluteY="548dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
