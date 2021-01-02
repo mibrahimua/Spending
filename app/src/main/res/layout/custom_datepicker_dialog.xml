@@ -43,32 +43,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        app:layout_constraintBaseline_toBaselineOf="@+id/yearBefore"
         app:layout_constraintEnd_toStartOf="@+id/yearNext"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/yearBefore"
+        app:layout_constraintTop_toTopOf="@+id/yearBefore"
         tools:text="2020" />
 
     <TextView
         android:id="@+id/yearNext"
         style="@style/MonthPickerStyle"
-        android:layout_marginEnd="16dp"
+        android:layout_height="35dp"
         android:background="?android:attr/selectableItemBackground"
         android:text="after"
         android:textAlignment="textEnd"
-        app:layout_constraintBaseline_toBaselineOf="@+id/yearCurrent"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/yearCurrent" />
+        app:layout_constraintStart_toEndOf="@+id/yearCurrent"
+        app:layout_constraintTop_toTopOf="@+id/yearCurrent" />
 
     <TextView
         android:id="@+id/yearBefore"
         style="@style/MonthPickerStyle"
-        android:layout_marginStart="16dp"
+        android:layout_height="35dp"
         android:layout_marginTop="16dp"
         android:background="?android:attr/selectableItemBackground"
         android:text="before"
         android:textAlignment="textStart"
+        android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/yearCurrent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,14 +79,17 @@
     <TextView
         android:id="@+id/monthJan"
         style="@style/MonthPickerStyle"
-        android:layout_marginStart="32dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:text="JAN"
+        app:layout_constraintBottom_toTopOf="@+id/monthMay"
         app:layout_constraintEnd_toStartOf="@+id/monthFeb"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/yearCurrent" />
+        app:layout_constraintTop_toBottomOf="@+id/yearBefore" />
 
     <TextView
         android:id="@+id/monthFeb"
@@ -93,41 +98,44 @@
         android:layout_marginEnd="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:text="FEB"
-        app:layout_constraintBaseline_toBaselineOf="@+id/monthJan"
         app:layout_constraintEnd_toStartOf="@+id/monthMar"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/monthJan" />
+        app:layout_constraintStart_toEndOf="@+id/monthJan"
+        app:layout_constraintTop_toTopOf="@+id/monthJan" />
 
     <TextView
         android:id="@+id/monthMar"
         style="@style/MonthPickerStyle"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:background="?android:attr/selectableItemBackground"
         android:text="MAR"
-        app:layout_constraintBaseline_toBaselineOf="@+id/monthFeb"
         app:layout_constraintEnd_toStartOf="@+id/monthApr"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/monthFeb" />
+        app:layout_constraintStart_toEndOf="@+id/monthFeb"
+        app:layout_constraintTop_toTopOf="@+id/monthFeb" />
 
     <TextView
         android:id="@+id/monthApr"
         style="@style/MonthPickerStyle"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         android:text="APR"
-        app:layout_constraintBaseline_toBaselineOf="@+id/monthMar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/monthMar" />
+        app:layout_constraintStart_toEndOf="@+id/monthMar"
+        app:layout_constraintTop_toTopOf="@+id/monthMar" />
 
     <TextView
         android:id="@+id/monthMay"
         style="@style/MonthPickerStyle"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:text="MAY"
+        app:layout_constraintBottom_toTopOf="@+id/monthSep"
         app:layout_constraintEnd_toStartOf="@+id/monthJun"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -139,10 +147,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="JUN"
-        app:layout_constraintBaseline_toBaselineOf="@+id/monthMay"
         app:layout_constraintEnd_toStartOf="@+id/monthJul"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/monthMay" />
+        app:layout_constraintStart_toEndOf="@+id/monthMay"
+        app:layout_constraintTop_toTopOf="@+id/monthMay" />
 
     <TextView
         android:id="@+id/monthJul"
@@ -150,27 +158,28 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="JUL"
-        app:layout_constraintBaseline_toBaselineOf="@+id/monthJun"
         app:layout_constraintEnd_toStartOf="@+id/monthAug"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/monthJun" />
+        app:layout_constraintStart_toEndOf="@+id/monthJun"
+        app:layout_constraintTop_toTopOf="@+id/monthJun" />
 
     <TextView
         android:id="@+id/monthAug"
         style="@style/MonthPickerStyle"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         android:text="AUG"
-        app:layout_constraintBaseline_toBaselineOf="@+id/monthJul"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/monthJul" />
+        app:layout_constraintStart_toEndOf="@+id/monthJul"
+        app:layout_constraintTop_toTopOf="@+id/monthJul" />
 
     <TextView
         android:id="@+id/monthSep"
         style="@style/MonthPickerStyle"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="24dp"
         android:text="SEP"
@@ -181,35 +190,36 @@
         app:layout_constraintTop_toBottomOf="@+id/monthMay" />
 
     <TextView
-        android:id="@+id/monthOct"
-        style="@style/MonthPickerStyle"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="OCT"
-        app:layout_constraintBaseline_toBaselineOf="@+id/monthSep"
-        app:layout_constraintEnd_toStartOf="@+id/monthNov"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/monthSep" />
-
-    <TextView
         android:id="@+id/monthNov"
         style="@style/MonthPickerStyle"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="NOV"
-        app:layout_constraintBaseline_toBaselineOf="@+id/monthOct"
         app:layout_constraintEnd_toStartOf="@+id/monthDec"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/monthOct" />
+        app:layout_constraintStart_toEndOf="@+id/monthOct"
+        app:layout_constraintTop_toTopOf="@+id/monthOct" />
 
     <TextView
         android:id="@+id/monthDec"
         style="@style/MonthPickerStyle"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="16dp"
         android:text="DEC"
-        app:layout_constraintBaseline_toBaselineOf="@+id/monthNov"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/monthNov" />
+        app:layout_constraintStart_toEndOf="@+id/monthNov"
+        app:layout_constraintTop_toTopOf="@+id/monthNov" />
+
+    <TextView
+        android:id="@+id/monthOct"
+        style="@style/MonthPickerStyle"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="OCT"
+        app:layout_constraintEnd_toStartOf="@+id/monthNov"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/monthSep"
+        app:layout_constraintTop_toTopOf="@+id/monthSep" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "b51daeef4402ad0ea6211c7f2adb1c15",
+    "identityHash": "ab6730b0548471f9c4ffb64cc8be9562",
     "entities": [
       {
         "tableName": "transaction_spend",
@@ -155,12 +155,44 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "account",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userName` TEXT NOT NULL, `userEmail` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userName",
+            "columnName": "userName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userEmail",
+            "columnName": "userEmail",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "userId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b51daeef4402ad0ea6211c7f2adb1c15')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ab6730b0548471f9c4ffb64cc8be9562')"
     ]
   }
 }

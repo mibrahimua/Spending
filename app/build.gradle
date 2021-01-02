@@ -94,6 +94,9 @@ dependencies {
     //Anko do async
     implementation "org.jetbrains.anko:anko:0.10.4"
 
+    //Google Play Services
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+
     //Leak Canary (Memory Leak Detection)
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
 
