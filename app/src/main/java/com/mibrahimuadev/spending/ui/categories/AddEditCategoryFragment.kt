@@ -2,6 +2,7 @@ package com.mibrahimuadev.spending.ui.categories
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
@@ -96,7 +97,7 @@ class AddEditCategoryFragment : Fragment() {
             object : OnBackPressedCallback(true /* enabled by default */) {
                 override fun handleOnBackPressed() {
                     Navigation.findNavController(requireView())
-                        .navigate(AddEditCategoryFragmentDirections.actionGlobalCategorySettingFragment())
+                        .navigate(AddEditCategoryFragmentDirections.actionAddEditCategoryFragmentToCategorySettingFragment())
                 }
             }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -112,16 +113,18 @@ class AddEditCategoryFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.save_action) {
+            val imm =
+                getActivity()?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view?.getWindowToken(), 0)
             categoryViewModel.validateCategory()
-
             categoryViewModel.errorMessage.observe(viewLifecycleOwner) { error ->
                 if (error.isNotEmpty()) {
                     Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
                 }
             }
-            categoryViewModel.navigateToHome.observe(viewLifecycleOwner, EventObserver {
+            categoryViewModel.navigateToCategorySetting.observe(viewLifecycleOwner, EventObserver {
                 val action =
-                    AddEditCategoryFragmentDirections.actionGlobalCategorySettingFragment()
+                    AddEditCategoryFragmentDirections.actionAddEditCategoryFragmentToCategorySettingFragment()
                 findNavController().navigate(action)
             })
         }
@@ -137,7 +140,7 @@ class AddEditCategoryFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 }

@@ -32,7 +32,7 @@ class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
     lateinit var calc: CalculatorImpl
     private var _binding: FragmentAddTransactionBinding? = null
     private val binding get() = _binding!!
-    private val transactionViewModel: TransactionViewModel by navGraphViewModels(R.id.nav_transc) {
+    private val transactionViewModel: TransactionViewModel by navGraphViewModels(R.id.nav_transaction) {
         TransactionViewModelFactory(requireActivity().application)
     }
     private val args: AddEditTransactionFragmentArgs by navArgs()

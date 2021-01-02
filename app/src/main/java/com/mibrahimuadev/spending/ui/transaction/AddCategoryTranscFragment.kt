@@ -27,7 +27,7 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
     private lateinit var adapter: AddCategoryTrancsListAdapter
     private lateinit var searchView: SearchView
     private val args: AddCategoryTranscFragmentArgs by navArgs()
-    private val transactionViewModel: TransactionViewModel by navGraphViewModels(R.id.nav_transc) {
+    private val transactionViewModel: TransactionViewModel by navGraphViewModels(R.id.nav_transaction) {
         TransactionViewModelFactory(requireActivity().application)
     }
 

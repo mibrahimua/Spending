@@ -29,6 +29,10 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
     val navigateToHome: LiveData<Event<Boolean>>
         get() = _navigateToHome
 
+    private val _navigateToCategorySetting = MutableLiveData<Event<Boolean>>()
+    val navigateToCategorySetting: LiveData<Event<Boolean>>
+        get() = _navigateToCategorySetting
+
     private val _dataLoading = MutableLiveData<Boolean>()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
@@ -111,19 +115,20 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
 
     fun validateCategory() {
         _dataLoading.value = true
-        val categoryId = categoryId.value ?: 0
-        if (categoryName.value == null || categoryName.value!!.isEmpty()) {
+        if (categoryName.value.isNullOrEmpty()) {
             _errorMessage.value = "Category name cannot empty"
             _dataLoading.value = false
             return
         }
-        if (categoryId == 0) {
-            getLastCategoryId()
+        if(iconName.value.isNullOrEmpty()) {
+            _errorMessage.value = "Icon category cannot empty"
+            _dataLoading.value = false
+            return
         }
         try {
             _errorMessage.value = ""
             insertOrUpdateCategory()
-            _navigateToHome.value = Event(true)
+            _navigateToCategorySetting.value = Event(true)
         } catch (e: Exception) {
             _errorMessage.value = "Can't saving category"
         }
@@ -131,20 +136,21 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
 
     fun insertOrUpdateCategory() {
         val categoryId = categoryId.value ?: 0
-        if (categoryId != 0) {
-            viewModelScope.launch() {
-                categoryRepository.insertOrUpdateCategory(
-                    CategoryEntity(
-                        categoryId = categoryId,
-                        categoryName = categoryName.value!!,
-                        iconId = iconId.value!!,
-                        categoryType = categoryType.value!!
-                    )
-                )
+        viewModelScope.launch() {
+            if (categoryId != 0) {
+                val job = viewModelScope.launch {
+                    getLastCategoryId()
+                }
+                job.join()
             }
-        } else {
-            _errorMessage.value = "Can't saving category"
-            return
+            categoryRepository.insertOrUpdateCategory(
+                CategoryEntity(
+                    categoryId = categoryId,
+                    categoryName = categoryName.value!!,
+                    iconId = iconId.value!!,
+                    categoryType = categoryType.value!!
+                )
+            )
         }
     }
 
@@ -154,6 +160,13 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
         } else {
             _categoryName.value = newText
         }
+    }
+
+    fun clearLiveDataCategory() {
+        _categoryId.value = null
+        _categoryName.value = ""
+        _iconId.value = null
+        _iconName.value = ""
     }
 
 

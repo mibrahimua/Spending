@@ -16,13 +16,16 @@
             app:destination="@id/homeFragment" />
         <action
             android:id="@+id/action_homeFragment_to_addTransaksiFragment"
-            app:destination="@id/nav_transc" />
+            app:destination="@id/nav_transaction" />
         <action
             android:id="@+id/action_homeFragment_to_detailTransactionFragment2"
             app:destination="@id/detailTransactionFragment2" />
+        <action
+            android:id="@+id/action_homeFragment_to_nav_category"
+            app:destination="@id/nav_category" />
     </fragment>
     <navigation
-        android:id="@+id/nav_transc"
+        android:id="@+id/nav_transaction"
         app:startDestination="@id/addTransactionFragment">
 
         <argument
@@ -78,7 +81,7 @@
         tools:layout="@layout/fragment_detail_transaction">
         <action
             android:id="@+id/action_detailTransactionFragment2_to_nav_transc"
-            app:destination="@id/nav_transc" />
+            app:destination="@id/nav_transaction" />
         <argument
             android:name="transactionId"
             app:argType="long" />
@@ -86,25 +89,9 @@
             android:id="@+id/action_detailTransactionFragment2_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/categorySettingFragment"
-        android:name="com.mibrahimuadev.spending.ui.categories.CategorySettingFragment"
-        android:label="fragment_category_setting"
-        tools:layout="@layout/fragment_category_setting">
-        <action
-            android:id="@+id/action_categorySettingFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_categorySettingFragment_to_addEditCategoryFragment"
-            app:destination="@id/nav_category"
-            app:popUpTo="@id/nav_category"
-            app:popUpToInclusive="true"/>
-    </fragment>
     <navigation
         android:id="@+id/nav_category"
-        app:startDestination="@id/addEditCategoryFragment">
+        app:startDestination="@id/categorySettingFragment">
         <argument
             android:name="categoryId"
             android:defaultValue="0"
@@ -142,11 +129,20 @@
                 app:popUpTo="@id/addEditCategoryFragment"
                 app:popUpToInclusive="true" />
         </fragment>
-        <action
-            android:id="@+id/action_global_categorySettingFragment"
-            app:destination="@id/categorySettingFragment"
-            app:popUpTo="@id/categorySettingFragment"
-            app:popUpToInclusive="true" />
+        <fragment
+            android:id="@+id/categorySettingFragment"
+            android:name="com.mibrahimuadev.spending.ui.categories.CategorySettingFragment"
+            android:label="fragment_category_setting"
+            tools:layout="@layout/fragment_category_setting" >
+            <action
+                android:id="@+id/action_categorySettingFragment_to_addEditCategoryFragment"
+                app:destination="@id/addEditCategoryFragment" />
+            <action
+                android:id="@+id/action_categorySettingFragment_to_homeFragment"
+                app:destination="@id/homeFragment"
+                app:popUpTo="@id/homeFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
     </navigation>
 
 </navigation>

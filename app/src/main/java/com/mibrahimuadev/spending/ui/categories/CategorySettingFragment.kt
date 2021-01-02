@@ -7,6 +7,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.adapter.CategorySettingListAdapter
@@ -18,6 +19,9 @@ class CategorySettingFragment : Fragment() {
     private var _binding: FragmentCategorySettingBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: CategorySettingListAdapter
+    private val categoryViewModel: CategoryViewModel by navGraphViewModels(R.id.nav_category) {
+        CategoryViewModelFactory(application = requireActivity().application)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,12 +29,9 @@ class CategorySettingFragment : Fragment() {
     ): View? {
         _binding = FragmentCategorySettingBinding.inflate(layoutInflater)
         val application = requireActivity().application
-        val viewModelFactory = CategoryViewModelFactory(application)
 
-        val categoryViewModel =
-            ViewModelProvider(this, viewModelFactory).get(CategoryViewModel::class.java)
         val recyclerView = binding.recycleviewCategory
-
+        categoryViewModel.clearLiveDataCategory()
         adapter = CategorySettingListAdapter(application)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(application)
