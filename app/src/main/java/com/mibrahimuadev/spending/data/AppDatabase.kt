@@ -8,13 +8,16 @@ import androidx.room.TypeConverters
 import com.mibrahimuadev.spending.data.dao.CategoryDao
 import com.mibrahimuadev.spending.data.dao.CurrencyDao
 import com.mibrahimuadev.spending.data.dao.TransactionDao
-import com.mibrahimuadev.spending.data.dao.TransactionIconDao
-import com.mibrahimuadev.spending.data.entity.*
+import com.mibrahimuadev.spending.data.dao.IconCategoryDao
+import com.mibrahimuadev.spending.data.entity.CategoryEntity
+import com.mibrahimuadev.spending.data.entity.IconCategoryEntity
+import com.mibrahimuadev.spending.data.entity.CurrencyEntity
+import com.mibrahimuadev.spending.data.entity.TransactionEntity
 import com.mibrahimuadev.spending.utils.Converters
 
 
 @Database(
-    entities = [(TransactionEntity::class), (CurrencyEntity::class), (CategoryEntity::class), (CategoryIconEntity::class)],
+    entities = [(TransactionEntity::class), (CurrencyEntity::class), (CategoryEntity::class), (IconCategoryEntity::class)],
     version = 1,
     exportSchema = true
 )
@@ -27,7 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun categoryDao(): CategoryDao
 
-    abstract fun iconTransaksiDao(): TransactionIconDao
+    abstract fun iconCategoryDao(): IconCategoryDao
 
     companion object {
         /**

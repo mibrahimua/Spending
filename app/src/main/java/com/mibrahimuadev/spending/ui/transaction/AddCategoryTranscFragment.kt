@@ -3,7 +3,6 @@ package com.mibrahimuadev.spending.ui.transaction
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -50,12 +49,16 @@ class AddCategoryTranscFragment : Fragment(), SearchView.OnQueryTextListener {
 //            Toast.makeText(application, "category $it clicked", Toast.LENGTH_SHORT).show()
             runBlocking {
                 Log.i(TAG, "Coroutine cek if category exist starting")
-                val job = lifecycleScope.launch(Dispatchers.IO) {
-                    categoryViewModel.insertOrUpdateCategory(it)
+                categoryViewModel._categoryId.value = it.categoryId
+                categoryViewModel._categoryName.value = it.categoryName
+                categoryViewModel._iconId.value = it.iconId
+                categoryViewModel._categoryType.value = it.categoryType
+                val job2 = lifecycleScope.launch(Dispatchers.IO) {
+                    categoryViewModel.insertOrUpdateCategory()
                 }
-                job.join()
+                job2.join()
 
-                Log.i(TAG, "Coroutine ends " + job.isActive)
+                Log.i(TAG, "Coroutine ends " + job2.isActive)
             }
             transactionViewModel._categoryId.value = it.categoryId
             transactionViewModel._categoryName.value = it.categoryName

@@ -3,6 +3,7 @@ package com.mibrahimuadev.spending.ui.categories
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -34,28 +35,37 @@ class CategorySettingFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(application)
 
-        categoryViewModel.typeCategory.observe(viewLifecycleOwner) {
+        categoryViewModel.categoryType.observe(viewLifecycleOwner) {
             categoryViewModel.getAllCategoriesByType(it)
         }
         categoryViewModel.allCategories.observe(viewLifecycleOwner, { categories ->
-            adapter.setCategory(categories, categoryViewModel.typeCategory.value!!)
+            adapter.setCategory(categories, categoryViewModel.categoryType.value!!)
         })
 
         binding.radioGroupTransc.setOnCheckedChangeListener { group, checkedId ->
             when (checkedId) {
                 R.id.radioExpense -> {
                     binding.radioExpense.setTextColor(Color.WHITE)
-                    binding.radioIncome.setTextColor(Color.BLUE)
-                    categoryViewModel._typeCategory.value = TransactionType.EXPENSE
+                    binding.radioIncome.setTextColor(Color.BLACK)
+                    categoryViewModel._categoryType.value = TransactionType.EXPENSE
                 }
                 R.id.radioIncome -> {
                     binding.radioIncome.setTextColor(Color.WHITE)
-                    binding.radioExpense.setTextColor(Color.BLUE)
-                    categoryViewModel._typeCategory.value = TransactionType.INCOME
+                    binding.radioExpense.setTextColor(Color.BLACK)
+                    categoryViewModel._categoryType.value = TransactionType.INCOME
                 }
             }
         }
         binding.radioExpense.isChecked = true
+
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true /* enabled by default */) {
+                override fun handleOnBackPressed() {
+                    Navigation.findNavController(requireView())
+                        .navigate(CategorySettingFragmentDirections.actionCategorySettingFragmentToHomeFragment())
+                }
+            }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         setHasOptionsMenu(true)
         return binding.root
@@ -71,7 +81,6 @@ class CategorySettingFragment : Fragment() {
             Navigation.findNavController(requireView())
                 .navigate(
                     CategorySettingFragmentDirections.actionCategorySettingFragmentToAddEditCategoryFragment()
-                        .setActionType("INSERT")
                 )
         }
         return super.onOptionsItemSelected(item)

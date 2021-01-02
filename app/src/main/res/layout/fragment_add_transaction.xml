@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_constraintGuide_begin="300dp"
-    tools:context=".ui.transaction.AddTransactionFragment">
+    tools:context=".ui.transaction.AddEditTransactionFragment">
 
     <RadioGroup
         android:id="@+id/radioGroupTransc"

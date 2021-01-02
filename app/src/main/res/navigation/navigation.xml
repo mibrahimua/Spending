@@ -24,10 +24,7 @@
     <navigation
         android:id="@+id/nav_transc"
         app:startDestination="@id/addTransactionFragment">
-        <argument
-            android:name="actionType"
-            android:defaultValue=""
-            app:argType="string" />
+
         <argument
             android:name="transactionType"
             android:defaultValue=""
@@ -38,7 +35,7 @@
             app:argType="long" />
         <fragment
             android:id="@+id/addTransactionFragment"
-            android:name="com.mibrahimuadev.spending.ui.transaction.AddTransactionFragment"
+            android:name="com.mibrahimuadev.spending.ui.transaction.AddEditTransactionFragment"
             android:label="AddTransaksiFragment"
             tools:layout="@layout/fragment_add_transaction">
             <action
@@ -50,18 +47,14 @@
                 app:popUpTo="@id/homeFragment"
                 app:popUpToInclusive="true" />
             <argument
-                android:name="actionType"
-                android:defaultValue=""
-                app:argType="string" />
-            <argument
                 android:name="transactionType"
                 android:defaultValue="@null"
                 app:argType="string"
                 app:nullable="true" />
             <argument
                 android:name="transactionId"
-                app:argType="long"
-                android:defaultValue="0L" />
+                android:defaultValue="0L"
+                app:argType="long" />
         </fragment>
         <fragment
             android:id="@+id/addCategoryTranscFragment"
@@ -97,29 +90,63 @@
         android:id="@+id/categorySettingFragment"
         android:name="com.mibrahimuadev.spending.ui.categories.CategorySettingFragment"
         android:label="fragment_category_setting"
-        tools:layout="@layout/fragment_category_setting" >
+        tools:layout="@layout/fragment_category_setting">
         <action
             android:id="@+id/action_categorySettingFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_categorySettingFragment_to_addEditCategoryFragment"
-            app:destination="@id/addEditCategoryFragment" />
+            app:destination="@id/nav_category"
+            app:popUpTo="@id/nav_category"
+            app:popUpToInclusive="true"/>
     </fragment>
-    <fragment
-        android:id="@+id/addEditCategoryFragment"
-        android:name="com.mibrahimuadev.spending.ui.categories.AddEditCategoryFragment"
-        android:label="fragment_addedit_category"
-        tools:layout="@layout/fragment_addedit_category" >
-        <action
-            android:id="@+id/action_addEditCategoryFragment_to_categorySettingFragment"
-            app:destination="@id/categorySettingFragment" />
+    <navigation
+        android:id="@+id/nav_category"
+        app:startDestination="@id/addEditCategoryFragment">
         <argument
             android:name="categoryId"
-            app:argType="integer"
-            android:defaultValue="0" />
-        <argument android:name="actionType"
-            android:defaultValue=""
-            app:argType="string" />
-    </fragment>
+            android:defaultValue="0"
+            app:argType="integer" />
+        <fragment
+            android:id="@+id/addEditCategoryFragment"
+            android:name="com.mibrahimuadev.spending.ui.categories.AddEditCategoryFragment"
+            android:label="fragment_addedit_category"
+            tools:layout="@layout/fragment_addedit_category">
+            <argument
+                android:name="categoryId"
+                android:defaultValue="0"
+                app:argType="integer" />
+            <argument
+                android:name="actionType"
+                android:defaultValue=""
+                app:argType="string" />
+            <action
+                android:id="@+id/action_addEditCategoryFragment_to_iconCategoryFragment"
+                app:destination="@id/iconCategoryFragment" />
+            <action
+                android:id="@+id/action_addEditCategoryFragment_to_categorySettingFragment"
+                app:destination="@id/categorySettingFragment"
+                app:popUpTo="@id/categorySettingFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <fragment
+            android:id="@+id/iconCategoryFragment"
+            android:name="com.mibrahimuadev.spending.ui.icon.IconCategoryFragment"
+            android:label="fragment_icon_category"
+            tools:layout="@layout/fragment_icon_category">
+            <action
+                android:id="@+id/action_iconCategoryFragment_to_addEditCategoryFragment"
+                app:destination="@id/addEditCategoryFragment"
+                app:popUpTo="@id/addEditCategoryFragment"
+                app:popUpToInclusive="true" />
+        </fragment>
+        <action
+            android:id="@+id/action_global_categorySettingFragment"
+            app:destination="@id/categorySettingFragment"
+            app:popUpTo="@id/categorySettingFragment"
+            app:popUpToInclusive="true" />
+    </navigation>
 
 </navigation>

@@ -11,7 +11,7 @@ interface CategoryDao {
     @Query(
         """SELECT k.categoryId, k.categoryName, c.iconId, c.iconName, k.categoryType 
             FROM category k 
-            LEFT JOIN category_icon c ON k.iconId = c.iconId 
+            LEFT JOIN icon_category c ON k.iconId = c.iconId 
             WHERE k.categoryType = :categoryType
             GROUP BY k.categoryId"""
     )
@@ -20,7 +20,7 @@ interface CategoryDao {
     @Query(
         """SELECT k.categoryId, k.categoryName, c.iconId, c.iconName, k.categoryType 
             FROM category k 
-            LEFT JOIN category_icon c ON k.iconId = c.iconId 
+            LEFT JOIN icon_category c ON k.iconId = c.iconId 
             WHERE categoryId = :categoriId"""
     )
     fun getDetailCategory(categoriId: Int): Category?

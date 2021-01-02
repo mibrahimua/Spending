@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "70cc9206b55209fbbf1b846e3ff9df72",
+    "identityHash": "b51daeef4402ad0ea6211c7f2adb1c15",
     "entities": [
       {
         "tableName": "transaction_spend",
@@ -131,7 +131,7 @@
         "foreignKeys": []
       },
       {
-        "tableName": "category_icon",
+        "tableName": "icon_category",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`iconId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `iconName` TEXT NOT NULL)",
         "fields": [
           {
@@ -160,7 +160,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '70cc9206b55209fbbf1b846e3ff9df72')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b51daeef4402ad0ea6211c7f2adb1c15')"
     ]
   }
 }

@@ -71,8 +71,8 @@ class AddCategoryTrancsListAdapter internal constructor(
                         categoryId = lastCategoryId,
                         categoryName = filterText,
                         categoryType = categoryType,
-                        iconId = 3,
-                        iconName = "ic_food_candy_12"
+                        iconId = 53,
+                        iconName = "ic_money_banknote_12"
                     )
                 )
             }

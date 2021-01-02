@@ -24,8 +24,8 @@
 
             <TextView
                 android:id="@+id/tvLabelExpense"
+                style="@style/LabelTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Expense"
                 app:layout_constraintEnd_toStartOf="@+id/tvLabelIncome"
@@ -36,8 +36,8 @@
 
             <TextView
                 android:id="@+id/tvExpense"
+                style="@style/LabelTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="@+id/tvLabelExpense"
                 app:layout_constraintStart_toStartOf="@+id/tvLabelExpense"
@@ -46,8 +46,8 @@
 
             <TextView
                 android:id="@+id/tvLabelIncome"
+                style="@style/LabelTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Income"
                 app:layout_constraintEnd_toStartOf="@+id/tvLabelBalance"
@@ -57,8 +57,8 @@
 
             <TextView
                 android:id="@+id/tvIncome"
+                style="@style/LabelTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="@+id/tvLabelIncome"
                 app:layout_constraintStart_toStartOf="@+id/tvLabelIncome"
@@ -67,8 +67,8 @@
 
             <TextView
                 android:id="@+id/tvLabelBalance"
+                style="@style/LabelTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Balance"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -78,8 +78,8 @@
 
             <TextView
                 android:id="@+id/tvBalancce"
+                style="@style/LabelTextView"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="@+id/tvLabelBalance"
                 app:layout_constraintStart_toStartOf="@+id/tvLabelBalance"

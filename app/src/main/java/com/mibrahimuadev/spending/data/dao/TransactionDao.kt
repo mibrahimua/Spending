@@ -13,7 +13,7 @@ interface TransactionDao {
                 k.categoryId, m.currencyId
                 FROM transaction_spend t
                 LEFT JOIN category k ON t.categoryId = k.categoryId
-                LEFT JOIN category_icon c ON c.iconId = k.iconId
+                LEFT JOIN icon_category c ON c.iconId = k.iconId
                 LEFT JOIN currency m ON m.currencyId = t.currencyId
                 WHERE datetime(t.transactionDate/1000,'unixepoch', 'localtime') 
                 BETWEEN :startDate AND :endDate
@@ -27,7 +27,7 @@ interface TransactionDao {
                 k.categoryId, m.currencyId
                 FROM transaction_spend t
                 LEFT JOIN category k ON t.categoryId = k.categoryId
-                LEFT JOIN category_icon c ON c.iconId = k.iconId
+                LEFT JOIN icon_category c ON c.iconId = k.iconId
                 LEFT JOIN currency m ON m.currencyId = t.currencyId
                 WHERE t.transactionId = :transactionId"""
     )

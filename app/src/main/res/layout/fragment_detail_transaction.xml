@@ -27,8 +27,7 @@
 
             <TextView
                 android:id="@+id/labelTranscCategory"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                style="@style/LabelTextView"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
@@ -40,8 +39,7 @@
 
             <TextView
                 android:id="@+id/labelTrancsType"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                style="@style/LabelTextView"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="8dp"
@@ -53,8 +51,7 @@
 
             <TextView
                 android:id="@+id/labelTranscNominal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                style="@style/LabelTextView"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
@@ -66,8 +63,7 @@
 
             <TextView
                 android:id="@+id/labelTranscDate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                style="@style/LabelTextView"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
@@ -79,8 +75,7 @@
 
             <TextView
                 android:id="@+id/labelTranscNote"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                style="@style/LabelTextView"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
@@ -94,8 +89,7 @@
 
             <TextView
                 android:id="@+id/tvTranscCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/LabelTextView"
                 android:textSize="18sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/labelTranscCategory"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -105,8 +99,7 @@
 
             <TextView
                 android:id="@+id/tvTrancsType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/LabelTextView"
                 android:textSize="16sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/labelTrancsType"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -116,8 +109,7 @@
 
             <TextView
                 android:id="@+id/tvTranscNominal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/LabelTextView"
                 android:textSize="16sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/labelTranscNominal"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -127,10 +119,8 @@
 
             <TextView
                 android:id="@+id/tvTranscDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/LabelTextView"
                 tools:text="Tue, 20 Oct 2020"
-                android:textSize="16sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/labelTranscDate"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -138,9 +128,7 @@
 
             <TextView
                 android:id="@+id/tvTranscNote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
+                style="@style/LabelTextView"
                 app:layout_constraintBaseline_toBaselineOf="@+id/labelTranscNote"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

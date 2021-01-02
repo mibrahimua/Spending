@@ -12,9 +12,7 @@ import com.mibrahimuadev.spending.data.repository.CategoryRepository
 import com.mibrahimuadev.spending.data.repository.TransactionRepository
 import com.mibrahimuadev.spending.utils.Event
 import com.mibrahimuadev.spending.utils.Result
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 
 class TransactionViewModel(application: Application) : AndroidViewModel(application) {
@@ -134,6 +132,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         val categoryId = categoryId.value ?: 0
         if (categoryId == 0) {
             _errorMessage.value = "Category cannot empty"
+            _dataLoading.value = false
             return
         }
         try {

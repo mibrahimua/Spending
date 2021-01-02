@@ -9,7 +9,6 @@
     app:cardElevation="3dp"
     app:cardUseCompatPadding="true">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,8 +18,8 @@
 
         <TextView
             android:id="@+id/tgl_transaksi"
+            style="@style/LabelTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toStartOf="@+id/kategori_transaksi"
@@ -51,8 +50,7 @@
 
         <TextView
             android:id="@+id/kategori_transaksi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/LabelTextView"
             android:layout_marginEnd="16dp"
             app:layout_constraintBaseline_toBaselineOf="@+id/tgl_transaksi"
             app:layout_constraintEnd_toEndOf="parent"
@@ -60,14 +58,12 @@
 
         <TextView
             android:id="@+id/nominal_transaksi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/LabelTextView"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view"
             tools:text="15.000" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

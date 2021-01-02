@@ -38,7 +38,6 @@ class CategorySettingListAdapter internal constructor(private val context: Conte
         holder.itemView.setOnClickListener { view ->
             val action = CategorySettingFragmentDirections.actionCategorySettingFragmentToAddEditCategoryFragment()
                 .setCategoryId(current.categoryId)
-                .setActionType("UPDATE")
             view.findNavController().navigate(action)
         }
     }

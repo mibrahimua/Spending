@@ -51,7 +51,7 @@ class HomeFragment : Fragment() {
     ): View? {
         _binding = FragmentHomeBinding.inflate(layoutInflater)
         val application = requireNotNull(this.activity).application
-        Log.i("HomeFragment", "HomeFragment Createdd")
+        Log.i("HomeFragment", "HomeFragment Created")
 
         val recycleView = binding.recycleviewTransaksi
         val adapter = TransactionListAdapter(application)
@@ -133,7 +133,6 @@ class HomeFragment : Fragment() {
                 .navigate(
                     HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment()
                         .setTransactionType(TransactionType.EXPENSE.name)
-                        .setActionType("INSERT")
                 )
         }
 
@@ -143,7 +142,6 @@ class HomeFragment : Fragment() {
                 .navigate(
                     HomeFragmentDirections.actionHomeFragmentToAddTransaksiFragment()
                         .setTransactionType(TransactionType.INCOME.name)
-                        .setActionType("INSERT")
                 )
         }
 

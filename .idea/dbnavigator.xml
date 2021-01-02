@@ -43,6 +43,11 @@
     <filter-actions connection-id="792014c5-367d-4152-8fbc-41332ee8e257" dataset="main.mata_uang" active-filter-id="03edacc3-d7b7-4051-aeeb-08a141d5ab3c">
       <filter id="03edacc3-d7b7-4051-aeeb-08a141d5ab3c" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND" />
     </filter-actions>
+    <filter-actions connection-id="792014c5-367d-4152-8fbc-41332ee8e257" dataset="main.icon_category" active-filter-id="EMPTY_FILTER">
+      <filter id="03f58247-b6f3-4647-ba27-c840b09e125e" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="iconId" operator="=" value="" active="true" />
+      </filter>
+    </filter-actions>
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />

@@ -37,21 +37,31 @@ class CustomDatePickerDialog : DialogFragment() {
             dismiss()
         }
         binding.currentMonth.setOnClickListener {
+            homeViewModel._selectedYear.value = CurrentDate.year.toString()
             homeViewModel._selectedMonth.value = CurrentDate.month.plus(1).toString()
             dismiss()
         }
+        val monthId = homeViewModel.selectedMonth.value!!.toInt().minus(1)
         binding.yearBefore.setOnClickListener {
-            val before = homeViewModel.selectedYear.value?.toInt()?.minus(1).toString()
-            homeViewModel._selectedYear.value = before
-            getMonthButtonIds()[homeViewModel.selectedMonth.value!!.toInt().minus(1)].let {
-                it.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+
+            val yearBefore = homeViewModel.selectedYear.value?.toInt()?.minus(1).toString()
+            homeViewModel._selectedYear.value = yearBefore
+
+            getMonthButtonIds()[monthId].let {
+                if(yearBefore != homeViewModel.currentSelectedYear.value) {
+                    it.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+                }
             }
         }
         binding.yearNext.setOnClickListener {
-            val after = homeViewModel.selectedYear.value?.toInt()?.plus(1).toString()
-            homeViewModel._selectedYear.value = after
-            getMonthButtonIds()[homeViewModel.selectedMonth.value!!.toInt().minus(1)].let {
-                it.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+
+            val yearAfter = homeViewModel.selectedYear.value?.toInt()?.plus(1).toString()
+            homeViewModel._selectedYear.value = yearAfter
+
+            getMonthButtonIds()[monthId].let {
+                if(yearAfter != homeViewModel.currentSelectedYear.value) {
+                    it.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+                }
             }
         }
         getMonthButtonIds().forEachIndexed { index, element ->
@@ -65,6 +75,9 @@ class CustomDatePickerDialog : DialogFragment() {
             binding.yearCurrent.text = it
         }
         homeViewModel.selectedMonth.observe(viewLifecycleOwner) {
+            /**
+             * masi error jika sudah pilih beda tahun terus kembali lagi currentmonth tidak berwarna
+             */
             getMonthButtonIds().forEachIndexed { index, element ->
                 if (it.toInt().minus(1) == index) {
                     setBackgroundColorMonth(index, R.color.orange)
@@ -73,6 +86,12 @@ class CustomDatePickerDialog : DialogFragment() {
                 }
             }
         }
+
+        homeViewModel.currentSelectedYear.observe(viewLifecycleOwner) {
+
+
+        }
+
         return binding.root
     }
 
@@ -100,6 +119,7 @@ class CustomDatePickerDialog : DialogFragment() {
         binding.monthDec
     )
 
+
     private fun setBackgroundColorMonth(monthId: Int, color: Int) {
         getMonthButtonIds()[monthId].let {
             it.setBackgroundColor(ContextCompat.getColor(requireContext(), color))
@@ -108,6 +128,7 @@ class CustomDatePickerDialog : DialogFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         _binding = null
         Log.i("CustomDatePickerDialog", "CustomDatePickerDialog destroyed")
     }

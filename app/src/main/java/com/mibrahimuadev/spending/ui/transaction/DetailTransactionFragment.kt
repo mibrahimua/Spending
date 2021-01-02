@@ -61,7 +61,6 @@ class DetailTransactionFragment : Fragment() {
 
                     ).setTransactionId(args.transactionId)
                         .setTransactionType(transactionViewModel.transactionType.value?.name!!)
-                        .setActionType("UPDATE")
 
                 )
         }

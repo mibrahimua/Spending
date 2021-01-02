@@ -6,11 +6,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.mibrahimuadev.spending.utils.Result
 import com.mibrahimuadev.spending.data.model.Transaction
 import com.mibrahimuadev.spending.data.repository.TransactionRepository
 import com.mibrahimuadev.spending.utils.CurrentDate
 import com.mibrahimuadev.spending.utils.CurrentDate.getEndOfDay
+import com.mibrahimuadev.spending.utils.Result
 import kotlinx.coroutines.launch
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
@@ -21,6 +21,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     val _selectedMonth = MutableLiveData<String>()
     val selectedMonth: LiveData<String> = _selectedMonth
+
+    val _currentSelectedYear = MutableLiveData<String>()
+    val currentSelectedYear: LiveData<String> = _currentSelectedYear
 
     val _selectedStartDate = MutableLiveData<String>()
     val selectedStartDate: LiveData<String> = _selectedStartDate
@@ -62,7 +65,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun setDateRange() {
         val month = selectedMonth.value?.toInt()
-        val formatDate = selectedYear.value + "-" + month.toString()
+        val formatDate = selectedYear.value + "-" + month.let {
+            if (it!! < 10) {
+                it.toString().padStart(2, '0')
+            } else {
+                it.toString()
+            }
+        }
         _selectedEndDate.value = formatDate + "-" + getEndOfDay(formatDate) + " 23:59:59"
         _selectedStartDate.value = formatDate + "-01 00:00:00"
         Log.i("HomeViewModel", "${selectedStartDate.value} - ${selectedEndDate.value}")

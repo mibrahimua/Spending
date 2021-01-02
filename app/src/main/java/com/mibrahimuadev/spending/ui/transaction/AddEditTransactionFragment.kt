@@ -26,7 +26,7 @@ import com.mibrahimuadev.spending.utils.EventObserver
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
 
 
-class AddTransactionFragment : Fragment(), Calculator, StartTransaction {
+class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
 
     private val TAG = "AddTransactionFragment"
     lateinit var calc: CalculatorImpl
@@ -35,7 +35,7 @@ class AddTransactionFragment : Fragment(), Calculator, StartTransaction {
     private val transactionViewModel: TransactionViewModel by navGraphViewModels(R.id.nav_transc) {
         TransactionViewModelFactory(requireActivity().application)
     }
-    private val args: AddTransactionFragmentArgs by navArgs()
+    private val args: AddEditTransactionFragmentArgs by navArgs()
 
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -181,12 +181,15 @@ class AddTransactionFragment : Fragment(), Calculator, StartTransaction {
          * Category View Binding Section
          */
         binding.categoryName.setOnClickListener {
+            /**
+             * Close keyboard before navigate
+             */
             val imm =
                 getActivity()?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view?.getWindowToken(), 0)
             Navigation.findNavController(requireView())
                 .navigate(
-                    AddTransactionFragmentDirections.actionAddTransactionFragmentToAddCategoryTranscFragment(
+                    AddEditTransactionFragmentDirections.actionAddTransactionFragmentToAddCategoryTranscFragment(
                         transactionViewModel.transactionType.value!!
                     )
                 )
@@ -243,9 +246,7 @@ class AddTransactionFragment : Fragment(), Calculator, StartTransaction {
         if (item.itemId == R.id.save_action) {
             calc.handleEquals()
             transactionViewModel.validateTransaction()
-            transactionViewModel.errorMessage.observe(viewLifecycleOwner, {
 
-            })
             transactionViewModel.errorMessage.observe(viewLifecycleOwner) { error ->
                 if (error.isNotEmpty()) {
                     Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
@@ -253,7 +254,7 @@ class AddTransactionFragment : Fragment(), Calculator, StartTransaction {
             }
             transactionViewModel.navigateToHome.observe(viewLifecycleOwner, EventObserver {
                 val action =
-                    AddTransactionFragmentDirections.actionAddTransaksiFragmentToHomeFragment()
+                    AddEditTransactionFragmentDirections.actionAddTransaksiFragmentToHomeFragment()
                 findNavController().navigate(action)
             })
         }
