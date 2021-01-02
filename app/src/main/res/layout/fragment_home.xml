@@ -97,7 +97,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView2"
+        app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonTrans"
@@ -128,6 +129,16 @@
         app:layout_constraintStart_toStartOf="@+id/floatingActionButtonTrans"
         app:pressedTranslationZ="12dp" />
 
+    <TextView
+        android:id="@+id/label_expense"
+        style="@style/LabelTextView"
+        android:text="Add Expense"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/floatingActionButtonExpense"
+        app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonExpense"
+        app:layout_constraintTop_toTopOf="@+id/floatingActionButtonExpense"
+        app:layout_constraintVertical_bias="0.35" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButtonIncome"
         android:layout_width="wrap_content"
@@ -141,5 +152,14 @@
         app:layout_constraintStart_toStartOf="@+id/floatingActionButtonExpense"
         app:pressedTranslationZ="12dp" />
 
+    <TextView
+        android:id="@+id/label_income"
+        style="@style/LabelTextView"
+        android:text="Add Income"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/floatingActionButtonIncome"
+        app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonIncome"
+        app:layout_constraintTop_toTopOf="@+id/floatingActionButtonIncome"
+        app:layout_constraintVertical_bias="0.35" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

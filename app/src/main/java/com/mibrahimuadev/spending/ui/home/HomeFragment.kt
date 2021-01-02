@@ -105,6 +105,8 @@ class HomeFragment : Fragment() {
                         fabIncome.startAnimation(fab_close)
                         fabExpense.isClickable = false
                         fabIncome.isClickable = false
+                        binding.labelExpense.startAnimation(fab_close)
+                        binding.labelIncome.startAnimation(fab_close)
                     }
                 }
             }
@@ -117,6 +119,8 @@ class HomeFragment : Fragment() {
                         fabIncome.startAnimation(fab_open)
                         fabExpense.isClickable = true
                         fabIncome.isClickable = true
+                        binding.labelExpense.startAnimation(fab_open)
+                        binding.labelIncome.startAnimation(fab_open)
                     }
                 }
                 super.onScrollStateChanged(recyclerView, newState)
@@ -163,6 +167,8 @@ class HomeFragment : Fragment() {
             fabIncome.startAnimation(fab_close)
             fabExpense.isClickable = false
             fabIncome.isClickable = false
+            binding.labelExpense.startAnimation(fab_close)
+            binding.labelIncome.startAnimation(fab_close)
             isFabOpen = false
         } else {
             fabTrans.startAnimation(rotate_forward)
@@ -170,6 +176,8 @@ class HomeFragment : Fragment() {
             fabIncome.startAnimation(fab_open)
             fabExpense.isClickable = true
             fabIncome.isClickable = true
+            binding.labelExpense.startAnimation(fab_open)
+            binding.labelIncome.startAnimation(fab_open)
             isFabOpen = true
         }
     }
