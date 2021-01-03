@@ -56,10 +56,12 @@ class TransactionListAdapter internal constructor(private val context: Context) 
         holder.tglTransaksi.text = CurrentDate.getDateString(current.transactionDate)
         holder.kategoriTransaksi.text = current.categoryName
         holder.nominalTransaksi.text =
-            current.currencySymbol + " " + Formatter.addThousandsDelimiter(
+//            current.currencySymbol + " " + Formatter.addThousandsDelimiter(
+//                convertToTransactionNominal(current)
+//            )
+            Formatter.addThousandsDelimiter(
                 convertToTransactionNominal(current)
             )
-
         holder.itemView.setOnClickListener { view ->
             val action =
                 HomeFragmentDirections.actionHomeFragmentToDetailTransactionFragment2(current.transactionId)

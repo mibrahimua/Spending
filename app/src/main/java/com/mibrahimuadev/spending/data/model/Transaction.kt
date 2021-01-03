@@ -10,8 +10,6 @@ data class Transaction(
     override val transactionIncome: Double,
     override val transactionNote: String? = "",
     val categoryId: Int,
-    val currencyId: String,
     val iconName: String,
     val categoryName: String? = "",
-    val currencySymbol: String? = ""
 ) : BaseTransaction

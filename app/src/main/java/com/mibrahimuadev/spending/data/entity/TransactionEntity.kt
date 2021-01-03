@@ -29,14 +29,12 @@ data class TransactionEntity(
 
     val categoryId: Int,
 
-    val currencyId: String,
-
     override val transactionDate: Date,
 
     override val transactionNote: String? = ""
 
 ) : BaseTransaction {
     override fun toString(): String {
-        return "Transaction(transactionId=$transactionId, transactionType=$transactionIncome, categoryId=$categoryId, currencyId='$currencyId', transactionNominal=$transactionExpense, transactionDate=$transactionDate, transactionNote=$transactionNote)"
+        return "TransactionEntity(transactionId=$transactionId, transactionType=$transactionType, transactionIncome=$transactionIncome, transactionExpense=$transactionExpense, categoryId=$categoryId, transactionDate=$transactionDate, transactionNote=$transactionNote)"
     }
 }

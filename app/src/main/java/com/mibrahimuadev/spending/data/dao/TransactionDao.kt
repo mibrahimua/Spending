@@ -12,12 +12,11 @@ interface TransactionDao {
     @Query(
         """SELECT t.transactionId, t.transactionType, CAST(transactionExpense AS text) AS transactionExpense,  
                 CAST(transactionIncome AS text) AS transactionIncome, t.transactionDate, k.categoryName, 
-                c.iconName, m.currencySymbol, t.transactionNote, 
-                k.categoryId, m.currencyId
+                c.iconName, t.transactionNote, 
+                k.categoryId
                 FROM transaction_spend t
                 LEFT JOIN category k ON t.categoryId = k.categoryId
                 LEFT JOIN icon_category c ON c.iconId = k.iconId
-                LEFT JOIN currency m ON m.currencyId = t.currencyId
                 WHERE datetime(t.transactionDate/1000,'unixepoch', 'localtime') 
                 BETWEEN :startDate AND :endDate
 				GROUP BY t.transactionId
@@ -28,12 +27,11 @@ interface TransactionDao {
     @Query(
         """SELECT t.transactionId, t.transactionType, CAST(transactionExpense AS text) AS transactionExpense,  
                 CAST(transactionIncome AS text) AS transactionIncome, t.transactionDate, k.categoryName, 
-                c.iconName, m.currencySymbol, t.transactionNote, 
-                k.categoryId, m.currencyId
+                c.iconName, t.transactionNote, 
+                k.categoryId
                 FROM transaction_spend t
                 LEFT JOIN category k ON t.categoryId = k.categoryId
                 LEFT JOIN icon_category c ON c.iconId = k.iconId
-                LEFT JOIN currency m ON m.currencyId = t.currencyId
                 WHERE t.transactionId = :transactionId"""
     )
     suspend fun getTransaction(transactionId: Long): Transaction

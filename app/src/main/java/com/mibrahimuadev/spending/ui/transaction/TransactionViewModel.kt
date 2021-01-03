@@ -182,7 +182,6 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         val transactionCategory = categoryId.value!!
         val dateTransaction = dateTransaction.value!!
         val noteTransaction = noteTransaction.value
-        val transactionCurrency = "IDR"
         val currentTransactionId = transactionId.value
         val dataTransaction = TransactionEntity(
             transactionId = currentTransactionId ?: 0L,
@@ -191,7 +190,6 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             transactionExpense = transactionExpense,
             transactionDate = dateTransaction,
             categoryId = transactionCategory,
-            currencyId = transactionCurrency,
             transactionNote = noteTransaction
         )
         viewModelScope.launch {
