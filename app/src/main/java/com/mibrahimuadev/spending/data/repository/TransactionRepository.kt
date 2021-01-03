@@ -2,12 +2,13 @@ package com.mibrahimuadev.spending.data.repository
 
 import android.app.Application
 import com.mibrahimuadev.spending.data.AppDatabase
-import com.mibrahimuadev.spending.utils.Result
-import com.mibrahimuadev.spending.data.entity.TransactionEntity
 import com.mibrahimuadev.spending.data.dao.TransactionDao
+import com.mibrahimuadev.spending.data.entity.TransactionEntity
 import com.mibrahimuadev.spending.data.model.Transaction
-import com.mibrahimuadev.spending.data.source.TransactionDataSource
 import com.mibrahimuadev.spending.data.model.TransactionSummary
+import com.mibrahimuadev.spending.data.model.TransactionSummaryPrevious
+import com.mibrahimuadev.spending.data.source.TransactionDataSource
+import com.mibrahimuadev.spending.utils.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
@@ -52,6 +53,19 @@ class TransactionRepository(
         return withContext(Dispatchers.IO) {
             try {
                 Result.Success(transactionDao.getSummaryTransaction(startDate, endDate))
+            } catch (e: Exception) {
+                Result.Error(e)
+            }
+        }
+    }
+
+    suspend fun getPreviousSummaryTransaction(
+        startDate: String,
+        endDate: String
+    ): Result<TransactionSummaryPrevious> {
+        return withContext(Dispatchers.IO) {
+            try {
+                Result.Success(transactionDao.getPreviousBalance(startDate, endDate))
             } catch (e: Exception) {
                 Result.Error(e)
             }

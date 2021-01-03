@@ -29,4 +29,9 @@
 
     <string name="unknown_error_occurred">An unknown error occurred</string>
     <string name="invalid_format_used">Invalid format used.</string>
+    <string name="expense">Expense</string>
+    <string name="income">Income</string>
+    <string name="balance">Balance</string>
+    <string name="add_expense">Add Expense</string>
+    <string name="add_income">Add Income</string>
 </resources>

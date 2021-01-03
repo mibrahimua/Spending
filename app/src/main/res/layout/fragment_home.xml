@@ -10,7 +10,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="130dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -27,7 +27,7 @@
                 style="@style/LabelTextView"
                 android:layout_width="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Expense"
+                android:text="@string/expense"
                 app:layout_constraintEnd_toStartOf="@+id/tvLabelIncome"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread"
@@ -49,7 +49,7 @@
                 style="@style/LabelTextView"
                 android:layout_width="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Income"
+                android:text="@string/income"
                 app:layout_constraintEnd_toStartOf="@+id/tvLabelBalance"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/tvLabelExpense"
@@ -70,7 +70,7 @@
                 style="@style/LabelTextView"
                 android:layout_width="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Balance"
+                android:text="@string/balance"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/tvLabelIncome"
@@ -85,6 +85,27 @@
                 app:layout_constraintStart_toStartOf="@+id/tvLabelBalance"
                 app:layout_constraintTop_toBottomOf="@+id/tvLabelBalance"
                 tools:text="-600,000" />
+
+            <TextView
+                android:id="@+id/tvPreviousBalance"
+                style="@style/LabelTextView"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@+id/tvBalancce"
+                app:layout_constraintStart_toStartOf="@+id/tvBalancce"
+                app:layout_constraintTop_toBottomOf="@+id/tvBalancce"
+                tools:text="1,000,200,000" />
+
+            <ImageView
+                android:id="@+id/infoPreviousBalance"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/btn_note"
+                app:layout_constraintBottom_toBottomOf="@+id/tvPreviousBalance"
+                app:layout_constraintEnd_toStartOf="@+id/tvPreviousBalance"
+                app:layout_constraintTop_toTopOf="@+id/tvPreviousBalance" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
@@ -132,7 +153,7 @@
     <TextView
         android:id="@+id/label_expense"
         style="@style/LabelTextView"
-        android:text="Add Expense"
+        android:text="@string/add_expense"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/floatingActionButtonExpense"
         app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonExpense"
@@ -155,11 +176,12 @@
     <TextView
         android:id="@+id/label_income"
         style="@style/LabelTextView"
-        android:text="Add Income"
+        android:text="@string/add_income"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/floatingActionButtonIncome"
         app:layout_constraintEnd_toStartOf="@+id/floatingActionButtonIncome"
         app:layout_constraintTop_toTopOf="@+id/floatingActionButtonIncome"
         app:layout_constraintVertical_bias="0.35" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

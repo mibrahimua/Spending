@@ -9,9 +9,10 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.navGraphViewModels
@@ -69,7 +70,8 @@ class HomeFragment : Fragment() {
         homeViewModel.onFirstLoaded()
         homeViewModel.selectedMonth.observe(viewLifecycleOwner) { month ->
             homeViewModel.displayData()
-            toolbarTitle.text = CurrentDate.monthName[month.toInt().minus(1)] + " " + homeViewModel.selectedYear.value
+            toolbarTitle.text = CurrentDate.monthName[month.toInt()
+                .minus(1)] + " " + homeViewModel.selectedYear.value
         }
 
         homeViewModel.allTransactions.observe(viewLifecycleOwner, { transaksi ->
@@ -83,6 +85,28 @@ class HomeFragment : Fragment() {
         }
         homeViewModel.balanceNominal.observe(viewLifecycleOwner) {
             binding.tvBalancce.text = Formatter.addThousandsDelimiter(it)
+        }
+        homeViewModel.previousBalanceNominal.observe(viewLifecycleOwner) {
+            binding.tvPreviousBalance.text = Formatter.addThousandsDelimiter(it)
+            if (it.toInt() == 0) {
+                binding.infoPreviousBalance.isVisible = false
+                binding.tvPreviousBalance.isVisible = false
+            } else {
+                binding.infoPreviousBalance.isVisible = true
+                binding.tvPreviousBalance.isVisible = true
+            }
+        }
+
+        val infoDialog = AlertDialog.Builder(requireActivity())
+        binding.infoPreviousBalance.setOnClickListener {
+            infoDialog.setTitle("Info")
+                .setMessage("This amount is an accumulation of the previous balance in the previous month in a year. " +
+                        "\n You can disable this feature in settings")
+                .setCancelable(true)
+                .setPositiveButton("Ok") { dialogInterface, i ->
+                    dialogInterface.dismiss()
+                }
+                .show()
         }
 
         fabTrans = binding.floatingActionButtonTrans

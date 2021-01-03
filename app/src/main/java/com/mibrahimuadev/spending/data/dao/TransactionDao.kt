@@ -4,6 +4,7 @@ import androidx.room.*
 import com.mibrahimuadev.spending.data.entity.TransactionEntity
 import com.mibrahimuadev.spending.data.model.Transaction
 import com.mibrahimuadev.spending.data.model.TransactionSummary
+import com.mibrahimuadev.spending.data.model.TransactionSummaryPrevious
 
 @Dao
 interface TransactionDao {
@@ -47,6 +48,16 @@ interface TransactionDao {
                 """
     )
     suspend fun getSummaryTransaction(startDate: String, endDate: String): TransactionSummary
+
+    @Query(
+        """SELECT :startDate as rangeTransaction, 
+                COALESCE(SUM(transactionIncome) - SUM(transactionExpense),0) AS previousBalanceNominal
+                FROM transaction_spend
+                WHERE datetime(transactionDate/1000,'unixepoch', 'localtime') 
+                BETWEEN :startDate AND :endDate
+                """
+    )
+    suspend fun getPreviousBalance(startDate: String, endDate: String): TransactionSummaryPrevious
 
     @androidx.room.Transaction
     suspend fun insertOrUpdate(transactionEntity: TransactionEntity) {

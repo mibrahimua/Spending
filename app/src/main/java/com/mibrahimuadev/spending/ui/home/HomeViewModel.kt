@@ -49,6 +49,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val _balanceNominal = MutableLiveData<String>()
     val balanceNominal: LiveData<String> = _balanceNominal
 
+    val _previousBalanceNominal = MutableLiveData<String>()
+    val previousBalanceNominal: LiveData<String> = _previousBalanceNominal
+
     fun onFirstLoaded() {
         if (isFirstLoaded) {
             isFirstLoaded = false
@@ -65,29 +68,70 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun setDateRange() {
         val month = selectedMonth.value?.toInt()
-        val formatDate = selectedYear.value + "-" + month.let {
+        val formatDate = selectedYear.value + "-" + month?.let { padStartMonth(it) }
+        _selectedEndDate.value = formatDate + "-" + getEndOfDay(formatDate) + " 23:59:59"
+        _selectedStartDate.value = formatDate + "-01 00:00:00"
+        Log.i("HomeViewModel", "${selectedStartDate.value} - ${selectedEndDate.value}")
+    }
+
+    private fun padStartMonth(month: Int): String {
+        val newMonth = month.let {
             if (it!! < 10) {
                 it.toString().padStart(2, '0')
             } else {
                 it.toString()
             }
         }
-        _selectedEndDate.value = formatDate + "-" + getEndOfDay(formatDate) + " 23:59:59"
-        _selectedStartDate.value = formatDate + "-01 00:00:00"
-        Log.i("HomeViewModel", "${selectedStartDate.value} - ${selectedEndDate.value}")
+        return newMonth
     }
 
     private fun getSummaryTransaction() {
         viewModelScope.launch {
+            val job1 = viewModelScope.launch {
+                getPreviousSummaryTransaction()
+            }
+
+            job1.join()
             val result =
-                repository.getSummaryTransaction(selectedStartDate.value!!, selectedEndDate.value!!)
+                repository.getSummaryTransaction(
+                    selectedStartDate.value!!,
+                    selectedEndDate.value!!
+                )
             if (result is Result.Success) {
                 _expenseNominal.value = result.data.expenseNominal.toString()
                 _incomeNominal.value = result.data.incomeNominal.toString()
                 _balanceNominal.value = result.data.let {
-                    it.incomeNominal - it.expenseNominal
+                    (it.incomeNominal - it.expenseNominal).plus(previousBalanceNominal.value!!.toInt())
                 }.toString()
             }
+        }
+    }
+
+    private suspend fun getPreviousSummaryTransaction() {
+        var month = selectedMonth.value?.toInt()
+        var year = selectedYear.value?.toInt()
+        var getEndOfMonthDay = true
+        if (month?.equals(1) == true) {
+//            month = 12
+            getEndOfMonthDay = false
+//            year = year?.minus(1)
+        } else {
+            month = month?.minus(1)
+        }
+
+        val formatDate = year.toString() + "-" + month?.let { padStartMonth(it) }
+        val startDate = "$year-01-01 00:00:00"
+        val endDate =  getEndOfMonthDay.let {
+            if (it) {
+                formatDate + "-" + getEndOfDay(formatDate) + " 23:59:59"
+            } else {
+                "$year-01-01 00:00:01"
+            }
+        }
+
+        val result = repository.getPreviousSummaryTransaction(startDate, endDate)
+        if (result is Result.Success) {
+            _previousBalanceNominal.value = result.data.previousBalanceNominal.toString()
         }
     }
 
