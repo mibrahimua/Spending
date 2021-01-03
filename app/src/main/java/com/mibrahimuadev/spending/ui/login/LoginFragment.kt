@@ -69,7 +69,6 @@ class LoginFragment : Fragment() {
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
         val account = GoogleSignIn.getLastSignedInAccount(requireActivity())
-//        Toast.makeText(requireContext(), "Welcome ${account?.email}", Toast.LENGTH_SHORT).show()
         updateUi(account)
 
     }

@@ -42,6 +42,12 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
+    val _transactionType = MutableLiveData<TransactionType>()
+    val transactionType: LiveData<TransactionType> = _transactionType
+
+    val _transactionNominal = MutableLiveData<String>()
+    val transactionNominal: LiveData<String> = _transactionNominal
+
     /**
      * Calculator Live Data
      */
@@ -60,11 +66,11 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     val _transactionId = MutableLiveData<Long>()
     var transactionId: LiveData<Long> = _transactionId
 
-    val _transactionType = MutableLiveData<TransactionType>()
-    val transactionType: LiveData<TransactionType> = _transactionType
+    val _transactionIncome = MutableLiveData<String>()
+    val transactionIncome: LiveData<String> = _transactionIncome
 
-    val _transactionNominal = MutableLiveData<String>()
-    val transactionNominal: LiveData<String> = _transactionNominal
+    val _transactionExpense = MutableLiveData<String>()
+    val transactionExpense: LiveData<String> = _transactionExpense
 
     val _categoryId = MutableLiveData<Int>()
     val categoryId: LiveData<Int> = _categoryId
@@ -91,17 +97,40 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
 
     fun getDetailTransaction(transactionId: Long) {
         viewModelScope.launch {
-            val result = transactionRepository.getTransaction(transactionId)
-            if (result is Result.Success) {
-                _transactionId.value = result.data.transactionId
-                _transactionType.value = result.data.transactionType
-                _transactionNominal.value = result.data.transactionNominal.toString()
-                _categoryId.value = result.data.categoryId
-                _categoryName.value = result.data.categoryName
-                _dateTransaction.value = result.data.transactionDate
-                _noteTransaction.value = result.data.transactionNote
-                _dataLoading.value = false
+            val job1 = viewModelScope.launch {
+                val result = transactionRepository.getTransaction(transactionId)
+                if (result is Result.Success) {
+                    _transactionId.value = result.data.transactionId
+                    _transactionType.value = result.data.transactionType
+                    _transactionIncome.value = result.data.transactionIncome.toString()
+                    _transactionExpense.value = result.data.transactionExpense.toString()
+                    _categoryId.value = result.data.categoryId
+                    _categoryName.value = result.data.categoryName
+                    _dateTransaction.value = result.data.transactionDate
+                    _noteTransaction.value = result.data.transactionNote
+                    _dataLoading.value = false
+                }
             }
+            job1.join()
+            convertToTransactionNominal()
+        }
+    }
+
+    fun convertToTransactionNominal() {
+        if (transactionType.value?.equals(TransactionType.INCOME) == true) {
+            _transactionNominal.value = transactionIncome.value
+        } else if (transactionType.value?.equals(TransactionType.EXPENSE) == true) {
+            _transactionNominal.value = transactionExpense.value
+        }
+    }
+
+    fun convertFromTransactionNominal() {
+        if (transactionType.value?.equals(TransactionType.INCOME) == true) {
+            _transactionIncome.value = _transactionNominal.value
+            _transactionExpense.value = "0"
+        } else if (transactionType.value?.equals(TransactionType.EXPENSE) == true) {
+            _transactionExpense.value = _transactionNominal.value
+            _transactionIncome.value = "0"
         }
     }
 
@@ -129,6 +158,7 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
 
     fun validateTransaction() {
         _dataLoading.value = true
+        convertFromTransactionNominal()
         val categoryId = categoryId.value ?: 0
         if (categoryId == 0) {
             _errorMessage.value = "Category cannot empty"
@@ -140,13 +170,15 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             saveTransaction()
             _navigateToHome.value = Event(true)
         } catch (e: Exception) {
+            Log.i(TAG, "$e")
             _errorMessage.value = "Invalid format numbers"
         }
     }
 
     fun saveTransaction() {
-        val transactionNominal = transactionNominal.value!!.filterNot { it == ',' }.toDouble()
         val transactionType = transactionType.value!!
+        val transactionIncome = transactionIncome.value!!.filterNot { it == ',' }.toDouble()
+        val transactionExpense = transactionExpense.value!!.filterNot { it == ',' }.toDouble()
         val transactionCategory = categoryId.value!!
         val dateTransaction = dateTransaction.value!!
         val noteTransaction = noteTransaction.value
@@ -154,8 +186,9 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
         val currentTransactionId = transactionId.value
         val dataTransaction = TransactionEntity(
             transactionId = currentTransactionId ?: 0L,
-            transactionNominal = transactionNominal,
             transactionType = transactionType,
+            transactionIncome = transactionIncome,
+            transactionExpense = transactionExpense,
             transactionDate = dateTransaction,
             categoryId = transactionCategory,
             currencyId = transactionCurrency,

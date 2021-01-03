@@ -23,7 +23,11 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="792014c5-367d-4152-8fbc-41332ee8e257">
+        <schema name="main" object-types="index, table, view, column, dataset trigger, constraint" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="792014c5-367d-4152-8fbc-41332ee8e257">
@@ -37,6 +41,7 @@
     <connection id="792014c5-367d-4152-8fbc-41332ee8e257" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="792014c5-367d-4152-8fbc-41332ee8e257" dataset="main.transaction_spend" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="792014c5-367d-4152-8fbc-41332ee8e257" dataset="main.TransaksiKategori" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="792014c5-367d-4152-8fbc-41332ee8e257" dataset="main.kategori" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="792014c5-367d-4152-8fbc-41332ee8e257" dataset="main.transaksi" active-filter-id="EMPTY_FILTER" />

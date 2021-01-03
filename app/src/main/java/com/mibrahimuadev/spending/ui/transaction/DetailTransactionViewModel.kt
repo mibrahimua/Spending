@@ -66,7 +66,7 @@ class DetailTransactionViewModel(application: Application) : AndroidViewModel(ap
             val result = transactionRepository.getTransaction(transactionId)
             if (result is Result.Success) {
                 _transactionType.value = result.data.transactionType
-                _transactionNominal.value = result.data.transactionNominal.toString()
+                _transactionNominal.value = result.data.transactionExpense.toString()
                 _categoryName.value = result.data.categoryName
                 _dateTransaction.value = result.data.transactionDate
                 _noteTransaction.value = result.data.transactionNote

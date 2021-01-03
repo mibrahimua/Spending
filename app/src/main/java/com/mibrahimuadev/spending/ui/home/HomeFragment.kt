@@ -24,7 +24,6 @@ import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.databinding.FragmentHomeBinding
 import com.mibrahimuadev.spending.utils.CurrentDate
 import com.mibrahimuadev.spending.utils.Formatter
-import kotlinx.android.synthetic.*
 
 
 class HomeFragment : Fragment() {
@@ -190,7 +189,6 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         Log.i("HomeFragment", "HomeFragment destroyed")
         toolbarTitle.text = ""
-        clearFindViewByIdCache()
         _binding = null
     }
 }

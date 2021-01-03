@@ -2,14 +2,16 @@ package com.mibrahimuadev.spending.data.dao
 
 import androidx.room.*
 import com.mibrahimuadev.spending.data.entity.TransactionEntity
-import com.mibrahimuadev.spending.data.model.TransactionSummary
 import com.mibrahimuadev.spending.data.model.Transaction
+import com.mibrahimuadev.spending.data.model.TransactionSummary
 
 @Dao
 interface TransactionDao {
 
     @Query(
-        """SELECT t.transactionId, t.transactionType, CAST(transactionNominal AS text) AS transactionNominal, t.transactionDate, k.categoryName, c.iconName, m.currencySymbol, t.transactionNote, 
+        """SELECT t.transactionId, t.transactionType, CAST(transactionExpense AS text) AS transactionExpense,  
+                CAST(transactionIncome AS text) AS transactionIncome, t.transactionDate, k.categoryName, 
+                c.iconName, m.currencySymbol, t.transactionNote, 
                 k.categoryId, m.currencyId
                 FROM transaction_spend t
                 LEFT JOIN category k ON t.categoryId = k.categoryId
@@ -23,7 +25,9 @@ interface TransactionDao {
     fun getAllTransactions(startDate: String, endDate: String): List<Transaction>
 
     @Query(
-        """SELECT t.transactionId, t.transactionType, CAST(transactionNominal AS text) AS transactionNominal, t.transactionDate, k.categoryName, c.iconName, m.currencySymbol, t.transactionNote, 
+        """SELECT t.transactionId, t.transactionType, CAST(transactionExpense AS text) AS transactionExpense,  
+                CAST(transactionIncome AS text) AS transactionIncome, t.transactionDate, k.categoryName, 
+                c.iconName, m.currencySymbol, t.transactionNote, 
                 k.categoryId, m.currencyId
                 FROM transaction_spend t
                 LEFT JOIN category k ON t.categoryId = k.categoryId
@@ -34,15 +38,13 @@ interface TransactionDao {
     suspend fun getTransaction(transactionId: Long): Transaction
 
     @Query(
-        """SELECT datetime(transactionDate/1000,'unixepoch', 'localtime') as rangeTransaction, 
-                (SELECT COALESCE(SUM(transactionNominal),0) FROM transaction_spend 
-                WHERE transactionType = 'EXPENSE' AND datetime(transactionDate/1000,'unixepoch', 'localtime') 
-                BETWEEN :startDate AND :endDate) as expenseNominal,
-                (SELECT COALESCE(SUM(transactionNominal),0) FROM transaction_spend 
-                WHERE transactionType = 'INCOME' AND datetime(transactionDate/1000,'unixepoch', 'localtime') 
-                BETWEEN :startDate AND :endDate) as incomeNominal
+        """SELECT :startDate as rangeTransaction, 
+                COALESCE(SUM(transactionIncome),0) AS incomeNominal, 
+                COALESCE(SUM(transactionExpense),0) AS expenseNominal
                 FROM transaction_spend
-                GROUP BY expenseNominal, incomeNominal"""
+                WHERE datetime(transactionDate/1000,'unixepoch', 'localtime') 
+                BETWEEN :startDate AND :endDate
+                """
     )
     suspend fun getSummaryTransaction(startDate: String, endDate: String): TransactionSummary
 

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ab6730b0548471f9c4ffb64cc8be9562",
+    "identityHash": "054e142a38af8d276d99c740cd83c5e0",
     "entities": [
       {
         "tableName": "transaction_spend",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`transactionId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `transactionType` TEXT NOT NULL, `categoryId` INTEGER NOT NULL, `currencyId` TEXT NOT NULL, `transactionNominal` REAL, `transactionDate` INTEGER NOT NULL, `transactionNote` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`transactionId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `transactionType` TEXT NOT NULL, `transactionIncome` REAL, `transactionExpense` REAL, `categoryId` INTEGER NOT NULL, `currencyId` TEXT NOT NULL, `transactionDate` INTEGER NOT NULL, `transactionNote` TEXT)",
         "fields": [
           {
             "fieldPath": "transactionId",
@@ -21,6 +21,18 @@
             "notNull": true
           },
           {
+            "fieldPath": "transactionIncome",
+            "columnName": "transactionIncome",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "transactionExpense",
+            "columnName": "transactionExpense",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
             "fieldPath": "categoryId",
             "columnName": "categoryId",
             "affinity": "INTEGER",
@@ -31,12 +43,6 @@
             "columnName": "currencyId",
             "affinity": "TEXT",
             "notNull": true
-          },
-          {
-            "fieldPath": "transactionNominal",
-            "columnName": "transactionNominal",
-            "affinity": "REAL",
-            "notNull": false
           },
           {
             "fieldPath": "transactionDate",
@@ -192,7 +198,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ab6730b0548471f9c4ffb64cc8be9562')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '054e142a38af8d276d99c740cd83c5e0')"
     ]
   }
 }

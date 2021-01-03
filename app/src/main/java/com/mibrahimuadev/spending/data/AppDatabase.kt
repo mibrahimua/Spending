@@ -11,9 +11,9 @@ import com.mibrahimuadev.spending.utils.Converters
 
 
 @Database(
+    version = 1,
     entities = [(TransactionEntity::class), (CurrencyEntity::class), (CategoryEntity::class),
         (IconCategoryEntity::class), (AccountEntity::class)],
-    version = 1,
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -44,6 +44,13 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
+        // Migration path definition from version 2 to version 3.
+//        val MIGRATION_2_3 = object : Migration(2, 3) {
+//            override fun migrate(database: SupportSQLiteDatabase) {
+//
+//            }
+//        }
+
         fun getInstance(context: Context): AppDatabase {
             /**
              * Multiple threads can potentially ask for a database instance at the same time,
@@ -62,8 +69,9 @@ abstract class AppDatabase : RoomDatabase() {
                         context.applicationContext,
                         AppDatabase::class.java,
                         "spending_database"
-                    ).fallbackToDestructiveMigration()
+                    )
                         .createFromAsset("database/spending_database.db")
+                        .fallbackToDestructiveMigration()
                         .build()
                     INSTANCE = instance
                 }

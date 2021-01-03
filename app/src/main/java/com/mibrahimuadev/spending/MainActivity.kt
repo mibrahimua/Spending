@@ -2,10 +2,6 @@ package com.mibrahimuadev.spending
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -16,7 +12,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.mibrahimuadev.spending.databinding.ActivityMainBinding
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -40,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         drawerLayout = binding.drawerLayout
         appBarConfiguration = AppBarConfiguration(navController.graph, drawerLayout)
 
-        navigationView.setupWithNavController(navController)
+        binding.navigationView.setupWithNavController(navController)
 
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
