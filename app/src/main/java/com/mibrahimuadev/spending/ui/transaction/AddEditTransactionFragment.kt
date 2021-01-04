@@ -1,17 +1,24 @@
 package com.mibrahimuadev.spending.ui.transaction
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.*
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
@@ -36,7 +43,10 @@ class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
         TransactionViewModelFactory(requireActivity().application)
     }
     private val args: AddEditTransactionFragmentArgs by navArgs()
-
+    val Int.dp: Int
+        get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
+    val Float.toPx: Int
+        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -51,12 +61,58 @@ class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
          * Prevent layout to adjust when user use keyboard
          */
         getActivity()?.getWindow()
-            ?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+            ?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
         startTransaction()
 
+        binding.noteTransc.setOnClickListener {
+            val editText: EditText = EditText(requireContext())
+            editText.text.append(transactionViewModel.noteTransaction.value ?: "")
+            AlertDialog.Builder(context)
+                .setTitle("Note Transaction")
+                .setEditText(editText)
+                .setNegativeButton("Cancel") { _, _ ->
+                }
+                .setPositiveButton("Set") { _, _ ->
+                    transactionViewModel._noteTransaction.value = editText.text.toString()
+                }
+                .show()
+        }
+        transactionViewModel.noteTransaction.observe(viewLifecycleOwner) {
+            binding.noteTransc.text = it
+        }
         setHasOptionsMenu(true)
         return binding.root
+    }
+
+    fun showAndHideSoftKeyboard(view: View) {
+        binding.groupCalc.isVisible = false
+        view.clearFocus()
+        val imm =
+            getActivity()?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    fun AlertDialog.Builder.setEditText(editText: EditText): AlertDialog.Builder {
+        val container = FrameLayout(context)
+        container.addView(editText)
+        val containerParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        )
+        val marginHorizontal = 48F
+        val marginTop = 16F
+        containerParams.topMargin = (marginTop / 2).toPx
+        containerParams.leftMargin = marginHorizontal.toInt()
+        containerParams.rightMargin = marginHorizontal.toInt()
+        container.layoutParams = containerParams
+
+        val superContainer = FrameLayout(context)
+        superContainer.addView(container)
+
+        setView(superContainer)
+
+        return this
     }
 
     override fun startTransaction() {
