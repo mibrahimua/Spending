@@ -103,6 +103,7 @@
                 android:layout_height="20dp"
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/btn_note"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/tvPreviousBalance"
                 app:layout_constraintEnd_toStartOf="@+id/tvPreviousBalance"
                 app:layout_constraintTop_toTopOf="@+id/tvPreviousBalance" />
