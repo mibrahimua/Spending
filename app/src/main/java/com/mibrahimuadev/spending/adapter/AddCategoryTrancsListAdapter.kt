@@ -54,6 +54,7 @@ class AddCategoryTrancsListAdapter internal constructor(
         categories.clear()
         if (filterText?.isEmpty()!!) {
             categories.addAll(categoriesCopy)
+            isNewCategory = false
         } else {
             for (category in categoriesCopy) {
                 if (category.categoryName?.toLowerCase()?.contains(filterText.toLowerCase())!!) {

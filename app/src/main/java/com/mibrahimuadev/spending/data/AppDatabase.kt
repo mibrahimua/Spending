@@ -5,6 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mibrahimuadev.spending.data.dao.*
 import com.mibrahimuadev.spending.data.entity.*
 import com.mibrahimuadev.spending.utils.Converters
@@ -45,11 +47,11 @@ abstract class AppDatabase : RoomDatabase() {
         private var INSTANCE: AppDatabase? = null
 
         // Migration path definition from version 2 to version 3.
-//        val MIGRATION_2_3 = object : Migration(2, 3) {
-//            override fun migrate(database: SupportSQLiteDatabase) {
-//
-//            }
-//        }
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+
+            }
+        }
 
         fun getInstance(context: Context): AppDatabase {
             /**

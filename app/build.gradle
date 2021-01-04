@@ -95,6 +95,10 @@ dependencies {
 
     //Google Play Services
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
+    implementation 'com.google.api-client:google-api-client:1.23.0'
+    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
+    implementation 'com.google.apis:google-api-services-drive:v3-rev110-1.23.0'
+
 
     //Leak Canary (Memory Leak Detection)
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
