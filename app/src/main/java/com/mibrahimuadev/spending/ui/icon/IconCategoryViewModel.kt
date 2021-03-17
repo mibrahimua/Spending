@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mibrahimuadev.spending.data.entity.IconCategoryEntity
 import com.mibrahimuadev.spending.data.repository.IconCategoryRepository
-import com.mibrahimuadev.spending.utils.Result
+import com.mibrahimuadev.spending.utils.wrapper.Result
 import kotlinx.coroutines.launch
 
 class IconCategoryViewModel(application: Application): AndroidViewModel(application) {
@@ -35,17 +35,4 @@ class IconCategoryViewModel(application: Application): AndroidViewModel(applicat
             }
         }
     }
-
-
-//    fun getIconCategory(iconId: Int) {
-//        viewModelScope.launch {
-//            iconCategoryRepository.getDetailIconCategory(iconId).let { result->
-//                if(result is Result.Success) {
-//                    _iconId.value = result.data?.iconId
-//                    _iconName.value = result.data?.iconName
-//                }
-//            }
-//        }
-//    }
-
 }

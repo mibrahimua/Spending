@@ -4,7 +4,7 @@ import android.app.Application
 import com.mibrahimuadev.spending.data.AppDatabase
 import com.mibrahimuadev.spending.data.dao.IconCategoryDao
 import com.mibrahimuadev.spending.data.entity.IconCategoryEntity
-import com.mibrahimuadev.spending.utils.Result
+import com.mibrahimuadev.spending.utils.wrapper.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

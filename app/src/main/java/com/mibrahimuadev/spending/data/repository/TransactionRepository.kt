@@ -7,15 +7,15 @@ import com.mibrahimuadev.spending.data.entity.TransactionEntity
 import com.mibrahimuadev.spending.data.model.Transaction
 import com.mibrahimuadev.spending.data.model.TransactionSummary
 import com.mibrahimuadev.spending.data.model.TransactionSummaryPrevious
-import com.mibrahimuadev.spending.data.source.TransactionDataSource
-import com.mibrahimuadev.spending.utils.Result
+import com.mibrahimuadev.spending.data.source.TransactionRepositoryInterface
+import com.mibrahimuadev.spending.utils.wrapper.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.withContext
 
 class TransactionRepository(
     application: Application
-) : TransactionDataSource {
+) : TransactionRepositoryInterface {
     private val transactionDao: TransactionDao
 
     init {
@@ -59,7 +59,7 @@ class TransactionRepository(
         }
     }
 
-    suspend fun getPreviousSummaryTransaction(
+    override suspend fun getPreviousSummaryTransaction(
         startDate: String,
         endDate: String
     ): Result<TransactionSummaryPrevious> {

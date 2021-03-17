@@ -1,7 +1,8 @@
-package com.mibrahimuadev.spending.ui.transaction
+package com.mibrahimuadev.spending.utils.calculator
 
 import android.content.Context
 import com.mibrahimuadev.spending.R
+import com.mibrahimuadev.spending.ui.transaction.*
 import com.mibrahimuadev.spending.utils.Formatter
 import com.mibrahimuadev.spending.utils.format
 import net.objecthunter.exp4j.ExpressionBuilder
@@ -17,10 +18,6 @@ class CalculatorImpl(calculator: Calculator, private val context: Context) {
     private var operations = listOf("+", "-", "*", "/")
     private var operationsRegex = "[-+*/]".toPattern()
     private var numbersRegex = "[^0-9,.]".toRegex()
-
-    init {
-//        showNewResult("0")
-    }
 
     private fun addDigit(number: Int) {
         if (inputDisplayedFormula == "0") {

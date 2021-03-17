@@ -1,11 +1,10 @@
-package com.mibrahimuadev.spending.ui.categories
+package com.mibrahimuadev.spending.ui.category
 
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager

@@ -1,4 +1,4 @@
-package com.mibrahimuadev.spending.ui.categories
+package com.mibrahimuadev.spending.ui.category
 
 import android.app.Application
 import android.util.Log
@@ -11,8 +11,8 @@ import com.mibrahimuadev.spending.data.model.Category
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.data.repository.CategoryRepository
 import com.mibrahimuadev.spending.data.repository.IconCategoryRepository
-import com.mibrahimuadev.spending.utils.Event
-import com.mibrahimuadev.spending.utils.Result
+import com.mibrahimuadev.spending.utils.wrapper.Event
+import com.mibrahimuadev.spending.utils.wrapper.Result
 import kotlinx.coroutines.launch
 
 class CategoryViewModel(application: Application) : AndroidViewModel(application) {

@@ -8,6 +8,7 @@
   <component name="DBNavigator.Project.DataExportManager">
     <export-instructions>
       <create-header value="true" />
+      <friendly-headers value="false" />
       <quote-values-containing-separator value="true" />
       <quote-all-values value="false" />
       <value-separator value="" />
@@ -48,6 +49,7 @@
     <filter-actions connection-id="792014c5-367d-4152-8fbc-41332ee8e257" dataset="main.mata_uang" active-filter-id="03edacc3-d7b7-4051-aeeb-08a141d5ab3c">
       <filter id="03edacc3-d7b7-4051-aeeb-08a141d5ab3c" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND" />
     </filter-actions>
+    <filter-actions connection-id="792014c5-367d-4152-8fbc-41332ee8e257" dataset="main.backup_entity" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="792014c5-367d-4152-8fbc-41332ee8e257" dataset="main.icon_category" active-filter-id="EMPTY_FILTER">
       <filter id="03f58247-b6f3-4647-ba27-c840b09e125e" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="iconId" operator="=" value="" active="true" />
@@ -129,6 +131,7 @@
           <restore-workspace value="true" />
           <restore-workspace-deep value="true" />
           <environment-type value="default" />
+          <connectivity-timeout value="5" />
           <idle-time-to-disconnect value="30" />
           <idle-time-to-disconnect-pool value="5" />
           <credential-expiry-time value="10" />
@@ -225,8 +228,6 @@
           <object-type name="TABLE" enabled="true" />
           <object-type name="VIEW" enabled="true" />
           <object-type name="MATERIALIZED VIEW" enabled="true" />
-          <object-type name="NESTED TABLE" enabled="false" />
-          <object-type name="COLUMN" enabled="false" />
           <object-type name="INDEX" enabled="true" />
           <object-type name="CONSTRAINT" enabled="true" />
           <object-type name="DATASET TRIGGER" enabled="true" />
@@ -237,8 +238,6 @@
           <object-type name="FUNCTION" enabled="true" />
           <object-type name="PACKAGE" enabled="true" />
           <object-type name="TYPE" enabled="true" />
-          <object-type name="TYPE ATTRIBUTE" enabled="false" />
-          <object-type name="ARGUMENT" enabled="false" />
           <object-type name="DIMENSION" enabled="false" />
           <object-type name="CLUSTER" enabled="false" />
           <object-type name="DBLINK" enabled="true" />

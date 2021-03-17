@@ -10,14 +10,15 @@ import com.mibrahimuadev.spending.data.entity.TransactionEntity
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.data.repository.CategoryRepository
 import com.mibrahimuadev.spending.data.repository.TransactionRepository
-import com.mibrahimuadev.spending.utils.Event
-import com.mibrahimuadev.spending.utils.Result
+import com.mibrahimuadev.spending.data.source.TransactionRepositoryInterface
+import com.mibrahimuadev.spending.utils.wrapper.Event
+import com.mibrahimuadev.spending.utils.wrapper.Result
 import kotlinx.coroutines.launch
 import java.util.*
 
 class TransactionViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "TransactionViewModel"
-    private val transactionRepository: TransactionRepository
+    private val transactionRepository: TransactionRepositoryInterface
     private val categoryRepository: CategoryRepository
 
     init {
@@ -92,7 +93,6 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
             _transactionType.value = transactionTypeArgs
             _dataLoading.value = false
         }
-
     }
 
     fun getDetailTransaction(transactionId: Long) {

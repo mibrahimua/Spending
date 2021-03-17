@@ -8,13 +8,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mibrahimuadev.spending.data.model.Transaction
 import com.mibrahimuadev.spending.data.repository.TransactionRepository
+import com.mibrahimuadev.spending.data.source.TransactionRepositoryInterface
 import com.mibrahimuadev.spending.utils.CurrentDate
 import com.mibrahimuadev.spending.utils.CurrentDate.getEndOfDay
-import com.mibrahimuadev.spending.utils.Result
+import com.mibrahimuadev.spending.utils.wrapper.Result
 import kotlinx.coroutines.launch
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository: TransactionRepository = TransactionRepository(application)
+    private val repository: TransactionRepositoryInterface = TransactionRepository(application)
 
     val _selectedYear = MutableLiveData<String>()
     val selectedYear: LiveData<String> = _selectedYear
@@ -22,8 +23,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val _selectedMonth = MutableLiveData<String>()
     val selectedMonth: LiveData<String> = _selectedMonth
 
-    val _currentSelectedYear = MutableLiveData<String>()
-    val currentSelectedYear: LiveData<String> = _currentSelectedYear
+//    val _currentSelectedYear = MutableLiveData<String>()
+//    val currentSelectedYear: LiveData<String> = _currentSelectedYear
 
     val _selectedStartDate = MutableLiveData<String>()
     val selectedStartDate: LiveData<String> = _selectedStartDate
@@ -76,7 +77,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun padStartMonth(month: Int): String {
         val newMonth = month.let {
-            if (it!! < 10) {
+            if (it < 10) {
                 it.toString().padStart(2, '0')
             } else {
                 it.toString()
@@ -112,16 +113,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         var year = selectedYear.value?.toInt()
         var getEndOfMonthDay = true
         if (month?.equals(1) == true) {
-//            month = 12
             getEndOfMonthDay = false
-//            year = year?.minus(1)
         } else {
             month = month?.minus(1)
         }
 
         val formatDate = year.toString() + "-" + month?.let { padStartMonth(it) }
         val startDate = "$year-01-01 00:00:00"
-        val endDate =  getEndOfMonthDay.let {
+        val endDate = getEndOfMonthDay.let {
             if (it) {
                 formatDate + "-" + getEndOfDay(formatDate) + " 23:59:59"
             } else {

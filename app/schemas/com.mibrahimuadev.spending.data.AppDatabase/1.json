@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a2fa1630227fb6066b36ea0445708b19",
+    "identityHash": "3564196b2bdda216a7a674784a404065",
     "entities": [
       {
         "tableName": "transaction_spend",
@@ -158,12 +158,12 @@
       },
       {
         "tableName": "account",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userName` TEXT NOT NULL, `userEmail` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` TEXT NOT NULL, `userName` TEXT NOT NULL, `userEmail` TEXT NOT NULL, PRIMARY KEY(`userId`))",
         "fields": [
           {
             "fieldPath": "userId",
             "columnName": "userId",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -183,7 +183,109 @@
           "columnNames": [
             "userId"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "google_auth",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER NOT NULL, `accessToken` TEXT NOT NULL, `refreshToken` TEXT NOT NULL, PRIMARY KEY(`userId`))",
+        "fields": [
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "accessToken",
+            "columnName": "accessToken",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "refreshToken",
+            "columnName": "refreshToken",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "userId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "drive_entitiy",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fileType` TEXT NOT NULL, `fileId` TEXT, `fileName` TEXT, `lastModified` INTEGER, PRIMARY KEY(`fileType`))",
+        "fields": [
+          {
+            "fieldPath": "fileType",
+            "columnName": "fileType",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "fileId",
+            "columnName": "fileId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fileName",
+            "columnName": "fileName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastModified",
+            "columnName": "lastModified",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "fileType"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "backup_entity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` TEXT NOT NULL, `localBackup` TEXT, `googleBackup` TEXT, PRIMARY KEY(`userId`))",
+        "fields": [
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "localBackup",
+            "columnName": "localBackup",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "googleBackup",
+            "columnName": "googleBackup",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "userId"
+          ],
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
@@ -192,7 +294,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a2fa1630227fb6066b36ea0445708b19')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3564196b2bdda216a7a674784a404065')"
     ]
   }
 }

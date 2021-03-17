@@ -4,15 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.navGraphViewModels
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.databinding.FragmentIconCategoryBinding
-import com.mibrahimuadev.spending.ui.categories.CategoryViewModel
-import com.mibrahimuadev.spending.ui.categories.CategoryViewModelFactory
+import com.mibrahimuadev.spending.ui.category.CategoryViewModel
+import com.mibrahimuadev.spending.ui.category.CategoryViewModelFactory
 
 class IconCategoryFragment : Fragment() {
 
@@ -27,15 +25,14 @@ class IconCategoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentIconCategoryBinding.inflate(layoutInflater)
-        val application = requireActivity().application
-        val viewModelFactory = IconCategoryViewModelFactory(application = application)
-        val iconCategoryViewModel =
-            ViewModelProvider(this, viewModelFactory).get(IconCategoryViewModel::class.java)
+//        val application = requireActivity().application
+//        val viewModelFactory = IconCategoryViewModelFactory(application = application)
+//        val iconCategoryViewModel =
+//            ViewModelProvider(this, viewModelFactory).get(IconCategoryViewModel::class.java)
 
         getIconIds().forEach {
             it.setOnClickListener {
                 val resourceName = this.context?.resources?.getResourceEntryName(it.id)
-                Toast.makeText(requireContext(), "Icon ${resourceName}", Toast.LENGTH_SHORT).show()
                 categoryViewModel.getIconCategoryByName(resourceName!!)
                 Navigation.findNavController(requireView())
                     .navigate(IconCategoryFragmentDirections.actionIconCategoryFragmentToAddEditCategoryFragment())

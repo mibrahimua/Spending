@@ -15,7 +15,8 @@ import com.mibrahimuadev.spending.utils.Converters
 @Database(
     version = 1,
     entities = [(TransactionEntity::class), (CurrencyEntity::class), (CategoryEntity::class),
-        (IconCategoryEntity::class), (AccountEntity::class)],
+        (IconCategoryEntity::class), (AccountEntity::class), (GoogleAuthEntity::class),
+        (DriveEntity::class), (BackupEntity::class)],
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -31,6 +32,12 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun accountDao(): AccountDao
 
+    abstract fun googleAuthDao(): GoogleAuthDao
+
+    abstract fun driveDao(): DriveDao
+
+    abstract fun backupDao(): BackupDao
+
     companion object {
         /**
          * Annotate INSTANCE with @Volatile.
@@ -45,6 +52,7 @@ abstract class AppDatabase : RoomDatabase() {
          */
         @Volatile
         private var INSTANCE: AppDatabase? = null
+        var DB_NAME = "spending_database"
 
         // Migration path definition from version 2 to version 3.
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -70,15 +78,24 @@ abstract class AppDatabase : RoomDatabase() {
                     instance = Room.databaseBuilder(
                         context.applicationContext,
                         AppDatabase::class.java,
-                        "spending_database"
+                        DB_NAME
                     )
                         .createFromAsset("database/spending_database.db")
                         .fallbackToDestructiveMigration()
+                        .allowMainThreadQueries()
                         .build()
                     INSTANCE = instance
                 }
                 return instance
             }
+        }
+
+        // close database
+        fun destroyInstance() {
+            if (INSTANCE?.isOpen == true) {
+                INSTANCE?.close()
+            }
+            INSTANCE = null
         }
     }
 }

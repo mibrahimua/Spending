@@ -1,12 +1,9 @@
-package com.mibrahimuadev.spending.ui.categories
+package com.mibrahimuadev.spending.ui.category
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.widget.addTextChangedListener
@@ -16,9 +13,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.mibrahimuadev.spending.R
-import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.databinding.FragmentAddeditCategoryBinding
-import com.mibrahimuadev.spending.utils.EventObserver
+import com.mibrahimuadev.spending.utils.wrapper.EventObserver
 
 
 class AddEditCategoryFragment : Fragment() {
@@ -67,32 +63,6 @@ class AddEditCategoryFragment : Fragment() {
                 .navigate(AddEditCategoryFragmentDirections.actionAddEditCategoryFragmentToIconCategoryFragment())
         }
 
-//        val spCategoryType = binding.spCategoryType
-//        spCategoryType.adapter = ArrayAdapter<TransactionType>(
-//            requireActivity(),
-//            R.layout.spinner_category_type,
-//            R.id.textCategoryType,
-//            TransactionType.values()
-//        )
-//        categoryViewModel.categoryType.observe(viewLifecycleOwner) {
-//            spCategoryType.setSelection(it.ordinal)
-//        }
-//        spCategoryType?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener,
-//            AdapterView.OnItemClickListener {
-//            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-//                categoryViewModel._categoryType.value =
-//                    TransactionType.valueOf(p0?.selectedItem.toString())
-//            }
-//
-//            override fun onNothingSelected(p0: AdapterView<*>?) {
-//
-//            }
-//
-//            override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-//
-//            }
-//        }
-
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true /* enabled by default */) {
                 override fun handleOnBackPressed() {
@@ -132,7 +102,7 @@ class AddEditCategoryFragment : Fragment() {
     }
 
     private fun setTextOnCategoryIcon() {
-        if(categoryViewModel.iconName.value.isNullOrEmpty()) {
+        if (categoryViewModel.iconName.value.isNullOrEmpty()) {
             binding.categoryIconSelect.text = "No Icon Selected"
         } else {
             binding.categoryIconSelect.text = ""

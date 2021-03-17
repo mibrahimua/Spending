@@ -1,4 +1,4 @@
-package com.mibrahimuadev.spending.ui.categories
+package com.mibrahimuadev.spending.ui.category
 
 import android.app.Application
 import androidx.lifecycle.ViewModel

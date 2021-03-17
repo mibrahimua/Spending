@@ -7,8 +7,8 @@
         android:id="@+id/menu_top"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/loginFragment"
-            android:title="Sign in"
+            android:id="@+id/backupFragment"
+            android:title="Backup"
             android:visible="true"/>
         <item
             android:id="@+id/logout"

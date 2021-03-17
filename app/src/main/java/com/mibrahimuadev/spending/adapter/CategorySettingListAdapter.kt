@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.data.model.Category
 import com.mibrahimuadev.spending.data.model.TransactionType
-import com.mibrahimuadev.spending.ui.categories.CategorySettingFragmentDirections
+import com.mibrahimuadev.spending.ui.category.CategorySettingFragmentDirections
 
 class CategorySettingListAdapter internal constructor(private val context: Context) :
     RecyclerView.Adapter<CategorySettingListAdapter.CategoryViewHolder>() {

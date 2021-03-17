@@ -1,6 +1,5 @@
 package com.mibrahimuadev.spending.data.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.mibrahimuadev.spending.data.entity.CategoryEntity
 import com.mibrahimuadev.spending.data.model.Category

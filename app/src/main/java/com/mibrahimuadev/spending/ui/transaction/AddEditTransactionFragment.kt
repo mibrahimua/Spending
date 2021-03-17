@@ -16,8 +16,6 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.*
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -29,11 +27,13 @@ import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.databinding.FragmentAddTransactionBinding
 import com.mibrahimuadev.spending.utils.CurrentDate
-import com.mibrahimuadev.spending.utils.EventObserver
+import com.mibrahimuadev.spending.utils.wrapper.EventObserver
+import com.mibrahimuadev.spending.utils.calculator.Calculator
+import com.mibrahimuadev.spending.utils.calculator.CalculatorImpl
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
 
 
-class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
+class AddEditTransactionFragment : Fragment(), Calculator {
 
     private val TAG = "AddTransactionFragment"
     lateinit var calc: CalculatorImpl
@@ -47,6 +47,7 @@ class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
         get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
     val Float.toPx: Int
         get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
     @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -85,42 +86,14 @@ class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
         return binding.root
     }
 
-    fun showAndHideSoftKeyboard(view: View) {
-        binding.groupCalc.isVisible = false
-        view.clearFocus()
-        val imm =
-            getActivity()?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
 
-    fun AlertDialog.Builder.setEditText(editText: EditText): AlertDialog.Builder {
-        val container = FrameLayout(context)
-        container.addView(editText)
-        val containerParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT
-        )
-        val marginHorizontal = 48F
-        val marginTop = 16F
-        containerParams.topMargin = (marginTop / 2).toPx
-        containerParams.leftMargin = marginHorizontal.toInt()
-        containerParams.rightMargin = marginHorizontal.toInt()
-        container.layoutParams = containerParams
 
-        val superContainer = FrameLayout(context)
-        superContainer.addView(container)
-
-        setView(superContainer)
-
-        return this
-    }
-
-    override fun startTransaction() {
+    fun startTransaction() {
         setupDataTransaction()
         displayDataTransaction()
     }
 
-    override fun setupDataTransaction() {
+    fun setupDataTransaction() {
         /**
          * Init Transaction
          */
@@ -134,11 +107,11 @@ class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
         setupNoteTransaction()
     }
 
-    override fun displayDataTransaction() {
+    fun displayDataTransaction() {
         transactionViewModel.displayDataTransaction()
     }
 
-    override fun setupTypeTransaction() {
+    fun setupTypeTransaction() {
         /**
          *  Transaction Type View Binding Section
          */
@@ -171,7 +144,21 @@ class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
         }
     }
 
-    override fun setupCalculator() {
+    private fun getNumberButtonIds() = arrayOf(
+        binding.btnDecimal,
+        binding.btn0,
+        binding.btn1,
+        binding.btn2,
+        binding.btn3,
+        binding.btn4,
+        binding.btn5,
+        binding.btn6,
+        binding.btn7,
+        binding.btn8,
+        binding.btn9
+    )
+
+    fun setupCalculator() {
         /**
          * Calculator View Binding Section
          */
@@ -231,8 +218,16 @@ class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
         }
     }
 
+    override fun showNewResult(value: String, context: Context) {
+        transactionViewModel._transactionNominal.value = value
+    }
+
+    override fun showNewFormula(value: String, context: Context) {
+        transactionViewModel._calcNewFormula.value = value
+    }
+
     @SuppressLint("SetTextI18n")
-    override fun setupCategory() {
+    fun setupCategory() {
         /**
          * Category View Binding Section
          */
@@ -259,7 +254,7 @@ class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
 
     }
 
-    override fun setupDateTransaction() {
+    fun setupDateTransaction() {
         /**
          * Date Transaction View Binding Section
          */
@@ -279,7 +274,25 @@ class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
         }
     }
 
-    override fun setupNoteTransaction() {
+    fun showDatePicker(currentDate: CurrentDate): DatePickerDialog {
+        val datePickerDialog =
+            DatePickerDialog.newInstance({ view, year, monthOfYear, dayOfMonth ->
+                saveDatePickerToLiveData(dayOfMonth, monthOfYear, year)
+            }, currentDate.year, currentDate.month, currentDate.day)
+
+        return datePickerDialog
+    }
+
+    fun saveDatePickerToLiveData(dayOfMonth: Int, monthOfYear: Int, year: Int) {
+        val realMonth = monthOfYear + 1
+        val date = CurrentDate
+            .dateFormat("dd MM yyyy")
+            .parse("$dayOfMonth $realMonth $year")
+        Log.i(TAG, "Saving date into live data $date")
+        transactionViewModel._dateTransaction.value = date
+    }
+
+    fun setupNoteTransaction() {
         /**
          * Note Transaction View Binding Section
          */
@@ -290,6 +303,46 @@ class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
         }
         binding.noteTransc.addTextChangedListener {
             transactionViewModel.editTextNoteTransactionChanged(it.toString())
+        }
+    }
+
+    private fun AlertDialog.Builder.setEditText(editText: EditText): AlertDialog.Builder {
+        val container = FrameLayout(context)
+        container.addView(editText)
+        val containerParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        )
+        val marginHorizontal = 48F
+        val marginTop = 16F
+        containerParams.topMargin = (marginTop / 2).toPx
+        containerParams.leftMargin = marginHorizontal.toInt()
+        containerParams.rightMargin = marginHorizontal.toInt()
+        container.layoutParams = containerParams
+
+        val superContainer = FrameLayout(context)
+        superContainer.addView(container)
+
+        setView(superContainer)
+
+        return this
+    }
+
+    private fun copyToClipboard(copyResult: Boolean): Boolean {
+        var value = binding.formula.text.toString().trim()
+        if (copyResult) {
+            value = binding.result.text.toString().trim()
+        }
+
+        return if (value.isEmpty()) {
+            false
+        } else {
+            val clipBoard =
+                activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip: ClipData = ClipData.newPlainText("text", value)
+            clipBoard.setPrimaryClip(clip)
+            Toast.makeText(activity, "Copied", Toast.LENGTH_SHORT).show()
+            true
         }
     }
 
@@ -315,64 +368,6 @@ class AddEditTransactionFragment : Fragment(), Calculator, StartTransaction {
             })
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun getNumberButtonIds() = arrayOf(
-        binding.btnDecimal,
-        binding.btn0,
-        binding.btn1,
-        binding.btn2,
-        binding.btn3,
-        binding.btn4,
-        binding.btn5,
-        binding.btn6,
-        binding.btn7,
-        binding.btn8,
-        binding.btn9
-    )
-
-    private fun copyToClipboard(copyResult: Boolean): Boolean {
-        var value = binding.formula.text.toString().trim()
-        if (copyResult) {
-            value = binding.result.text.toString().trim()
-        }
-
-        return if (value.isEmpty()) {
-            false
-        } else {
-            val clipBoard =
-                activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip: ClipData = ClipData.newPlainText("text", value)
-            clipBoard.setPrimaryClip(clip)
-            Toast.makeText(activity, "Copied", Toast.LENGTH_SHORT).show()
-            true
-        }
-    }
-
-    override fun showNewResult(value: String, context: Context) {
-        transactionViewModel._transactionNominal.value = value
-    }
-
-    override fun showNewFormula(value: String, context: Context) {
-        transactionViewModel._calcNewFormula.value = value
-    }
-
-    fun showDatePicker(currentDate: CurrentDate): DatePickerDialog {
-        val datePickerDialog =
-            DatePickerDialog.newInstance({ view, year, monthOfYear, dayOfMonth ->
-                saveDatePickerToLiveData(dayOfMonth, monthOfYear, year)
-            }, currentDate.year, currentDate.month, currentDate.day)
-
-        return datePickerDialog
-    }
-
-    fun saveDatePickerToLiveData(dayOfMonth: Int, monthOfYear: Int, year: Int) {
-        val realMonth = monthOfYear + 1
-        val date = CurrentDate
-            .dateFormat("dd MM yyyy")
-            .parse("$dayOfMonth $realMonth $year")
-        Log.i(TAG, "Saving date into live data $date")
-        transactionViewModel._dateTransaction.value = date
     }
 
     override fun onDestroyView() {

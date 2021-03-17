@@ -1,4 +1,4 @@
-package com.mibrahimuadev.spending.utils
+package com.mibrahimuadev.spending.utils.wrapper
 
 sealed class Result<out R> {
 

@@ -1,4 +1,4 @@
-package com.mibrahimuadev.spending.ui.transaction
+package com.mibrahimuadev.spending.ui.transactiondetail
 
 import android.app.Application
 import android.util.Log
@@ -9,8 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.data.repository.CategoryRepository
 import com.mibrahimuadev.spending.data.repository.TransactionRepository
-import com.mibrahimuadev.spending.utils.Event
-import com.mibrahimuadev.spending.utils.Result
+import com.mibrahimuadev.spending.utils.wrapper.Event
+import com.mibrahimuadev.spending.utils.wrapper.Result
 import kotlinx.coroutines.launch
 import java.util.*
 

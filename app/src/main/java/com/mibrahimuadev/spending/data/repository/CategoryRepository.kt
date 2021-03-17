@@ -2,7 +2,7 @@ package com.mibrahimuadev.spending.data.repository
 
 import android.app.Application
 import com.mibrahimuadev.spending.data.AppDatabase
-import com.mibrahimuadev.spending.utils.Result
+import com.mibrahimuadev.spending.utils.wrapper.Result
 import com.mibrahimuadev.spending.data.entity.CategoryEntity
 import com.mibrahimuadev.spending.data.dao.CategoryDao
 import com.mibrahimuadev.spending.data.source.CategoryDataSource

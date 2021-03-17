@@ -11,7 +11,7 @@ import com.mibrahimuadev.spending.databinding.CustomDatepickerDialogBinding
 import com.mibrahimuadev.spending.utils.CurrentDate
 
 
-class CustomDatePickerDialog : DialogFragment() {
+class CustomDatePickerFragment : DialogFragment() {
     private var _binding: CustomDatepickerDialogBinding? = null
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by navGraphViewModels(R.id.navigation) {
@@ -47,22 +47,22 @@ class CustomDatePickerDialog : DialogFragment() {
             val yearBefore = homeViewModel.selectedYear.value?.toInt()?.minus(1).toString()
             homeViewModel._selectedYear.value = yearBefore
 
-            getMonthButtonIds()[monthId].let {
-                if(yearBefore != homeViewModel.currentSelectedYear.value) {
-                    it.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-                }
-            }
+//            getMonthButtonIds()[monthId].let {
+//                if(yearBefore != homeViewModel.currentSelectedYear.value) {
+//                    it.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+//                }
+//            }
         }
         binding.yearNext.setOnClickListener {
 
             val yearAfter = homeViewModel.selectedYear.value?.toInt()?.plus(1).toString()
             homeViewModel._selectedYear.value = yearAfter
 
-            getMonthButtonIds()[monthId].let {
-                if(yearAfter != homeViewModel.currentSelectedYear.value) {
-                    it.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-                }
-            }
+//            getMonthButtonIds()[monthId].let {
+//                if(yearAfter != homeViewModel.currentSelectedYear.value) {
+//                    it.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+//                }
+//            }
         }
         getMonthButtonIds().forEachIndexed { index, element ->
             element.setOnClickListener {
@@ -87,10 +87,10 @@ class CustomDatePickerDialog : DialogFragment() {
             }
         }
 
-        homeViewModel.currentSelectedYear.observe(viewLifecycleOwner) {
-
-
-        }
+//        homeViewModel.currentSelectedYear.observe(viewLifecycleOwner) {
+//
+//
+//        }
 
         return binding.root
     }

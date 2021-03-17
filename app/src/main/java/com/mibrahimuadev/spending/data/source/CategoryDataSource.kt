@@ -1,6 +1,6 @@
 package com.mibrahimuadev.spending.data.source
 
-import com.mibrahimuadev.spending.utils.Result
+import com.mibrahimuadev.spending.utils.wrapper.Result
 import com.mibrahimuadev.spending.data.entity.CategoryEntity
 import com.mibrahimuadev.spending.data.model.Category
 import com.mibrahimuadev.spending.data.model.TransactionType

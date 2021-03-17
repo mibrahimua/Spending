@@ -1,20 +1,20 @@
-package com.mibrahimuadev.spending.ui.transaction
+package com.mibrahimuadev.spending.ui.transactiondetail
 
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.databinding.FragmentDetailTransactionBinding
+import com.mibrahimuadev.spending.ui.transaction.TransactionViewModel
+import com.mibrahimuadev.spending.ui.transaction.TransactionViewModelFactory
 import com.mibrahimuadev.spending.utils.CurrentDate
-import com.mibrahimuadev.spending.utils.EventObserver
 import com.mibrahimuadev.spending.utils.Formatter
+import com.mibrahimuadev.spending.utils.wrapper.EventObserver
 
 class DetailTransactionFragment : Fragment() {
     private val TAG = "DetailTransactionFragment"
@@ -83,9 +83,10 @@ class DetailTransactionFragment : Fragment() {
                 }
                 .setPositiveButton("Yes") { _, _ ->
                     transactionViewModel.deleteTransaction(args.transactionId)
-                    transactionViewModel.navigateToHome.observe(viewLifecycleOwner, EventObserver{
-                      val action = DetailTransactionFragmentDirections.actionDetailTransactionFragment2ToHomeFragment()
-                      findNavController().navigate(action)
+                    transactionViewModel.navigateToHome.observe(viewLifecycleOwner, EventObserver {
+                        val action =
+                            DetailTransactionFragmentDirections.actionDetailTransactionFragment2ToHomeFragment()
+                        findNavController().navigate(action)
                     })
                 }
                 .show()

@@ -24,9 +24,9 @@
             android:id="@+id/action_homeFragment_to_nav_category"
             app:destination="@id/nav_category" />
         <action
-            android:id="@+id/action_homeFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:popUpTo="@id/loginFragment"
+            android:id="@+id/action_homeFragment_to_backupFragment"
+            app:destination="@id/backupFragment"
+            app:popUpTo="@id/backupFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <navigation
@@ -81,7 +81,7 @@
     </navigation>
     <fragment
         android:id="@+id/detailTransactionFragment2"
-        android:name="com.mibrahimuadev.spending.ui.transaction.DetailTransactionFragment"
+        android:name="com.mibrahimuadev.spending.ui.transactiondetail.DetailTransactionFragment"
         android:label="fragment_detail_transaction"
         tools:layout="@layout/fragment_detail_transaction">
         <action
@@ -103,7 +103,7 @@
             app:argType="integer" />
         <fragment
             android:id="@+id/addEditCategoryFragment"
-            android:name="com.mibrahimuadev.spending.ui.categories.AddEditCategoryFragment"
+            android:name="com.mibrahimuadev.spending.ui.category.AddEditCategoryFragment"
             android:label="fragment_addedit_category"
             tools:layout="@layout/fragment_addedit_category">
             <argument
@@ -136,7 +136,7 @@
         </fragment>
         <fragment
             android:id="@+id/categorySettingFragment"
-            android:name="com.mibrahimuadev.spending.ui.categories.CategorySettingFragment"
+            android:name="com.mibrahimuadev.spending.ui.category.CategorySettingFragment"
             android:label="fragment_category_setting"
             tools:layout="@layout/fragment_category_setting" >
             <action
@@ -150,12 +150,12 @@
         </fragment>
     </navigation>
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.mibrahimuadev.spending.ui.login.LoginFragment"
+        android:id="@+id/backupFragment"
+        android:name="com.mibrahimuadev.spending.ui.backup.BackupFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_backup" >
         <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
+            android:id="@+id/action_backupFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />

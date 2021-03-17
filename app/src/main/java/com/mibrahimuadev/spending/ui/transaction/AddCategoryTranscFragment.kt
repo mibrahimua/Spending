@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.adapter.AddCategoryTrancsListAdapter
 import com.mibrahimuadev.spending.databinding.FragmentAddCategoryTranscBinding
-import com.mibrahimuadev.spending.ui.categories.CategoryViewModel
-import com.mibrahimuadev.spending.ui.categories.CategoryViewModelFactory
+import com.mibrahimuadev.spending.ui.category.CategoryViewModel
+import com.mibrahimuadev.spending.ui.category.CategoryViewModelFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
