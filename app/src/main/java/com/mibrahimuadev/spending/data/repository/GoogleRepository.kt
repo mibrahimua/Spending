@@ -2,13 +2,11 @@ package com.mibrahimuadev.spending.data.repository
 
 import android.app.Application
 import android.content.Context
-import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
 import androidx.sqlite.db.SimpleSQLiteQuery
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.api.client.extensions.android.http.AndroidHttp
@@ -37,15 +35,15 @@ import java.net.URL
 import java.util.*
 
 
-class GoogleRepository(val application: Application) {
-    private val googleAuthService: GoogleAuthService = GoogleAuthService(application)
+class GoogleRepository(val appContext: Context) {
+    private val googleAuthService: GoogleAuthService = GoogleAuthService(appContext)
     private val accountDao: AccountDao
     private val googleAuthDao: GoogleAuthDao
     private val driveDao: DriveDao
     private val backupDao: BackupDao
 
     init {
-        val database = AppDatabase.getInstance(application.applicationContext)
+        val database = AppDatabase.getInstance(appContext)
         accountDao = database.accountDao()
         googleAuthDao = database.googleAuthDao()
         driveDao = database.driveDao()
@@ -90,7 +88,13 @@ class GoogleRepository(val application: Application) {
 
     suspend fun updateGoogleBackup(userId: String, googleBackup: String) {
         return withContext(Dispatchers.IO) {
-            backupDao.updateLocalBackup(userId, googleBackup)
+            backupDao.updateGoogleBackup(userId, googleBackup)
+        }
+    }
+
+    suspend fun deleteBackupDate() {
+        return withContext(Dispatchers.IO) {
+            backupDao.deleteBackupDate()
         }
     }
 
@@ -107,7 +111,7 @@ class GoogleRepository(val application: Application) {
             var mDriveServiceHelper: DriveServiceHelper? = null
             val job1 = launch {
                 val credential = GoogleAccountCredential.usingOAuth2(
-                    application, setOf(DriveScopes.DRIVE_FILE)
+                    appContext, setOf(DriveScopes.DRIVE_FILE)
                 )
                 credential.selectedAccount = googleAccount.account
                 val googleDriveService = Drive.Builder(

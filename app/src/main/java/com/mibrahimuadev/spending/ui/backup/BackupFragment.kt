@@ -66,12 +66,6 @@ class BackupFragment : Fragment() {
 
         mGoogleSignInClient = backupViewModel.mGoogleSignInClient
         backupViewModel.initRequiredData()
-//        backupViewModel.checkLoggedUser()
-//
-//        /**
-//         * GETBACKUPDATE BUTUH USERID DARI CHECKLOGGEDUSER
-//         */
-//        backupViewModel.getBackupDate()
 
         backupViewModel.googleAccount.observe(viewLifecycleOwner) {
             if (it != null) {
@@ -97,12 +91,13 @@ class BackupFragment : Fragment() {
 
         /**
          * driveServiceHelper ditrigger dari button backup
+         * DISABLE untuk test work manager
          */
-        backupViewModel.driveServiceHelper.observe(viewLifecycleOwner) {
-            if (it != null) {
-                backupViewModel.syncFileBackupDrive()
-            }
-        }
+//        backupViewModel.driveServiceHelper.observe(viewLifecycleOwner) {
+//            if (it != null) {
+//                backupViewModel.syncFileBackupDrive()
+//            }
+//        }
 
         binding.authButton.setOnClickListener {
             if (isUserExist) {
@@ -117,20 +112,18 @@ class BackupFragment : Fragment() {
         }
 
         binding.buttonBackup.setOnClickListener {
-            val localFileBackup = backupViewModel.createLocalFileBackup()
-            if (localFileBackup) {
-                Toast.makeText(
-                    requireContext(),
-                    "file backup on local is exist, ready to sync",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-//            requestSignIn()
+            backupViewModel.doBackup()
             /**
-             * disini dipanggil requestSignIn karena didalam fungsi tsb ada startActivityForResult
-             * yang akan mengarahkan ke handleSignInResult
-             * dan memanggil backupViewModel.syncFileBackupDrive
+             * DISABLE untuk test work manager
              */
+//            val localFileBackup = backupViewModel.createLocalFileBackup()
+//            if (localFileBackup) {
+//                Toast.makeText(
+//                    requireContext(),
+//                    "file backup on local is exist, ready to sync",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
         }
 
         return binding.root
@@ -215,15 +208,6 @@ class BackupFragment : Fragment() {
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
-            //DISABLE DRIVE BACKUP
-//            backupViewModel.getDriveServiceHelper(result)
-//
-//            backupViewModel.driveServiceHelper.observe(viewLifecycleOwner) {
-//                if (it != null) {
-//                    backupViewModel.syncFileBackupDrive()
-//                }
-//            }
-            // DISABLE DRIVE BACKUP
             val account: GoogleSignInAccount? = completedTask.getResult(ApiException::class.java)
 
             if (account != null) {
@@ -263,6 +247,7 @@ class BackupFragment : Fragment() {
 
     private fun loggingOut() {
         backupViewModel.deleteLoggedUser()
+        backupViewModel.deleteBackupDate()
         mGoogleSignInClient.signOut()
             .addOnCompleteListener(requireActivity()) {
                 Toast.makeText(requireContext(), "Log Out Successfully", Toast.LENGTH_SHORT)
@@ -271,24 +256,5 @@ class BackupFragment : Fragment() {
                 Navigation.findNavController(requireView())
                     .navigate(BackupFragmentDirections.actionBackupFragmentToHomeFragment())
             }
-    }
-
-    /**
-     * Starts a sign-in activity using [.REQUEST_CODE_SIGN_IN].
-     */
-    private fun requestSignIn() {
-        /**
-         * bukannya ini udah dihandle sama function lain ??
-         */
-        Log.d("BackupFragment", "Requesting sign-in")
-        val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .requestScopes(Scope(DriveScopes.DRIVE_FILE))
-            .build()
-        val googleSignInClient = GoogleSignIn.getClient(requireContext(), signInOptions)
-
-        mGoogleSignInClient = GoogleSignIn.getClient(requireActivity(), signInOptions)
-        // The result of the sign-in Intent is handled in onActivityResult.
-        startActivityForResult(googleSignInClient.signInIntent, REQUEST_CODE_SIGN_IN)
     }
 }

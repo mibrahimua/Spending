@@ -6,10 +6,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.common.Scopes
-import com.google.android.gms.common.api.Scope
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.FileList
 import com.mibrahimuadev.spending.data.AppDatabase
@@ -21,6 +23,9 @@ import com.mibrahimuadev.spending.data.model.BaseDrive
 import com.mibrahimuadev.spending.data.model.GoogleAccount
 import com.mibrahimuadev.spending.data.network.google.DriveServiceHelper
 import com.mibrahimuadev.spending.data.repository.GoogleRepository
+import com.mibrahimuadev.spending.data.workmanager.BackupWorker
+import com.mibrahimuadev.spending.utils.CurrentDate
+import com.mibrahimuadev.spending.utils.CurrentDate.toString
 import com.mibrahimuadev.spending.utils.wrapper.Result
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
@@ -40,10 +45,10 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
 
     val mGoogleSignInClient: GoogleSignInClient
 
-    private val SCOPES: MutableList<String> =
-        Collections.singletonList(Scope(Scopes.DRIVE_FILE).toString())
-
     private var googleSignInAccount: GoogleSignInAccount? = null
+
+    private val _googleAccount = MutableLiveData<GoogleAccount>()
+    val googleAccount: LiveData<GoogleAccount> = _googleAccount
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -51,11 +56,14 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
     private val _isUserLoggedIn = MutableLiveData<Boolean>()
     var isUserLoggedIn = _isUserLoggedIn
 
-    private val _googleAccount = MutableLiveData<GoogleAccount>()
-    val googleAccount: LiveData<GoogleAccount> = _googleAccount
-
+    /**
+     * tak tau variable job ini berguna atau tidak LMAO
+     */
     val job = Job()
 
+    /**
+     * variable mutex untuk membuat coroutine berjalan secara sequence / berurutan
+     */
     val mutex = Mutex()
 
     init {
@@ -93,6 +101,8 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
     /**
      * Backup Date Section
      */
+    val currentDateTime = CurrentDate.getCurrentDateTime().toString("dd MMM yyyy HH:mm")
+
     private val _backupDate = MutableLiveData<BackupDate>()
     val backupDate: LiveData<BackupDate> = _backupDate
 
@@ -105,6 +115,10 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
                 return@withContext getBackupDate()
             }
         }
+    }
+    private val workManager = WorkManager.getInstance(applicationContext)
+    fun doBackup() {
+        workManager.enqueue(OneTimeWorkRequest.from(BackupWorker::class.java))
     }
 
     suspend fun checkLoggedUser() {
@@ -155,7 +169,9 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
 
     fun deleteLoggedUser() {
         viewModelScope.launch(Dispatchers.IO) {
-            googleRepository.deleteLoggedUser()
+            mutex.withLock {
+                googleRepository.deleteLoggedUser()
+            }
         }
     }
 
@@ -205,10 +221,11 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
             val upsertBackupDate = viewModelScope.launch(CoroutineName("UpsertBackupDate")) {
                 Log.d(TAG, "Starting UpsertBackupDate in thread ${Thread.currentThread().name}")
 
+
                 googleRepository.insertOrUpdateBackupDate(
                     BackupEntity(
                         userId = googleAccount.value!!.userId,
-                        localBackup = "16-03-2021 21:37",
+                        localBackup = currentDateTime,
                         googleBackup = null
                     )
                 )
@@ -245,6 +262,7 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         searchFileBackupDrive()
         uploadFileBackupDrive()
         deleteOldFileBackupDrive()
+        getBackupDate()
     }
 
     fun searchFolderDrive() {
@@ -255,9 +273,11 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
                 }
                 val driveEntity: BaseDrive? = job1.await()
                 if (driveEntity?.fileId.equals(null)) {
+                    /**
+                     * Buat folder drive baru
+                     */
                     createFolderDrive()
                 } else {
-//                this@BackupViewModel.driveEntity = driveEntity?
                     _baseDrive.postValue(driveEntity)
                     Log.i(
                         "GoogleDrive",
@@ -323,6 +343,11 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
                     }
                     val driveEntity = job1.await()
                     _baseDrive.postValue(driveEntity)
+
+                    googleRepository.updateGoogleBackup(
+                        googleAccount.value!!.userId,
+                        currentDateTime
+                    )
                 } else {
                     Log.i("GoogleDrive", "baseDrive are null or empty or not equals folder")
                 }
@@ -378,22 +403,30 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
     fun getBackupDate() {
         if (googleAccount.value?.userId != null) {
             viewModelScope.launch(job) {
-                Log.d(TAG, "Starting MainGetBackupDate in thread ${Thread.currentThread().name}")
-
-                val job1 = viewModelScope.async(job) {
-                    googleRepository.getBackupDate(googleAccount.value!!.userId)
-                }
-                Log.d(TAG, "fetch googleRepoGetBackupDate in thread ${Thread.currentThread().name}")
-
-                val result = job1.await()
-
-                _backupDate.postValue(
-                    BackupDate(
-                        localBackup = result?.localBackup,
-                        googleBackup = result?.googleBackup
+                mutex.withLock {
+                    Log.d(
+                        TAG,
+                        "Starting MainGetBackupDate in thread ${Thread.currentThread().name}"
                     )
-                )
-                Log.d(TAG, "result fetch of googleRepoGetBackupDate ${result}")
+
+                    val job1 = viewModelScope.async(job) {
+                        googleRepository.getBackupDate(googleAccount.value!!.userId)
+                    }
+                    Log.d(
+                        TAG,
+                        "fetch googleRepoGetBackupDate in thread ${Thread.currentThread().name}"
+                    )
+
+                    val result = job1.await()
+
+                    _backupDate.postValue(
+                        BackupDate(
+                            localBackup = result?.localBackup,
+                            googleBackup = result?.googleBackup
+                        )
+                    )
+                    Log.d(TAG, "result fetch of googleRepoGetBackupDate ${result}")
+                }
             }
         } else {
             Log.d(TAG, "getBackupDate() : googleAccount userId is null")
@@ -403,6 +436,14 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
     fun insertOrUpdateBackupDate(backupEntity: BackupEntity) {
         viewModelScope.launch {
             googleRepository.insertOrUpdateBackupDate(backupEntity)
+        }
+    }
+
+    fun deleteBackupDate() {
+        viewModelScope.launch {
+            mutex.withLock {
+                googleRepository.deleteBackupDate()
+            }
         }
     }
 

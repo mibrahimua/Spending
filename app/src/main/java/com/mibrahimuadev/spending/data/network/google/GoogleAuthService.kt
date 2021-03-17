@@ -1,6 +1,7 @@
 package com.mibrahimuadev.spending.data.network.google
 
 import android.app.Application
+import android.content.Context
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -13,7 +14,7 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import java.util.*
 
-class GoogleAuthService(val application: Application) {
+class GoogleAuthService(val appContext: Context) {
     companion object {
         val SCOPES: List<String> =
             Collections.singletonList(Scope(Scopes.DRIVE_FILE).toString())
@@ -34,19 +35,19 @@ class GoogleAuthService(val application: Application) {
     }
 
     fun getGoogleSignInClient(): GoogleSignInClient {
-        return GoogleSignIn.getClient(application, getGoogleSignOption())
+        return GoogleSignIn.getClient(appContext, getGoogleSignOption())
     }
 
     fun getLastSignedInAccount(): GoogleSignInAccount? {
-        return GoogleSignIn.getLastSignedInAccount(application)
+        return GoogleSignIn.getLastSignedInAccount(appContext)
     }
 
     fun checkDriveAuth(): Drive {
         val mAccount: GoogleSignInAccount? =
-            GoogleSignIn.getLastSignedInAccount(application)
+            GoogleSignIn.getLastSignedInAccount(appContext)
 
         val credential: GoogleAccountCredential =
-            GoogleAccountCredential.usingOAuth2(application, SCOPES)
+            GoogleAccountCredential.usingOAuth2(appContext, SCOPES)
 
         credential.setSelectedAccount(mAccount?.account)
         val googleDriveService: Drive =
