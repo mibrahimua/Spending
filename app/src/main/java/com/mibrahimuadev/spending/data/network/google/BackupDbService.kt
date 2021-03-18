@@ -66,6 +66,13 @@ class BackupDbService(val appContext: Context) {
      * }
      */
 
+    /**
+     * yang berbeda dengan backupviewmodel
+     * 1. Coroutine Scope
+     * 2. tidak ada pengecekan data google sign in ke db
+     *
+     */
+
     fun createLocalFileBackup(): Boolean {
         createLocalDirBackupDB()
         changeCheckPointPragma()

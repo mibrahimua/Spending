@@ -12,8 +12,7 @@ class BackupWorker(val appContext: Context, workerParams: WorkerParameters) :
          * Disini dilakukan pemanggilan fungsi sync
          */
         return try {
-            val backupDb = BackupDbService(appContext)
-            val result = backupDb.createLocalFileBackup()
+            BackupDbService(appContext).createLocalFileBackup()
             Result.success()
         } catch (throwable: Throwable) {
             Result.failure()

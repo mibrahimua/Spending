@@ -74,30 +74,6 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         mGoogleSignInClient = googleRepository.getGoogleSignInClient()
     }
 
-    private val _driveServiceHelper = MutableLiveData<DriveServiceHelper>()
-    val driveServiceHelper: LiveData<DriveServiceHelper> = _driveServiceHelper
-
-    // BELUM DIGUNAKAN
-//    val _accessToken = MutableLiveData<String>()
-//    val accessToken: LiveData<String> = _accessToken
-//
-//    val _filesDrive = MutableLiveData<List<File?>>()
-//    val filesDrive: LiveData<List<File?>> = _filesDrive
-//
-//    val _errorMessage = MutableLiveData<String>()
-//    val errorMessage: LiveData<String> = _errorMessage
-
-    /**
-     * Drive Section
-     */
-    private lateinit var driveEntity: DriveEntity
-
-    val _baseDrive = MutableLiveData<BaseDrive>()
-    val baseDrive: LiveData<BaseDrive> = _baseDrive
-
-    val _listFileId = MutableLiveData<MutableList<String>>()
-    val listFileId: LiveData<MutableList<String>> = _listFileId
-
     /**
      * Backup Date Section
      */
@@ -116,7 +92,9 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
             }
         }
     }
+
     private val workManager = WorkManager.getInstance(applicationContext)
+
     fun doBackup() {
         workManager.enqueue(OneTimeWorkRequest.from(BackupWorker::class.java))
     }
@@ -124,8 +102,6 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
     suspend fun checkLoggedUser() {
         var isUserExist = false
         withContext(Dispatchers.IO) {
-            Log.d(TAG, "Starting MainCheckLoggedUser in thread ${Thread.currentThread().name}")
-
             _isLoading.postValue(true)
 
             viewModelScope.launch(job) {
@@ -141,8 +117,6 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
             }
 
             val result = googleRepoCheckLoggedUser.await()
-            Log.d(TAG, "result fetch GoogleRepoCheckLoggedUser ${result}")
-
             if (result is Result.Success) {
                 if (result.data != null) {
                     isUserExist = true
@@ -175,200 +149,31 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         }
     }
 
-    fun createLocalFileBackup(): Boolean {
-        createLocalDirBackupDB()
-        changeCheckPointPragma()
-        copyLocalAppDbToBackupDBDir(File(applicationContext.filesDir, "BackupDB").toString())
-        val checkBackupFile =
-            File(applicationContext.filesDir.absoluteFile, "BackupDB/spending_database.db")
-        if (checkBackupFile.exists()) return true
-        return false
-    }
-
-    fun createLocalDirBackupDB() {
-        /**
-         * applicationContext.filesDir
-         * com.mibrahimuadev.spending/files/
-         */
-        val folder = applicationContext.filesDir
-        if (!File(folder, "BackupDB").isDirectory) {
-            val createFolder = File(folder, "BackupDB")
-            createFolder.mkdir()
-        }
-    }
-
-    fun changeCheckPointPragma() {
-        viewModelScope.launch {
-            googleRepository.changeCheckPointPragma()
-        }
-    }
-
-    @Throws(IOException::class)
-    fun copyLocalAppDbToBackupDBDir(address: String) {
-        viewModelScope.launch(CoroutineName("MainCopyLocalAppDb")) {
-            Log.d(TAG, "Starting MainCopyLocalAppDb in thread ${Thread.currentThread().name}")
-
-            val backupDB = File(address, "spending_database.db")
-            val currentDB = applicationContext.getDatabasePath(AppDatabase.DB_NAME)
-            if (currentDB.exists()) {
-                val src = FileInputStream(currentDB).channel
-                val dst = FileOutputStream(backupDB).channel
-                dst.transferFrom(src, 0, src.size())
-                src.close()
-                dst.close()
-            }
-
-            val upsertBackupDate = viewModelScope.launch(CoroutineName("UpsertBackupDate")) {
-                Log.d(TAG, "Starting UpsertBackupDate in thread ${Thread.currentThread().name}")
-
-
-                googleRepository.insertOrUpdateBackupDate(
-                    BackupEntity(
-                        userId = googleAccount.value!!.userId,
-                        localBackup = currentDateTime,
-                        googleBackup = null
-                    )
-                )
-                Log.d(TAG, "fetch UpsertBackupDate in thread ${Thread.currentThread().name}")
-
-            }
-            upsertBackupDate.join()
-
-            getBackupDate()
-
-            /**
-             * memulai proses async google drive
-             */
-            getDriveServiceHelper()
-        }
-    }
-
-    fun getDriveServiceHelper() {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (googleRepository.hasActiveInternetConnection(getApplication()) && googleSignInAccount != null) {
-                viewModelScope.launch(Dispatchers.Main) {
-                    val job1 = viewModelScope.async(Dispatchers.Main) {
-                        googleRepository.getDriveServiceHelper(googleSignInAccount!!)
+    fun getBackupDate() {
+        if (googleAccount.value?.userId != null) {
+            viewModelScope.launch(job) {
+                mutex.withLock {
+                    val job1 = viewModelScope.async(job) {
+                        googleRepository.getBackupDate(googleAccount.value!!.userId)
                     }
-                    _driveServiceHelper.value = job1.await()
-                    Log.i("GoogleDrive", "${driveServiceHelper.value}")
-                }
-            }
-        }
-    }
-
-    fun syncFileBackupDrive() {
-        searchFolderDrive()
-        searchFileBackupDrive()
-        uploadFileBackupDrive()
-        deleteOldFileBackupDrive()
-        getBackupDate()
-    }
-
-    fun searchFolderDrive() {
-        viewModelScope.launch {
-            mutex.withLock {
-                val job1 = viewModelScope.async {
-                    googleRepository.searchFolderDrive(driveServiceHelper.value)
-                }
-                val driveEntity: BaseDrive? = job1.await()
-                if (driveEntity?.fileId.equals(null)) {
-                    /**
-                     * Buat folder drive baru
-                     */
-                    createFolderDrive()
-                } else {
-                    _baseDrive.postValue(driveEntity)
-                    Log.i(
-                        "GoogleDrive",
-                        "retrive driveEntity from job1 searchFolderDrive : $driveEntity"
-                    )
-                }
-            }
-        }
-    }
-
-    fun createFolderDrive() {
-        viewModelScope.launch {
-            mutex.withLock {
-                Log.i(
-                    "GoogleDrive",
-                    "call createFolderDrive from googleRepository"
-                )
-                val job1 = viewModelScope.async {
-                    googleRepository.createFolderDrive(driveServiceHelper.value)
-                }
-                val driveEntity = job1.await()
-                _baseDrive.postValue(driveEntity)
-                Log.i(
-                    "GoogleDrive",
-                    "retrive driveEntity from job1 createFolderDrive : $driveEntity"
-                )
-            }
-        }
-    }
-
-    fun searchFileBackupDrive() {
-        viewModelScope.launch {
-            mutex.withLock {
-                val job1 = async {
-                    Log.i(
-                        "GoogleDrive",
-                        "call searchFileBackupDrive from googleRepository"
-                    )
-                    googleRepository.searchFileBackupDrive(driveServiceHelper.value)
-                }
-                _listFileId.postValue(job1.await())
-                Log.i(
-                    "GoogleDrive",
-                    "retrive listFileId from job1 searchFileBackupDrive"
-                )
-            }
-        }
-    }
-
-    fun uploadFileBackupDrive() {
-        viewModelScope.launch {
-            mutex.withLock {
-                if (!baseDrive.value?.fileId.isNullOrEmpty() && baseDrive.value?.fileType.equals("folder")) {
-                    Log.i(
-                        "GoogleDrive",
-                        "call uploadFileBackupDrive from googleRepository with folderId = ${baseDrive.value?.fileId}"
-                    )
-                    val job1 = viewModelScope.async {
-                        googleRepository.uploadFileBackupDrive(
-                            driveServiceHelper.value,
-                            baseDrive.value?.fileId!!
+                    val result = job1.await()
+                    _backupDate.postValue(
+                        BackupDate(
+                            localBackup = result?.localBackup,
+                            googleBackup = result?.googleBackup
                         )
-                    }
-                    val driveEntity = job1.await()
-                    _baseDrive.postValue(driveEntity)
-
-                    googleRepository.updateGoogleBackup(
-                        googleAccount.value!!.userId,
-                        currentDateTime
                     )
-                } else {
-                    Log.i("GoogleDrive", "baseDrive are null or empty or not equals folder")
                 }
             }
+        } else {
+            Log.d(TAG, "getBackupDate() : googleAccount userId is null")
         }
     }
 
-    fun deleteOldFileBackupDrive() {
+    fun deleteBackupDate() {
         viewModelScope.launch {
             mutex.withLock {
-                if (!listFileId.value.isNullOrEmpty()) {
-                    Log.i(
-                        "GoogleDrive",
-                        "call function deleteOldFileBackupDrive listFileid = ${listFileId.value}"
-                    )
-
-                    googleRepository.deleteOldFileBackupDrive(
-                        driveServiceHelper.value,
-                        listFileId.value!!
-                    )
-                }
+                googleRepository.deleteBackupDate()
             }
         }
     }
@@ -398,53 +203,6 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         } while (pageToken != null)
 
         return countFile > 0
-    }
-
-    fun getBackupDate() {
-        if (googleAccount.value?.userId != null) {
-            viewModelScope.launch(job) {
-                mutex.withLock {
-                    Log.d(
-                        TAG,
-                        "Starting MainGetBackupDate in thread ${Thread.currentThread().name}"
-                    )
-
-                    val job1 = viewModelScope.async(job) {
-                        googleRepository.getBackupDate(googleAccount.value!!.userId)
-                    }
-                    Log.d(
-                        TAG,
-                        "fetch googleRepoGetBackupDate in thread ${Thread.currentThread().name}"
-                    )
-
-                    val result = job1.await()
-
-                    _backupDate.postValue(
-                        BackupDate(
-                            localBackup = result?.localBackup,
-                            googleBackup = result?.googleBackup
-                        )
-                    )
-                    Log.d(TAG, "result fetch of googleRepoGetBackupDate ${result}")
-                }
-            }
-        } else {
-            Log.d(TAG, "getBackupDate() : googleAccount userId is null")
-        }
-    }
-
-    fun insertOrUpdateBackupDate(backupEntity: BackupEntity) {
-        viewModelScope.launch {
-            googleRepository.insertOrUpdateBackupDate(backupEntity)
-        }
-    }
-
-    fun deleteBackupDate() {
-        viewModelScope.launch {
-            mutex.withLock {
-                googleRepository.deleteBackupDate()
-            }
-        }
     }
 
     override fun onCleared() {
