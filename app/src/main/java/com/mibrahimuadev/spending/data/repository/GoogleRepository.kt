@@ -1,6 +1,5 @@
 package com.mibrahimuadev.spending.data.repository
 
-import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -15,13 +14,12 @@ import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import com.mibrahimuadev.spending.data.AppDatabase
-import com.mibrahimuadev.spending.data.dao.AccountDao
-import com.mibrahimuadev.spending.data.dao.BackupDao
-import com.mibrahimuadev.spending.data.dao.DriveDao
-import com.mibrahimuadev.spending.data.dao.GoogleAuthDao
+import com.mibrahimuadev.spending.data.dao.*
 import com.mibrahimuadev.spending.data.entity.AccountEntity
 import com.mibrahimuadev.spending.data.entity.BackupEntity
 import com.mibrahimuadev.spending.data.entity.DriveEntity
+import com.mibrahimuadev.spending.data.entity.SettingEntity
+import com.mibrahimuadev.spending.data.model.BackupSchedule
 import com.mibrahimuadev.spending.data.network.google.DriveServiceHelper
 import com.mibrahimuadev.spending.data.network.google.GoogleAuthService
 import com.mibrahimuadev.spending.ui.backup.DriveData
@@ -29,6 +27,7 @@ import com.mibrahimuadev.spending.utils.wrapper.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
@@ -41,6 +40,7 @@ class GoogleRepository(val appContext: Context) {
     private val googleAuthDao: GoogleAuthDao
     private val driveDao: DriveDao
     private val backupDao: BackupDao
+    private val settingDao: SettingDao
 
     init {
         val database = AppDatabase.getInstance(appContext)
@@ -48,6 +48,7 @@ class GoogleRepository(val appContext: Context) {
         googleAuthDao = database.googleAuthDao()
         driveDao = database.driveDao()
         backupDao = database.backupDao()
+        settingDao = database.settingDao()
     }
 
     suspend fun checkLoggedUser(userEmail: String?): Result<AccountEntity?> {
@@ -59,12 +60,14 @@ class GoogleRepository(val appContext: Context) {
     suspend fun insertOrUpdateLoggedUser(accountEntity: AccountEntity) {
         return withContext(Dispatchers.IO) {
             accountDao.insertOrUpdateLoggedUser(accountEntity)
+            settingDao.updateSettingUserId(accountEntity.userId)
         }
     }
 
     suspend fun deleteLoggedUser() {
         return withContext(Dispatchers.IO) {
             accountDao.deleteLoggedUser()
+            settingDao.deleteAllSettingValue()
         }
     }
 
@@ -107,13 +110,15 @@ class GoogleRepository(val appContext: Context) {
     }
 
     suspend fun getDriveServiceHelper(googleAccount: GoogleSignInAccount): DriveServiceHelper? {
-        return withContext(Dispatchers.Main) {
+        return withContext(Dispatchers.IO) {
             var mDriveServiceHelper: DriveServiceHelper? = null
             val job1 = launch {
                 val credential = GoogleAccountCredential.usingOAuth2(
                     appContext, setOf(DriveScopes.DRIVE_FILE)
                 )
                 credential.selectedAccount = googleAccount.account
+                Timber.d("Configure credential with value : ${credential.selectedAccount}")
+
                 val googleDriveService = Drive.Builder(
                     AndroidHttp.newCompatibleTransport(),
                     GsonFactory(),
@@ -125,49 +130,9 @@ class GoogleRepository(val appContext: Context) {
                 // The DriveServiceHelper encapsulates all REST API and SAF functionality.
                 // Its instantiation is required before handling any onClick actions.
                 mDriveServiceHelper = DriveServiceHelper(googleDriveService)
-                Log.i("GoogleDrive", "Autorisasi Sukses $mDriveServiceHelper")
-
-                /**
-                 * function dibawah menggunakan parameter result: Intent, sementara coba langsung
-                 * passing GoogleSignInAccount dari viewmodel. Jadi fungsi dibawah di disable dulu
-                 */
-//                GoogleSignIn.getSignedInAccountFromIntent(result)
-//                    .addOnSuccessListener { googleAccount: GoogleSignInAccount ->
-//                        Log.d("GoogleDrive", "Signed in as " + googleAccount.email)
-//
-//                        // Use the authenticated account to sign in to the Drive service.
-//                        val credential = GoogleAccountCredential.usingOAuth2(
-//                            application, setOf(DriveScopes.DRIVE_FILE)
-//                        )
-//                        /**
-//                         * Disini kita bisa pakai GoogleSignInAccount dari handleSignInResult,
-//                         * jadi tidak perlu pass result intent
-//                         */
-//                        credential.selectedAccount = googleAccount.account
-//                        val googleDriveService = Drive.Builder(
-//                            AndroidHttp.newCompatibleTransport(),
-//                            GsonFactory(),
-//                            credential
-//                        )
-//                            .setApplicationName("Spending")
-//                            .build()
-//
-//                        // The DriveServiceHelper encapsulates all REST API and SAF functionality.
-//                        // Its instantiation is required before handling any onClick actions.
-//                        mDriveServiceHelper = DriveServiceHelper(googleDriveService)
-//                        Log.i("GoogleDrive", "Autorisasi Sukses $mDriveServiceHelper")
-//                    }
-//                    .addOnFailureListener { exception: java.lang.Exception? ->
-//                        Log.e(
-//                            "GoogleDrive",
-//                            "Unable to sign in.",
-//                            exception
-//                        )
-//                    }
+                Timber.d("Authorization is success with value : ${googleDriveService}")
             }
             job1.join()
-            Log.i("GoogleDrive", "getDriveServiceHelper : $mDriveServiceHelper")
-
             return@withContext mDriveServiceHelper
         }
     }
@@ -240,6 +205,18 @@ class GoogleRepository(val appContext: Context) {
         }
     }
 
+    suspend fun getBackupSchedule(): SettingEntity {
+        return withContext(Dispatchers.IO) {
+            settingDao.getSettingApp("backup_schedule")
+        }
+    }
+
+    suspend fun updateBackupSchedule(backupSchedule: BackupSchedule) {
+        return withContext(Dispatchers.IO) {
+            settingDao.updateSettingValue("backup_schedule", backupSchedule)
+        }
+    }
+
     fun hasActiveInternetConnection(context: Context): Boolean {
         if (isNetworkAvailable(context)) {
             try {
@@ -289,46 +266,4 @@ class GoogleRepository(val appContext: Context) {
 
         return result
     }
-
-//    suspend fun setDetailCredentials(userId: Int) {
-//        val credential = getDetailCredentials()
-//        return withContext(Dispatchers.IO) {
-//            googleAuthDao.insertOrUpdate(
-//                GoogleAuthEntity(
-//                    userId = userId,
-//                    accessToken = credential!!.accessToken,
-//                    refreshToken = credential!!.refreshToken
-//                )
-//            )
-//        }
-//    }
-
-
-    /**
-     * Below is example of call retrofit from activity
-     */
-//    fun exampleFromActivty() {
-//        val authUserService = this.authUser()
-//        authUserService.getAuth().enqueue(object : Callback<List<GoogleAuth>> {
-//            override fun onResponse(
-//                call: Call<List<GoogleAuth>>,
-//                response: Response<List<GoogleAuth>>
-//            ) {
-//                if (response.isSuccessful) {
-//                    val data = response.body()
-//                    Log.i("tag", "berhasil ambil data")
-//                    data?.map {
-//                        Log.i("tag", "datanya {${it.accessToken}}")
-//                    }
-//
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<List<GoogleAuth>>, t: Throwable) {
-//                Log.e("tag", "gagal ambil data, errornya {${t.message}}")
-//            }
-//
-//        })
-//    }
-
 }

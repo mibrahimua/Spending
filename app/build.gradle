@@ -124,7 +124,10 @@ dependencies {
 //    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
 
     // Work Manager
-    implementation "androidx.work:work-runtime-ktx:2.4.0"
+    implementation "androidx.work:work-runtime-ktx:2.5.0"
+
+    //Timber Logger
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     // Solution for bug duplicate class guava
     implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'

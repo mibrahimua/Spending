@@ -1,27 +1,22 @@
 package com.mibrahimuadev.spending.ui.backup
 
+import android.annotation.SuppressLint
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import androidx.work.WorkRequest
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.FileList
-import com.mibrahimuadev.spending.data.AppDatabase
 import com.mibrahimuadev.spending.data.entity.AccountEntity
-import com.mibrahimuadev.spending.data.entity.BackupEntity
-import com.mibrahimuadev.spending.data.entity.DriveEntity
 import com.mibrahimuadev.spending.data.model.BackupDate
-import com.mibrahimuadev.spending.data.model.BaseDrive
 import com.mibrahimuadev.spending.data.model.GoogleAccount
-import com.mibrahimuadev.spending.data.network.google.DriveServiceHelper
 import com.mibrahimuadev.spending.data.repository.GoogleRepository
 import com.mibrahimuadev.spending.data.workmanager.BackupWorker
 import com.mibrahimuadev.spending.utils.CurrentDate
@@ -30,10 +25,7 @@ import com.mibrahimuadev.spending.utils.wrapper.Result
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
+import timber.log.Timber
 import java.util.*
 
 
@@ -66,12 +58,21 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
      */
     val mutex = Mutex()
 
+    /**
+     * Section Work Manager
+     */
+    private val workManager = WorkManager.getInstance(applicationContext)
+
+    internal val outputWorkInfos: LiveData<List<WorkInfo>>
+
     init {
-        Log.d("BackupViewModel", "BackupViewModel Created")
+        Timber.d("BackupViewModel Created")
 
         googleRepository = GoogleRepository(getApplication())
 
         mGoogleSignInClient = googleRepository.getGoogleSignInClient()
+
+        outputWorkInfos = workManager.getWorkInfosByTagLiveData("BACKUP_WORK")
     }
 
     /**
@@ -81,6 +82,15 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
 
     private val _backupDate = MutableLiveData<BackupDate>()
     val backupDate: LiveData<BackupDate> = _backupDate
+
+    fun doBackup() {
+        workManager.beginUniqueWork(
+            "BACKUP_WORK",
+            ExistingWorkPolicy.REPLACE,
+            OneTimeWorkRequest.from(BackupWorker::class.java)
+        ).enqueue()
+
+    }
 
     fun initRequiredData() {
         viewModelScope.launch {
@@ -93,30 +103,26 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         }
     }
 
-    private val workManager = WorkManager.getInstance(applicationContext)
-
-    fun doBackup() {
-        workManager.enqueue(OneTimeWorkRequest.from(BackupWorker::class.java))
-    }
-
+    @SuppressLint("BinaryOperationInTimber")
     suspend fun checkLoggedUser() {
         var isUserExist = false
         withContext(Dispatchers.IO) {
             _isLoading.postValue(true)
+            googleSignInAccount = googleRepository.getGoogleSignInAccount()
 
-            viewModelScope.launch(job) {
-                googleSignInAccount = googleRepository.getGoogleSignInAccount()
-                Log.d(
-                    TAG,
-                    "fetch GoogleRepoGetSignInAccount in thread ${Thread.currentThread().name}"
-                )
-            }
+            Timber.d("get googleSignInAccount, result : ${googleSignInAccount?.email}")
 
-            val googleRepoCheckLoggedUser = viewModelScope.async(job) {
+            val googleRepoCheckLoggedUser = viewModelScope.async {
                 googleRepository.checkLoggedUser(googleSignInAccount?.email)
-            }
 
+            }
             val result = googleRepoCheckLoggedUser.await()
+
+            Timber.d(
+                "check logged user using googleSignInAccount with value ${googleSignInAccount?.email}" +
+                        ", result : ${result}"
+            )
+
             if (result is Result.Success) {
                 if (result.data != null) {
                     isUserExist = true
@@ -135,20 +141,6 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         }
     }
 
-    fun insertOrUpdateLoggedUser(accountEntity: AccountEntity) {
-        viewModelScope.launch(Dispatchers.IO) {
-            googleRepository.insertOrUpdateLoggedUser(accountEntity)
-        }
-    }
-
-    fun deleteLoggedUser() {
-        viewModelScope.launch(Dispatchers.IO) {
-            mutex.withLock {
-                googleRepository.deleteLoggedUser()
-            }
-        }
-    }
-
     fun getBackupDate() {
         if (googleAccount.value?.userId != null) {
             viewModelScope.launch(job) {
@@ -157,6 +149,8 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
                         googleRepository.getBackupDate(googleAccount.value!!.userId)
                     }
                     val result = job1.await()
+                    Timber.d("get date backup with result : ${result}")
+
                     _backupDate.postValue(
                         BackupDate(
                             localBackup = result?.localBackup,
@@ -166,7 +160,25 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
                 }
             }
         } else {
-            Log.d(TAG, "getBackupDate() : googleAccount userId is null")
+            Timber.d("failed run getBackupDate(), googleAccount is null")
+        }
+    }
+
+    fun insertOrUpdateLoggedUser(accountEntity: AccountEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            mutex.withLock {
+                googleRepository.insertOrUpdateLoggedUser(accountEntity)
+                Timber.d("insert or update logged user to database with value : ${accountEntity}")
+            }
+        }
+    }
+
+    fun deleteLoggedUser() {
+        viewModelScope.launch(Dispatchers.IO) {
+            mutex.withLock {
+                googleRepository.deleteLoggedUser()
+                Timber.d("delete logged user from database")
+            }
         }
     }
 
@@ -174,6 +186,7 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         viewModelScope.launch {
             mutex.withLock {
                 googleRepository.deleteBackupDate()
+                Timber.d("delete date backup from database")
             }
         }
     }
@@ -207,6 +220,6 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
 
     override fun onCleared() {
         super.onCleared()
-        Log.i(TAG, "BackupViewModel Cleared")
+        Timber.d("BackupViewModel Cleared")
     }
 }

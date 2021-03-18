@@ -12,6 +12,9 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.mibrahimuadev.spending.databinding.ActivityMainBinding
+import timber.log.Timber
+import timber.log.Timber.DebugTree
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -24,7 +27,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        Log.i("MainActivity", "MainActivity Created")
+        if (BuildConfig.DEBUG) {
+            Timber.plant(DebugTree())
+        }
+        Timber.d("MainActivity Created")
         setSupportActionBar(findViewById(R.id.mainToolbar))
         supportActionBar?.setDisplayShowCustomEnabled(false)
         supportActionBar?.setDisplayShowTitleEnabled(false)

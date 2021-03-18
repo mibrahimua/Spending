@@ -24,9 +24,9 @@
         android:id="@+id/groupDriveSetting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:constraint_referenced_ids="labelDriveSetitng,labelBackupToDrive,
-        labelBackupSchedule" />
+        labelBackupSchedule, buttonBackup" />
 
     <TextView
         android:id="@+id/labelLastBackup"

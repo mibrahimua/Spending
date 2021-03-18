@@ -16,9 +16,11 @@ import com.google.api.services.drive.model.File
 import com.google.api.services.drive.model.FileList
 import com.mibrahimuadev.spending.data.entity.DriveEntity
 import com.mibrahimuadev.spending.ui.backup.DriveData
+import timber.log.Timber
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.sql.Time
 import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -43,7 +45,7 @@ class DriveServiceHelper(private val mDriveService: Drive) {
         val file: File = mDriveService.files().create(fileMetadata)
             .setFields("id")
             .execute()
-        Log.i("GoogleDrive", "Folder ID: ${file.name}, ${file.id}")
+        Timber.d("Create new folder Drive with value : folder name = ${file.name}, folder id = ${file.id}")
 
         return DriveEntity(
             fileType = "folder",
@@ -67,8 +69,9 @@ class DriveServiceHelper(private val mDriveService: Drive) {
                 .setFields("nextPageToken, files(id, name)")
                 .setPageToken(pageToken)
                 .execute()
+            Timber.d("Searching folder drive with value : ${result.files}")
             for (file in result.files) {
-                Log.i("GoogleDrive", "Found folder: %s (%s) ${file.name}, ${file.id}")
+                Timber.d("Found folder with value: folder name =  ${file.name}, folder id = ${file.id}")
                 file.name.let {
                     if (it.equals("SpendingAppBackup")) {
                         countFolder += 1
@@ -79,7 +82,6 @@ class DriveServiceHelper(private val mDriveService: Drive) {
                             lastModified = null
                         )
                     }
-
                 }
             }
             pageToken = result.nextPageToken
@@ -105,11 +107,7 @@ class DriveServiceHelper(private val mDriveService: Drive) {
                 .setFields("id, parents")
                 .execute()
 
-            Log.i(
-                "GoogleDrive",
-                "uploading file backup to drive with detail file : ${file.createdTime}"
-            )
-
+            Timber.d("Uploading file backtup to drive with value : ${file.name}")
             return DriveData(
                 fileType = "files",
                 fileId = file.id,
@@ -117,7 +115,7 @@ class DriveServiceHelper(private val mDriveService: Drive) {
                 lastModified = null
             )
         } catch (e: IOException) {
-            Log.i("GoogleDrive", "failed to upload file because : $e")
+            Timber.d("Failed to upload to drive with error : ${e}")
 
             return DriveData(
                 fileType = "files",
@@ -140,7 +138,7 @@ class DriveServiceHelper(private val mDriveService: Drive) {
                 .setPageToken(pageToken)
                 .execute()
             for (file in result.files) {
-                Log.i("GoogleDrive", "Found old file: %s (%s) ${file.name}, ${file.id}")
+                Timber.d("Found old file with value: file name =  ${file.name}, file id = ${file.id}")
                 file.name.let {
                     listFileId.add(file.id)
                 }
@@ -152,14 +150,13 @@ class DriveServiceHelper(private val mDriveService: Drive) {
     }
 
     fun deleteOldFileBackupDrive(listFileId: MutableList<String>) {
-        Log.i("GoogleDrive", "There is total : ${listFileId.size} old file backup")
-
+        Timber.d("There is old backup file with total value : ${listFileId.size}")
         for (fileId in listFileId) {
             try {
-                Log.i("GoogleDrive", "Deleting file backup with fileId : $fileId")
+                Timber.d("Deleting backup file with file id : ${fileId}")
                 mDriveService.files().delete(fileId).execute()
             } catch (e: IOException) {
-                Log.i("GoogleDrive", "Cannot delete file backup with fileId : $fileId")
+                Timber.d("Cannot delete file with file id : ${fileId}, because error : ${e}")
             }
 
         }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3564196b2bdda216a7a674784a404065",
+    "identityHash": "a3df03245d63d4e3e11ec3ec1507b370",
     "entities": [
       {
         "tableName": "transaction_spend",
@@ -289,12 +289,56 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "setting_app",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`settingId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` TEXT, `settingName` TEXT NOT NULL, `settingValue` TEXT, `settingSysname` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "settingId",
+            "columnName": "settingId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "settingName",
+            "columnName": "settingName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "settingValue",
+            "columnName": "settingValue",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "settingSysname",
+            "columnName": "settingSysname",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "settingId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3564196b2bdda216a7a674784a404065')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a3df03245d63d4e3e11ec3ec1507b370')"
     ]
   }
 }

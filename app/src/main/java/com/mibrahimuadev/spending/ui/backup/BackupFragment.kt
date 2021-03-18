@@ -77,6 +77,10 @@ class BackupFragment : Fragment() {
             }
         }
 
+        backupViewModel.outputWorkInfos.observe(viewLifecycleOwner) {
+            backupViewModel.getBackupDate()
+        }
+
         backupViewModel.backupDate.observe(viewLifecycleOwner) {
             if (it != null) {
                 binding.localBackup.text = it.localBackup ?: "-"
@@ -144,6 +148,8 @@ class BackupFragment : Fragment() {
                 navDrawer.updateNavigationDrawer(dataUi)
             }
 
+            binding.groupDriveSetting.isVisible = true
+
         } else {
             binding.authButton.text = "Log In"
             binding.authButton.setBackgroundColor(
@@ -152,6 +158,8 @@ class BackupFragment : Fragment() {
                     R.color.green
                 )
             )
+            binding.groupDriveSetting.isVisible = false
+
             navDrawer.updateNavigationDrawer(null)
         }
     }

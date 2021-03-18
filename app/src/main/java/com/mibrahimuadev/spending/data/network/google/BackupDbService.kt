@@ -1,23 +1,25 @@
 package com.mibrahimuadev.spending.data.network.google
 
 import android.content.Context
-import android.util.Log
+import androidx.work.Data
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.mibrahimuadev.spending.data.AppDatabase
 import com.mibrahimuadev.spending.data.entity.BackupEntity
 import com.mibrahimuadev.spending.data.model.BaseDrive
-import com.mibrahimuadev.spending.data.model.GoogleAccount
 import com.mibrahimuadev.spending.data.repository.GoogleRepository
 import com.mibrahimuadev.spending.utils.CurrentDate
 import com.mibrahimuadev.spending.utils.CurrentDate.toString
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
-import java.io.IOException
 
 class BackupDbService(val appContext: Context) {
     private val TAG = "BackupDbService"
@@ -50,14 +52,12 @@ class BackupDbService(val appContext: Context) {
 
     /**
      * Prosedur backup database aplikasi :
-     * createLocalFileBackup {
+     * syncFileBackupDrive {
      * 1. createLocalDirBackupDB
      * 2. changeCheckPointPragma
      * 3. copyLocalAppDbToBackupDBDir
-     *}
      *
      * sampai tahap ini aplikasi butuh GoogleSignInAccount dari googleRepository
-     * syncFileBackupDrive {
      * 4. getDriveServiceHelper
      * 5. searchFolderDrive
      * 6. searchFileBackupDrive
@@ -73,16 +73,6 @@ class BackupDbService(val appContext: Context) {
      *
      */
 
-    fun createLocalFileBackup(): Boolean {
-        createLocalDirBackupDB()
-        changeCheckPointPragma()
-        copyLocalAppDbToBackupDBDir(File(appContext.filesDir, "BackupDB").toString())
-        val checkBackupFile =
-            File(appContext.filesDir.absoluteFile, "BackupDB/spending_database.db")
-        if (checkBackupFile.exists()) return true
-        return false
-    }
-
     fun createLocalDirBackupDB() {
         /**
          * applicationContext.filesDir
@@ -93,81 +83,84 @@ class BackupDbService(val appContext: Context) {
             val createFolder = File(folder, "BackupDB")
             createFolder.mkdir()
         }
+        Timber.d("Create folder local backup database")
     }
 
-    fun changeCheckPointPragma() {
-        GlobalScope.launch {
-            googleRepository.changeCheckPointPragma()
-        }
-    }
-
-    @Throws(IOException::class)
-    fun copyLocalAppDbToBackupDBDir(address: String) {
-        GlobalScope.launch(CoroutineName("MainCopyLocalAppDb")) {
-            Log.d(TAG, "Starting MainCopyLocalAppDb in thread ${Thread.currentThread().name}")
-
-            val backupDB = File(address, "spending_database.db")
-            val currentDB = appContext.getDatabasePath(AppDatabase.DB_NAME)
-            if (currentDB.exists()) {
-                val src = FileInputStream(currentDB).channel
-                val dst = FileOutputStream(backupDB).channel
-                dst.transferFrom(src, 0, src.size())
-                src.close()
-                dst.close()
+    suspend fun changeCheckPointPragma() {
+        val job1 = GlobalScope.launch(Dispatchers.IO) {
+            mutex.withLock {
+                googleRepository.changeCheckPointPragma()
+                Timber.d("Change check point Pragma WAL")
             }
+        }
+        job1.join()
+    }
 
-            val upsertBackupDate = GlobalScope.launch(CoroutineName("UpsertBackupDate")) {
-                Log.d(TAG, "Starting UpsertBackupDate in thread ${Thread.currentThread().name}")
-
-
-                googleRepository.insertOrUpdateBackupDate(
-                    BackupEntity(
-                        userId = googleSignInAccount?.id!!,
-                        localBackup = currentDateTime,
-                        googleBackup = null
-                    )
+    suspend fun copyLocalAppDbToBackupDBDir(address: String) {
+        val job1 = GlobalScope.launch(Dispatchers.IO) {
+            mutex.withLock {
+                val backupDB = File(address, "spending_database.db")
+                val currentDB = appContext.getDatabasePath(AppDatabase.DB_NAME)
+                if (currentDB.exists()) {
+                    val src = FileInputStream(currentDB).channel
+                    val dst = FileOutputStream(backupDB).channel
+                    dst.transferFrom(src, 0, src.size())
+                    src.close()
+                    dst.close()
+                    Timber.d("Copying local database")
+                }
+                val backupEntity = BackupEntity(
+                    userId = googleSignInAccount?.id!!,
+                    localBackup = currentDateTime,
+                    googleBackup = null
                 )
-                Log.d(TAG, "fetch UpsertBackupDate in thread ${Thread.currentThread().name}")
-
-            }
-            upsertBackupDate.join()
-
-            /**
-             * memulai proses async google drive
-             */
-            getDriveServiceHelper()
-            delay(3000)
-            if(driveServiceHelper != null) {
-                syncFileBackupDrive()
+                googleRepository.insertOrUpdateBackupDate(backupEntity)
+                Timber.d("insert local date backup to database with value : ${backupEntity}")
             }
         }
+        job1.join()
     }
 
-    fun getDriveServiceHelper() {
-        GlobalScope.launch(Dispatchers.IO) {
+    fun syncFileBackupDrive(): Data {
+        val backup = Data.Builder()
+        GlobalScope.launch {
+            createLocalDirBackupDB()
+            changeCheckPointPragma()
+            copyLocalAppDbToBackupDBDir(File(appContext.filesDir, "BackupDB").toString())
+            getDriveServiceHelper()
+            if (driveServiceHelper != null) {
+                Timber.d("begin syncing proccess with Google Drive")
+                searchFolderDrive()
+                searchFileBackupDrive()
+                uploadFileBackupDrive()
+                deleteOldFileBackupDrive()
+            } else {
+                Timber.d("driveServiceHelper is null, cannot proccess sync with Google Drive")
+            }
+            backup.putBoolean("BACKUP", true)
+        }
+        return backup.build()
+    }
+
+    suspend fun getDriveServiceHelper() {
+        val job1 = GlobalScope.launch(Dispatchers.IO) {
             mutex.withLock {
                 if (googleSignInAccount != null) {
-                    GlobalScope.launch(Dispatchers.IO) {
-                        val job1 = GlobalScope.async(Dispatchers.IO) {
-                            googleRepository.getDriveServiceHelper(googleSignInAccount!!)
-                        }
-                        driveServiceHelper = job1.await()!!
-                        Log.i("GoogleDrive", "${driveServiceHelper}")
+                    val job1 = GlobalScope.async(Dispatchers.IO) {
+                        googleRepository.getDriveServiceHelper(googleSignInAccount!!)
                     }
+                    driveServiceHelper = job1.await()!!
+                    Timber.d("get driveServiceHelper from googleRepository with result : ${driveServiceHelper}")
+                } else {
+                    Timber.d("googleSignInAccount is null, cant get driveServiceHelper")
                 }
             }
         }
+        job1.join()
     }
 
-    fun syncFileBackupDrive() {
-        searchFolderDrive()
-        searchFileBackupDrive()
-        uploadFileBackupDrive()
-        deleteOldFileBackupDrive()
-    }
-
-    fun searchFolderDrive() {
-        GlobalScope.launch {
+    suspend fun searchFolderDrive() {
+        val job1 = GlobalScope.launch {
             mutex.withLock {
                 val job1 = GlobalScope.async {
                     googleRepository.searchFolderDrive(driveServiceHelper)
@@ -178,64 +171,47 @@ class BackupDbService(val appContext: Context) {
                      * Buat folder drive baru
                      */
                     createFolderDrive()
+                    Timber.d("Call createFolderDrive() because file id is null")
                 } else {
                     baseDrive = driveEntity
-                    Log.i(
-                        "GoogleDrive",
-                        "retrive driveEntity from job1 searchFolderDrive : $driveEntity"
-                    )
+                    Timber.d("retrieve file driveEntity from googleRepository with result : ${baseDrive}")
                 }
             }
         }
+        job1.join()
     }
 
-    fun createFolderDrive() {
-        GlobalScope.launch {
+    suspend fun createFolderDrive() {
+        val job1 = GlobalScope.launch {
             mutex.withLock {
-                Log.i(
-                    "GoogleDrive",
-                    "call createFolderDrive from googleRepository"
-                )
                 val job1 = GlobalScope.async {
                     googleRepository.createFolderDrive(driveServiceHelper)
                 }
                 val driveEntity = job1.await()
                 baseDrive = driveEntity
-                Log.i(
-                    "GoogleDrive",
-                    "retrive driveEntity from job1 createFolderDrive : $driveEntity"
-                )
+                Timber.d("Creating new folder Drive with result : ${baseDrive}")
             }
         }
+        job1.join()
     }
 
-    fun searchFileBackupDrive() {
-        GlobalScope.launch {
+    suspend fun searchFileBackupDrive() {
+        val job1 = GlobalScope.launch {
             mutex.withLock {
                 val job1 = async {
-                    Log.i(
-                        "GoogleDrive",
-                        "call searchFileBackupDrive from googleRepository"
-                    )
                     googleRepository.searchFileBackupDrive(driveServiceHelper)
                 }
                 listFileId = job1.await()!!
-                Log.i(
-                    "GoogleDrive",
-                    "retrive listFileId from job1 searchFileBackupDrive"
-                )
+                Timber.d("retrieve List file id from googleRepository with result : ${listFileId}")
             }
         }
+        job1.join()
     }
 
-    fun uploadFileBackupDrive() {
-        GlobalScope.launch {
+    suspend fun uploadFileBackupDrive() {
+        val job1 = GlobalScope.launch {
             mutex.withLock {
                 if (!baseDrive?.fileId.isNullOrEmpty() && baseDrive?.fileType.equals("folder")) {
-                    Log.i(
-                        "GoogleDrive",
-                        "call uploadFileBackupDrive from googleRepository with folderId = ${baseDrive?.fileId}"
-                    )
                     val job1 = GlobalScope.async {
                         googleRepository.uploadFileBackupDrive(
                             driveServiceHelper,
@@ -244,33 +220,33 @@ class BackupDbService(val appContext: Context) {
                     }
                     val driveEntity = job1.await()
                     baseDrive = driveEntity
+                    Timber.d("Upload local database to Google Drive with result : ${baseDrive}")
 
                     googleRepository.updateGoogleBackup(
                         googleSignInAccount?.id!!,
                         currentDateTime
                     )
+                    Timber.d("Update date backup google to database with value : id = ${googleSignInAccount?.id!!}, datetime = ${currentDateTime}")
                 } else {
-                    Log.i("GoogleDrive", "baseDrive are null or empty or not equals folder")
+                    Timber.d("baseDrive are null or empty or not equals folder")
                 }
             }
         }
+        job1.join()
     }
 
-    fun deleteOldFileBackupDrive() {
-        GlobalScope.launch {
+    suspend fun deleteOldFileBackupDrive() {
+        val job1 = GlobalScope.launch {
             mutex.withLock {
                 if (!listFileId.isNullOrEmpty()) {
-                    Log.i(
-                        "GoogleDrive",
-                        "call function deleteOldFileBackupDrive listFileid = ${listFileId}"
-                    )
-
                     googleRepository.deleteOldFileBackupDrive(
                         driveServiceHelper,
                         listFileId
                     )
+                    Timber.d("delete old file in Google Drive")
                 }
             }
         }
+        job1.join()
     }
 }
