@@ -6,168 +6,205 @@
     android:layout_height="match_parent"
     tools:context=".ui.backup.BackupFragment">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView3"
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/auth_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed">
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintTop_toTopOf="parent">
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.12" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.33" />
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupDriveSetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="labelDriveSetitng,labelBackupToDrive,
+        labelBackupSchedule" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.95" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.05" />
-
-            <TextView
-                android:id="@+id/textView2"
-                style="@style/LabelTextView"
-                android:layout_marginTop="24dp"
-                android:text="Welcome To Spending"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toStartOf="@+id/guideline4"
-                app:layout_constraintStart_toStartOf="@+id/guideline3"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textView3"
-                style="@style/LabelTextView"
-                android:layout_marginTop="20dp"
-                android:text="Please login to backup your data \n into Google Drive"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toStartOf="@+id/guideline4"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline3"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-            <TextView
-                android:id="@+id/labelLocalBackup"
-                style="@style/LabelTextView"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/local_backup"
-                app:layout_constraintEnd_toStartOf="@+id/guideline5"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline3"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
-
-            <TextView
-                android:id="@+id/localBackup"
-                style="@style/LabelTextView"
-                android:layout_marginStart="8dp"
-                android:text="-"
-                app:layout_constraintEnd_toStartOf="@+id/guideline4"
-                app:layout_constraintStart_toStartOf="@+id/guideline5"
-                app:layout_constraintTop_toTopOf="@+id/labelLocalBackup"
-                tools:text="11 Jan 2021 15:18" />
-
-            <TextView
-                android:id="@+id/labelGoogleBackup"
-                style="@style/LabelTextView"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/google_drive"
-                app:layout_constraintEnd_toStartOf="@+id/guideline5"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline3"
-                app:layout_constraintTop_toBottomOf="@+id/labelLocalBackup" />
-
-            <TextView
-                android:id="@+id/googleBackup"
-                style="@style/LabelTextView"
-                android:layout_marginStart="8dp"
-                android:text="-"
-                app:layout_constraintEnd_toStartOf="@+id/guideline4"
-                app:layout_constraintStart_toStartOf="@+id/guideline5"
-                app:layout_constraintTop_toTopOf="@+id/labelGoogleBackup"
-                tools:text="11 Jan 2021 18:25" />
-
-            <TextView
-                android:id="@+id/emailBackup"
-                style="@style/LabelTextView"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="24dp"
-                android:text="-"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/guideline5"
-                app:layout_constraintTop_toTopOf="@+id/labelEmail"
-                tools:text="mibrahimua@gmail.com" />
-
-            <TextView
-                android:id="@+id/labelEmail"
-                style="@style/LabelTextView"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/email"
-                app:layout_constraintEnd_toStartOf="@+id/guideline5"
-                app:layout_constraintStart_toStartOf="@+id/guideline3"
-                app:layout_constraintTop_toBottomOf="@+id/labelGoogleBackup" />
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="@+id/labelEmail"
-                app:layout_constraintEnd_toStartOf="@+id/guideline4"
-                app:layout_constraintStart_toStartOf="@+id/guideline3"
-                app:layout_constraintTop_toBottomOf="@+id/labelLocalBackup" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
-
-    <Button
-        android:id="@+id/auth_button"
+    <TextView
+        android:id="@+id/labelLastBackup"
+        style="@style/LabelTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:background="@color/green"
-        android:text="Log In"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView3" />
+        android:text="@string/last_backup"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/labelInfoBackup"
+        style="@style/LabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/info_backup"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/labelLastBackup" />
+
+    <TextView
+        android:id="@+id/labelLocalBackup"
+        style="@style/LabelTextView"
+        android:layout_marginTop="16dp"
+        android:text="@string/local_backup"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/labelInfoBackup" />
+
+    <TextView
+        android:id="@+id/localBackup"
+        style="@style/LabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="-"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/labelLocalBackup"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/labelLocalBackup"
+        app:layout_constraintTop_toTopOf="@+id/labelLocalBackup"
+        tools:text="11 Jan 2021 15:18" />
+
+    <TextView
+        android:id="@+id/labelGoogleBackup"
+        style="@style/LabelTextView"
+        android:layout_marginTop="8dp"
+        android:text="@string/google_drive"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/labelLocalBackup" />
+
+    <TextView
+        android:id="@+id/googleBackup"
+        style="@style/LabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="-"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/labelGoogleBackup"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHorizontal_bias="0.008"
+        app:layout_constraintStart_toEndOf="@+id/labelGoogleBackup"
+        app:layout_constraintTop_toTopOf="@+id/labelGoogleBackup"
+        tools:text="11 Jan 2021 18:25" />
+
+    <TextView
+        android:id="@+id/labelEmail"
+        style="@style/LabelTextView"
+        android:layout_marginTop="8dp"
+        android:text="@string/email"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/labelGoogleBackup" />
+
+    <TextView
+        android:id="@+id/emailBackup"
+        style="@style/LabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="-"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="@+id/labelEmail"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/labelEmail"
+        app:layout_constraintTop_toTopOf="@+id/labelEmail"
+        tools:text="mibrahimua@gmail.com" />
 
     <Button
         android:id="@+id/buttonBackup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Backup"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHorizontal_bias="0.09"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/labelEmail" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/labelEmail" />
+
+    <Button
+        android:id="@+id/auth_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/green"
+        android:text="Log In"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintStart_toEndOf="@+id/buttonBackup"
+        app:layout_constraintTop_toTopOf="@+id/buttonBackup" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
         android:layout_marginTop="16dp"
-        android:text="Button"
+        android:background="#8C8484"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonBackup" />
 
+
+    <TextView
+        android:id="@+id/labelDriveSetitng"
+        style="@style/LabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/google_drive_setting"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+    <TextView
+        android:id="@+id/labelBackupToDrive"
+        style="@style/LabelTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/back_up_to_google_drive"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/labelDriveSetitng" />
+
+    <TextView
+        android:id="@+id/labelBackupSchedule"
+        style="@style/LabelTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/green"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toStartOf="@+id/guideline4"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toBottomOf="@+id/labelBackupToDrive"
+        tools:text="Monthly" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Spending</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -44,7 +45,11 @@
     <string name="status_user_cancelled">User Cancelled</string>
     <string name="status_error">We found a problem: %1$s</string>
     <string name="not_open_file">Could not open file</string>
-    <string name="local_backup">Local</string>
-    <string name="email">Email</string>
-    <string name="google_drive">Google Drive</string>
+    <string name="local_backup">Local :</string>
+    <string name="email">Email :</string>
+    <string name="google_drive">Google Drive :</string>
+    <string name="last_backup">Last Backup</string>
+    <string name="info_backup">Back up your data to Google Drive.\nYou can restore them when you reinstall Spending.\nYour data will also back up to your phone\'s internal storage</string>
+    <string name="google_drive_setting">Google Drive Setting</string>
+    <string name="back_up_to_google_drive">Back Up to Google Drive</string>
 </resources>
