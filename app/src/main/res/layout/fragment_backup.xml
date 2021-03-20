@@ -24,9 +24,8 @@
         android:id="@+id/groupDriveSetting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
-        app:constraint_referenced_ids="labelDriveSetitng,labelBackupToDrive,
-        labelBackupSchedule, buttonBackup" />
+        android:visibility="visible"
+        app:constraint_referenced_ids="labelDriveSetting,buttonBackup, layoutBackupSchedule" />
 
     <TextView
         android:id="@+id/labelLastBackup"
@@ -35,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/last_backup"
-        android:textSize="13sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
@@ -49,7 +48,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="@string/info_backup"
-        android:textSize="12sp"
+        android:textSize="13sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
@@ -60,7 +59,7 @@
         style="@style/LabelTextView"
         android:layout_marginTop="16dp"
         android:text="@string/local_backup"
-        android:textSize="13sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/labelInfoBackup" />
 
@@ -70,7 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_marginStart="8dp"
         android:text="-"
-        android:textSize="13sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/labelLocalBackup"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintHorizontal_bias="0.0"
@@ -83,7 +82,7 @@
         style="@style/LabelTextView"
         android:layout_marginTop="8dp"
         android:text="@string/google_drive"
-        android:textSize="13sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/labelLocalBackup" />
 
@@ -93,7 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_marginStart="8dp"
         android:text="-"
-        android:textSize="13sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/labelGoogleBackup"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintHorizontal_bias="0.008"
@@ -106,7 +105,7 @@
         style="@style/LabelTextView"
         android:layout_marginTop="8dp"
         android:text="@string/email"
-        android:textSize="13sp"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/labelGoogleBackup" />
 
@@ -116,7 +115,7 @@
         android:layout_width="wrap_content"
         android:layout_marginStart="8dp"
         android:text="-"
-        android:textSize="13sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/labelEmail"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintHorizontal_bias="0.0"
@@ -169,41 +168,48 @@
 
 
     <TextView
-        android:id="@+id/labelDriveSetitng"
+        android:id="@+id/labelDriveSetting"
         style="@style/LabelTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="@string/google_drive_setting"
-        android:textSize="13sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toBottomOf="@+id/view2" />
 
-    <TextView
-        android:id="@+id/labelBackupToDrive"
-        style="@style/LabelTextView"
+    <LinearLayout
+        android:id="@+id/layoutBackupSchedule"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/back_up_to_google_drive"
-        android:textSize="13sp"
+        android:layout_marginTop="16dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="vertical"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toBottomOf="@+id/labelDriveSetitng" />
+        app:layout_constraintTop_toBottomOf="@+id/labelDriveSetting">
 
-    <TextView
-        android:id="@+id/labelBackupSchedule"
-        style="@style/LabelTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/green"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline4"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toBottomOf="@+id/labelBackupToDrive"
-        tools:text="Monthly" />
+        <TextView
+            android:id="@+id/labelBackupToDrive"
+            style="@style/LabelTextView"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/back_up_to_google_drive"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/labelBackupSchedule"
+            style="@style/LabelTextView"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/green"
+            android:textSize="14sp"
+            tools:text="Monthly" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
