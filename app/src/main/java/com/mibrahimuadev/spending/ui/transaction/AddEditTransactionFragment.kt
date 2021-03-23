@@ -31,6 +31,7 @@ import com.mibrahimuadev.spending.utils.wrapper.EventObserver
 import com.mibrahimuadev.spending.utils.calculator.Calculator
 import com.mibrahimuadev.spending.utils.calculator.CalculatorImpl
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog
+import timber.log.Timber
 
 
 class AddEditTransactionFragment : Fragment(), Calculator {
@@ -54,7 +55,7 @@ class AddEditTransactionFragment : Fragment(), Calculator {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.i(TAG, "AddTransactionFragment created")
+        Timber.d("AddTransactionFragment created")
 
         _binding = FragmentAddTransactionBinding.inflate(layoutInflater)
 
@@ -85,8 +86,6 @@ class AddEditTransactionFragment : Fragment(), Calculator {
         setHasOptionsMenu(true)
         return binding.root
     }
-
-
 
     fun startTransaction() {
         setupDataTransaction()

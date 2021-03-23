@@ -1,4 +1,4 @@
-package com.mibrahimuadev.spending.data.workmanager
+package com.mibrahimuadev.spending
 
 import android.app.Application
 import android.util.Log
@@ -8,7 +8,8 @@ import androidx.work.WorkManager
 /**
  * The [Application]. Responsible for initializing [WorkManager] in [Log.VERBOSE] mode.
  */
-class App : Application(), Configuration.Provider {
+class SpendingApp : Application(), Configuration.Provider {
+
     override fun getWorkManagerConfiguration() =
         Configuration.Builder()
             .setMinimumLoggingLevel(Log.VERBOSE)

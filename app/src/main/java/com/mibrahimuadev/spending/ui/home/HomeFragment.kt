@@ -1,8 +1,6 @@
 package com.mibrahimuadev.spending.ui.home
 
 import android.annotation.SuppressLint
-import android.content.ContentValues
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,38 +9,27 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.adapter.TransactionListAdapter
 import com.mibrahimuadev.spending.data.model.TransactionType
-import com.mibrahimuadev.spending.data.network.google.GoogleAuthService
 import com.mibrahimuadev.spending.databinding.FragmentHomeBinding
-import com.mibrahimuadev.spending.ui.backup.BackupFragmentDirections
 import com.mibrahimuadev.spending.ui.backup.BackupViewModel
 import com.mibrahimuadev.spending.ui.backup.BackupViewModelFactory
 import com.mibrahimuadev.spending.ui.nav.NavDrawer
 import com.mibrahimuadev.spending.utils.CurrentDate
 import com.mibrahimuadev.spending.utils.Formatter
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 
 class HomeFragment : Fragment() {
@@ -77,22 +64,14 @@ class HomeFragment : Fragment() {
         val viewModelFactory = BackupViewModelFactory(application = application)
         backupViewModel =
             ViewModelProvider(this, viewModelFactory).get(BackupViewModel::class.java)
-        /**
-         * DISABLE SEMENTARA BUAT TEST COROUTINES
-         */
-//        backupViewModel.checkLoggedUser()
-        backupViewModel.initRequiredData()
 
         navigationView = requireActivity().findViewById(R.id.navigationView) as NavigationView
         navDrawer = NavDrawer(navigationView)
 
-        backupViewModel.googleAccount.observe(viewLifecycleOwner) {
-            if (it != null) {
-                navDrawer.updateNavigationDrawer(it)
-            } else {
-                navDrawer.updateNavigationDrawer(null)
-            }
+        backupViewModel.loggedUserFlow.observe(viewLifecycleOwner) {
+            navDrawer.updateNavigationDrawer(it ?: null)
         }
+
         Log.i("HomeFragment", "HomeFragment Created")
 
         val recycleView = binding.recycleviewTransaksi

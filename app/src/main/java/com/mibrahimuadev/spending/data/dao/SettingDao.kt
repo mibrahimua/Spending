@@ -4,11 +4,12 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.mibrahimuadev.spending.data.entity.SettingEntity
 import com.mibrahimuadev.spending.data.model.BackupSchedule
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SettingDao {
     @Query("SELECT * FROM setting_app WHERE settingSysname = :settingSysName")
-    fun getSettingApp(settingSysName: String): SettingEntity
+    fun getSettingApp(settingSysName: String): Flow<SettingEntity>
 
     @Query("UPDATE setting_app SET userId = :userId")
     fun updateSettingUserId(userId: String)

@@ -4,13 +4,14 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.google.api.client.util.DateTime
 import com.mibrahimuadev.spending.data.entity.BackupEntity
+import kotlinx.coroutines.flow.Flow
 import java.util.*
 
 @Dao
 interface BackupDao {
 
     @Query("SELECT * FROM backup_entity WHERE userId = :userId")
-    fun getBackupDate(userId: String? = ""): BackupEntity?
+    fun getBackupDate(userId: String? = ""): Flow<BackupEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertBackupDate(backupEntity: BackupEntity): Long

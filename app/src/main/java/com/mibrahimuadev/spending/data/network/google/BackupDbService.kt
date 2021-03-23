@@ -30,8 +30,6 @@ class BackupDbService(val appContext: Context) {
 
     private var googleSignInAccount: GoogleSignInAccount? = null
 
-//    private lateinit var googleAccount: GoogleAccount
-
     private var driveServiceHelper: DriveServiceHelper? = null
 
     private var baseDrive: BaseDrive? = null

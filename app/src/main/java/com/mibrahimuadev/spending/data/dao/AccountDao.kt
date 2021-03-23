@@ -4,13 +4,14 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.mibrahimuadev.spending.data.entity.AccountEntity
 import com.mibrahimuadev.spending.data.entity.CategoryEntity
+import kotlinx.coroutines.flow.Flow
 
 
 @Dao
 interface AccountDao {
 
     @Query("SELECT * FROM account WHERE userEmail = :userEmail")
-    fun getLoggedUser(userEmail: String? = ""): AccountEntity?
+    fun getLoggedUser(userEmail: String? = ""): Flow<AccountEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertLoggedUser(accountEntity: AccountEntity): Long

@@ -1,57 +1,41 @@
 package com.mibrahimuadev.spending.ui.backup
 
-import android.annotation.SuppressLint
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import androidx.lifecycle.*
+import androidx.work.*
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.FileList
 import com.mibrahimuadev.spending.data.entity.AccountEntity
-import com.mibrahimuadev.spending.data.model.BackupDate
-import com.mibrahimuadev.spending.data.model.GoogleAccount
+import com.mibrahimuadev.spending.data.entity.BackupEntity
+import com.mibrahimuadev.spending.data.entity.SettingEntity
+import com.mibrahimuadev.spending.data.model.BackupSchedule
+import com.mibrahimuadev.spending.data.model.BackupScheduleImp
 import com.mibrahimuadev.spending.data.repository.GoogleRepository
 import com.mibrahimuadev.spending.data.workmanager.BackupWorker
-import com.mibrahimuadev.spending.utils.CurrentDate
-import com.mibrahimuadev.spending.utils.CurrentDate.toString
-import com.mibrahimuadev.spending.utils.wrapper.Result
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
-import java.util.*
 
 
 class BackupViewModel(val applicationContext: Application) : AndroidViewModel(applicationContext) {
 
     private val TAG = "BackupViewModel"
 
+    private val BACKUP_WORKER_TAG = "BACKUP_WORKER"
+
     private val googleRepository: GoogleRepository
 
     val mGoogleSignInClient: GoogleSignInClient
-
-    private var googleSignInAccount: GoogleSignInAccount? = null
-
-    private val _googleAccount = MutableLiveData<GoogleAccount>()
-    val googleAccount: LiveData<GoogleAccount> = _googleAccount
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
     private val _isUserLoggedIn = MutableLiveData<Boolean>()
     var isUserLoggedIn = _isUserLoggedIn
-
-    /**
-     * tak tau variable job ini berguna atau tidak LMAO
-     */
-    val job = Job()
 
     /**
      * variable mutex untuk membuat coroutine berjalan secara sequence / berurutan
@@ -63,7 +47,12 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
      */
     private val workManager = WorkManager.getInstance(applicationContext)
 
+    val constraintsWorks: Constraints = Constraints.Builder()
+        .setRequiredNetworkType(NetworkType.CONNECTED)
+        .build()
+
     internal val outputWorkInfos: LiveData<List<WorkInfo>>
+
 
     init {
         Timber.d("BackupViewModel Created")
@@ -72,95 +61,62 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
 
         mGoogleSignInClient = googleRepository.getGoogleSignInClient()
 
-        outputWorkInfos = workManager.getWorkInfosByTagLiveData("BACKUP_WORK")
+        outputWorkInfos = workManager.getWorkInfosByTagLiveData(BACKUP_WORKER_TAG)
     }
+
+    val loggedUserFlow: LiveData<AccountEntity> = googleRepository.getLoggedUser().asLiveData()
+
 
     /**
      * Backup Date Section
      */
-    val currentDateTime = CurrentDate.getCurrentDateTime().toString("dd MMM yyyy HH:mm")
+    val backupDateFlow: LiveData<BackupEntity> = googleRepository.getBackupDate().asLiveData()
 
-    private val _backupDate = MutableLiveData<BackupDate>()
-    val backupDate: LiveData<BackupDate> = _backupDate
+    val backupSchedule: LiveData<BackupSchedule> =
+        googleRepository.backupScheduleConf.asLiveData()
+            .map {
+                BackupSchedule.valueOf(it.settingValue ?: "NEVER")
+            }
 
-    fun doBackup() {
-        workManager.beginUniqueWork(
-            "BACKUP_WORK",
-            ExistingWorkPolicy.REPLACE,
-            OneTimeWorkRequest.from(BackupWorker::class.java)
-        ).enqueue()
+    fun doBackupOneTime() {
+        val requestBackup = OneTimeWorkRequestBuilder<BackupWorker>()
+            .addTag(BACKUP_WORKER_TAG)
+            .setConstraints(constraintsWorks)
+            .build()
 
+        workManager.enqueueUniqueWork(BACKUP_WORKER_TAG, ExistingWorkPolicy.REPLACE, requestBackup)
     }
 
-    fun initRequiredData() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                return@withContext checkLoggedUser()
-            }
-            withContext(Dispatchers.IO) {
-                return@withContext getBackupDate()
-            }
-        }
-    }
+    fun doBackupPeriodic() {
+        /**
+         * Kisaran waktu
+         * 1. Never = do nothing about this function
+         * 2. Daily = 1, TimeUnit.DAYS
+         * 3. Weekly = 7, TimeUnit.DAYS
+         * 4. Monthly = 30, TImeUnit.DAYS
+         */
 
-    @SuppressLint("BinaryOperationInTimber")
-    suspend fun checkLoggedUser() {
-        var isUserExist = false
-        withContext(Dispatchers.IO) {
-            _isLoading.postValue(true)
-            googleSignInAccount = googleRepository.getGoogleSignInAccount()
+        /**
+         * fungsi ini dipanggil ketika user pertama kali login
+         * dan ketika update setting schedule backup
+         */
 
-            Timber.d("get googleSignInAccount, result : ${googleSignInAccount?.email}")
-
-            val googleRepoCheckLoggedUser = viewModelScope.async {
-                googleRepository.checkLoggedUser(googleSignInAccount?.email)
-
-            }
-            val result = googleRepoCheckLoggedUser.await()
-
-            Timber.d(
-                "check logged user using googleSignInAccount with value ${googleSignInAccount?.email}" +
-                        ", result : ${result}"
+        val backupConf = backupSchedule.value?.name ?: ""
+        if (backupConf.isNotEmpty()) {
+            val scheduleBackup = BackupScheduleImp(backupConf).getIntervalWorker()
+            val requestBackup = PeriodicWorkRequestBuilder<BackupWorker>(
+                scheduleBackup.interval,
+                scheduleBackup.timeUnit
             )
+                .addTag(BACKUP_WORKER_TAG)
+                .setConstraints(constraintsWorks)
+                .build()
 
-            if (result is Result.Success) {
-                if (result.data != null) {
-                    isUserExist = true
-                    _googleAccount.postValue(
-                        GoogleAccount(
-                            userId = googleSignInAccount?.id!!,
-                            userDisplayName = googleSignInAccount?.displayName!!,
-                            userEmail = googleSignInAccount?.email!!
-                        )
-                    )
-                }
-            }
-            _isLoading.postValue(false)
-            _isUserLoggedIn.postValue(isUserExist)
-            return@withContext
-        }
-    }
-
-    fun getBackupDate() {
-        if (googleAccount.value?.userId != null) {
-            viewModelScope.launch(job) {
-                mutex.withLock {
-                    val job1 = viewModelScope.async(job) {
-                        googleRepository.getBackupDate(googleAccount.value!!.userId)
-                    }
-                    val result = job1.await()
-                    Timber.d("get date backup with result : ${result}")
-
-                    _backupDate.postValue(
-                        BackupDate(
-                            localBackup = result?.localBackup,
-                            googleBackup = result?.googleBackup
-                        )
-                    )
-                }
-            }
-        } else {
-            Timber.d("failed run getBackupDate(), googleAccount is null")
+            workManager.enqueueUniquePeriodicWork(
+                BACKUP_WORKER_TAG,
+                ExistingPeriodicWorkPolicy.REPLACE,
+                requestBackup
+            )
         }
     }
 
@@ -168,7 +124,7 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         viewModelScope.launch(Dispatchers.IO) {
             mutex.withLock {
                 googleRepository.insertOrUpdateLoggedUser(accountEntity)
-                Timber.d("insert or update logged user to database with value : ${accountEntity}")
+                Timber.d("Insert or update logged user to database with value : ${accountEntity}")
             }
         }
     }
@@ -177,7 +133,7 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         viewModelScope.launch(Dispatchers.IO) {
             mutex.withLock {
                 googleRepository.deleteLoggedUser()
-                Timber.d("delete logged user from database")
+                Timber.d("Delete logged user from database")
             }
         }
     }
@@ -186,8 +142,26 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         viewModelScope.launch {
             mutex.withLock {
                 googleRepository.deleteBackupDate()
-                Timber.d("delete date backup from database")
+                Timber.d("Delete date backup from database")
             }
+        }
+    }
+
+//    fun getBackupSchedule() {
+//        viewModelScope.launch {
+//            val result = viewModelScope.async {
+//                googleRepository.getBackupScheduleConf()
+//            }
+//            val backupSchedule = result.await().settingValue ?: "NEVER"
+//            _backupSchedule.postValue(BackupSchedule.valueOf(backupSchedule))
+//            Timber.d("Retrieve backup schedule from database with result : ${backupSchedule}")
+//        }
+//    }
+
+    fun updateBackupSchedule(backupSchedule: BackupSchedule) {
+        viewModelScope.launch {
+            googleRepository.updateBackupSchedule(backupSchedule)
+            Timber.d("Update backup schedule to database with value : ${backupSchedule}")
         }
     }
 
@@ -216,6 +190,30 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         } while (pageToken != null)
 
         return countFile > 0
+    }
+
+    /**
+     * Helper function to call a data load function with a loading spinner; errors will trigger a
+     * snackbar.
+     *
+     * By marking [block] as [suspend] this creates a suspend lambda which can call suspend
+     * functions.
+     *
+     * @param block lambda to actually load data. It is called in the viewModelScope. Before calling
+     *              the lambda, the loading spinner will display. After completion or error, the
+     *              loading spinner will stop.
+     */
+    private fun launchDataLoad(block: suspend () -> Unit): Job {
+        return viewModelScope.launch {
+            try {
+                _isLoading.value = true
+                block()
+            } catch (error: Throwable) {
+                _isLoading.value = false
+            } finally {
+                _isLoading.value = false
+            }
+        }
     }
 
     override fun onCleared() {

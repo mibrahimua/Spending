@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -23,8 +24,8 @@ import com.mibrahimuadev.spending.data.model.BackupSchedule
 import com.mibrahimuadev.spending.data.network.google.DriveServiceHelper
 import com.mibrahimuadev.spending.data.network.google.GoogleAuthService
 import com.mibrahimuadev.spending.ui.backup.DriveData
-import com.mibrahimuadev.spending.utils.wrapper.Result
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -51,10 +52,9 @@ class GoogleRepository(val appContext: Context) {
         settingDao = database.settingDao()
     }
 
-    suspend fun checkLoggedUser(userEmail: String?): Result<AccountEntity?> {
-        return withContext(Dispatchers.IO) {
-            Result.Success(accountDao.getLoggedUser(userEmail))
-        }
+    fun getLoggedUser(): Flow<AccountEntity> {
+        val userEmail = this.getGoogleSignInAccount()?.email ?: ""
+        return accountDao.getLoggedUser(userEmail)
     }
 
     suspend fun insertOrUpdateLoggedUser(accountEntity: AccountEntity) {
@@ -71,10 +71,9 @@ class GoogleRepository(val appContext: Context) {
         }
     }
 
-    suspend fun getBackupDate(userId: String): BackupEntity? {
-        return withContext(Dispatchers.IO) {
-            backupDao.getBackupDate(userId)
-        }
+    fun getBackupDate(): Flow<BackupEntity> {
+        val userId = this.getGoogleSignInAccount()?.id ?: ""
+        return backupDao.getBackupDate(userId)
     }
 
     suspend fun insertOrUpdateBackupDate(backupEntity: BackupEntity) {
@@ -108,6 +107,9 @@ class GoogleRepository(val appContext: Context) {
     fun getGoogleSignInAccount(): GoogleSignInAccount? {
         return googleAuthService.getLastSignedInAccount()
     }
+
+    val googleAccount: LiveData<GoogleSignInAccount?> =
+        googleAuthService.getLastSignedInAccountFlow()
 
     suspend fun getDriveServiceHelper(googleAccount: GoogleSignInAccount): DriveServiceHelper? {
         return withContext(Dispatchers.IO) {
@@ -145,7 +147,8 @@ class GoogleRepository(val appContext: Context) {
 
     suspend fun searchFolderDrive(driveServiceHelper: DriveServiceHelper?): DriveEntity? {
         return withContext(Dispatchers.IO) {
-            Log.i("GoogleDrive", "call function searchFolderDrive from driveServiceHelper")
+            Timber.d("Call function searchFolderDrive from driveServiceHelper")
+
             val driveData = driveServiceHelper?.searchFolderDrive()
             driveData?.let { insertFolderId(it) }
             return@withContext driveData
@@ -155,7 +158,8 @@ class GoogleRepository(val appContext: Context) {
 
     suspend fun createFolderDrive(driveServiceHelper: DriveServiceHelper?): DriveEntity? {
         return withContext(Dispatchers.IO) {
-            Log.i("GoogleDrive", "call function createFolderDrive from driveServiceHelper")
+            Timber.d("Call function createFolderDrive from driveServiceHelper")
+
             val driveEntity = driveServiceHelper?.createFolderDrive()
             driveEntity?.let { insertFolderId(it) }
             return@withContext driveEntity
@@ -170,10 +174,8 @@ class GoogleRepository(val appContext: Context) {
 
     suspend fun searchFileBackupDrive(driveServiceHelper: DriveServiceHelper?): MutableList<String>? {
         return withContext(Dispatchers.IO) {
-            Log.i(
-                "GoogleDrive",
-                "call function searchFileBackupDrive from driveServiceHelper"
-            )
+            Timber.d("Call function searchFileBackupDrive from driveServiceHelper")
+
             val fileList = driveServiceHelper?.searchFileBackupDrive()
             return@withContext fileList
         }
@@ -184,10 +186,8 @@ class GoogleRepository(val appContext: Context) {
         folderId: String
     ): DriveData? {
         return withContext(Dispatchers.IO) {
-            Log.i(
-                "GoogleDrive",
-                "call function uploadFileBackupDrive from driveServiceHelper, folder id = $folderId"
-            )
+            Timber.d("Call function uploadFileBackupDrive from driveServiceHelper, folder id = $folderId\"")
+
             return@withContext driveServiceHelper?.uploadFileBackupDrive(folderId)
         }
     }
@@ -197,19 +197,13 @@ class GoogleRepository(val appContext: Context) {
         listFileId: MutableList<String>
     ) {
         return withContext(Dispatchers.IO) {
-            Log.i(
-                "GoogleDrive",
-                "call function deleteOldFileBackupDrive from driveServiceHelper"
-            )
+            Timber.d("Call function deleteOldFileBackupDrive from driveServiceHelper")
             driveServiceHelper?.deleteOldFileBackupDrive(listFileId)
         }
     }
 
-    suspend fun getBackupSchedule(): SettingEntity {
-        return withContext(Dispatchers.IO) {
-            settingDao.getSettingApp("backup_schedule")
-        }
-    }
+    val backupScheduleConf: Flow<SettingEntity>
+        get() = settingDao.getSettingApp("backup_schedule")
 
     suspend fun updateBackupSchedule(backupSchedule: BackupSchedule) {
         return withContext(Dispatchers.IO) {
