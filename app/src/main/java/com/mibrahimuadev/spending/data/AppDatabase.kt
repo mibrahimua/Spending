@@ -15,8 +15,8 @@ import com.mibrahimuadev.spending.utils.ConvertersRoomDataType
 @Database(
     version = 1,
     entities = [(TransactionEntity::class), (CurrencyEntity::class), (CategoryEntity::class),
-        (IconCategoryEntity::class), (AccountEntity::class), (GoogleAuthEntity::class),
-        (DriveEntity::class), (BackupEntity::class), (SettingEntity::class)],
+        (IconCategoryEntity::class), (AccountEntity::class), (DriveEntity::class),
+        (BackupEntity::class), (SettingEntity::class)],
     exportSchema = true
 )
 @TypeConverters(ConvertersRoomDataType::class)
@@ -31,8 +31,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun iconCategoryDao(): IconCategoryDao
 
     abstract fun accountDao(): AccountDao
-
-    abstract fun googleAuthDao(): GoogleAuthDao
 
     abstract fun driveDao(): DriveDao
 

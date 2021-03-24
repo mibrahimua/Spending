@@ -38,7 +38,6 @@ import java.util.*
 class GoogleRepository(val appContext: Context) {
     private val googleAuthService: GoogleAuthService = GoogleAuthService(appContext)
     private val accountDao: AccountDao
-    private val googleAuthDao: GoogleAuthDao
     private val driveDao: DriveDao
     private val backupDao: BackupDao
     private val settingDao: SettingDao
@@ -46,7 +45,6 @@ class GoogleRepository(val appContext: Context) {
     init {
         val database = AppDatabase.getInstance(appContext)
         accountDao = database.accountDao()
-        googleAuthDao = database.googleAuthDao()
         driveDao = database.driveDao()
         backupDao = database.backupDao()
         settingDao = database.settingDao()
