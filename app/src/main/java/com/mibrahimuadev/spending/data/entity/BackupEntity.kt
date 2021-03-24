@@ -11,7 +11,7 @@ data class BackupEntity(
     @PrimaryKey
     val userId: String,
 
-    val localBackup: String?,
+    val localBackup: Date?,
 
-    val googleBackup: String?,
+    val googleBackup: Date?,
 )

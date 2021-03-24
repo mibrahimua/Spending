@@ -9,7 +9,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mibrahimuadev.spending.data.dao.*
 import com.mibrahimuadev.spending.data.entity.*
-import com.mibrahimuadev.spending.utils.Converters
+import com.mibrahimuadev.spending.utils.ConvertersRoomDataType
 
 
 @Database(
@@ -19,7 +19,7 @@ import com.mibrahimuadev.spending.utils.Converters
         (DriveEntity::class), (BackupEntity::class), (SettingEntity::class)],
     exportSchema = true
 )
-@TypeConverters(Converters::class)
+@TypeConverters(ConvertersRoomDataType::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun transactionDao(): TransactionDao

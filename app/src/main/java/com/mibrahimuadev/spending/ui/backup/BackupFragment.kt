@@ -1,6 +1,7 @@
 package com.mibrahimuadev.spending.ui.backup
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
@@ -33,6 +34,7 @@ import com.mibrahimuadev.spending.data.model.BackupSchedule
 import com.mibrahimuadev.spending.data.network.google.GoogleAuthService
 import com.mibrahimuadev.spending.databinding.FragmentBackupBinding
 import com.mibrahimuadev.spending.ui.nav.NavDrawer
+import com.mibrahimuadev.spending.utils.CurrentDate.toString
 import com.mibrahimuadev.spending.utils.PermissionsApp
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -53,7 +55,6 @@ class BackupFragment : Fragment() {
 
     private lateinit var dialogBackupSchedule: Dialog
     private lateinit var radioGroup: RadioGroup
-    private lateinit var radioButton: RadioButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,11 +75,6 @@ class BackupFragment : Fragment() {
 
         backupViewModel.backupSchedule.observe(viewLifecycleOwner) {
             binding.labelBackupSchedule.text = it.name
-            /**
-             * Reset periodic work request if backupSchedule has changed
-             * tapi fungsi ini akan terus dijalankan tiap kali buka halaman backup, hmmmm
-             */
-//            backupViewModel.doBackupPeriodic()
         }
 
         binding.layoutBackupSchedule.setOnClickListener {
@@ -87,8 +83,8 @@ class BackupFragment : Fragment() {
 
         backupViewModel.backupDateFlow.observe(viewLifecycleOwner) {
             if (it != null) {
-                binding.localBackup.text = it.localBackup ?: "-"
-                binding.googleBackup.text = it.googleBackup ?: "-"
+                binding.localBackup.text = it.localBackup?.toString("dd MMM yyyy HH:mm") ?: "-"
+                binding.googleBackup.text = it.googleBackup?.toString("dd MMM yyyy HH:mm") ?: "-"
             }
         }
 
@@ -113,7 +109,16 @@ class BackupFragment : Fragment() {
         }
 
         binding.buttonBackup.setOnClickListener {
-            backupViewModel.doBackupOneTime()
+            val doBackup: Boolean = backupViewModel.doBackupOneTime()
+            if (!doBackup) {
+                val alertDialog = AlertDialog.Builder(requireContext()).create()
+                alertDialog.setTitle("Warning")
+                alertDialog.setMessage("Failed to backup database, \nyou can perform backups 12 hours after the last backup")
+                alertDialog.setButton(
+                    AlertDialog.BUTTON_NEUTRAL, "OK"
+                ) { dialog, which -> dialog.dismiss() }
+                alertDialog.show()
+            }
         }
 
         return binding.root
@@ -125,42 +130,28 @@ class BackupFragment : Fragment() {
         dialogBackupSchedule.setContentView(R.layout.backup_schedule_dialog)
 
         radioGroup = dialogBackupSchedule.findViewById<View>(R.id.radioGroupBackup) as RadioGroup
-        val buttonNever =
-            dialogBackupSchedule.findViewById<View>(R.id.radioButtonNever) as RadioButton
-        val buttonDaily =
-            dialogBackupSchedule.findViewById<View>(R.id.radioButtonDaily) as RadioButton
-        val buttonWeekly =
-            dialogBackupSchedule.findViewById<View>(R.id.radioButtonWeekly) as RadioButton
-        val buttonMonthly =
-            dialogBackupSchedule.findViewById<View>(R.id.radioButtonMonthly) as RadioButton
 
         backupViewModel.backupSchedule.observe(viewLifecycleOwner) {
-            if (it.name == "NEVER") {
-                buttonNever.isChecked = true
-            }
-            if (it.name == "DAILY") {
-                buttonDaily.isChecked = true
-            }
-            if (it.name == "WEEKLY") {
-                buttonWeekly.isChecked = true
-            }
-            if (it.name == "MONTHLY") {
-                buttonMonthly.isChecked = true
-            }
+            if (it.name == "NEVER") radioGroup.check(R.id.radioButtonNever)
+            if (it.name == "DAILY") radioGroup.check(R.id.radioButtonDaily)
+            if (it.name == "WEEKLY") radioGroup.check(R.id.radioButtonWeekly)
+            if (it.name == "MONTHLY") radioGroup.check(R.id.radioButtonMonthly)
         }
-        radioGroup.setOnCheckedChangeListener { radioGroup: RadioGroup, i: Int ->
+
+        radioGroup.setOnCheckedChangeListener { radioGroup: RadioGroup, _ ->
             val selectedRadioButtonId = radioGroup.checkedRadioButtonId
-            radioButton =
-                dialogBackupSchedule.findViewById<View>(selectedRadioButtonId) as RadioButton
+            val currentButton =
+                dialogBackupSchedule.findViewById(selectedRadioButtonId) as RadioButton
 
-            backupViewModel.updateBackupSchedule(
-                BackupSchedule.valueOf(
-                    radioButton.text.toString()
-                        .toUpperCase(Locale.getDefault())
+            currentButton.setOnClickListener {
+                backupViewModel.updateBackupSchedule(
+                    BackupSchedule.valueOf(
+                        currentButton.text.toString()
+                            .toUpperCase(Locale.getDefault())
+                    )
                 )
-            )
-
-            dialogBackupSchedule.dismiss()
+                dialogBackupSchedule.dismiss()
+            }
         }
 
         val closeDialogBackup =

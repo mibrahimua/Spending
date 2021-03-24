@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "a3df03245d63d4e3e11ec3ec1507b370",
+    "identityHash": "cea8448a4828f5fd585dcc2d9c6641f6",
     "entities": [
       {
         "tableName": "transaction_spend",
@@ -260,7 +260,7 @@
       },
       {
         "tableName": "backup_entity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` TEXT NOT NULL, `localBackup` TEXT, `googleBackup` TEXT, PRIMARY KEY(`userId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` TEXT NOT NULL, `localBackup` INTEGER, `googleBackup` INTEGER, PRIMARY KEY(`userId`))",
         "fields": [
           {
             "fieldPath": "userId",
@@ -271,13 +271,13 @@
           {
             "fieldPath": "localBackup",
             "columnName": "localBackup",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
             "fieldPath": "googleBackup",
             "columnName": "googleBackup",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": false
           }
         ],
@@ -338,7 +338,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a3df03245d63d4e3e11ec3ec1507b370')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cea8448a4828f5fd585dcc2d9c6641f6')"
     ]
   }
 }

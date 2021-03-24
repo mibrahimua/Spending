@@ -11,18 +11,31 @@ enum class BackupSchedule {
 
 class BackupScheduleImp(val schedule: String) {
 
-    fun getIntervalWorker(): IntervalWorker {
+    /**
+     * perlu diberi constraint
+     * jika backup daily maka,
+     * dilakukan pengecekan apakah hari itu sudah melakukan backup
+     *
+     * jika backup weekly maka,
+     * dilakukan pengecekan apakah dalam seminggu itu sudah melakukan backup
+     *
+     * jika backup monthly maka,
+     * dilakukan pengecekan apakah dalam sebulan itu sudah melakukan backup
+     */
+
+    fun getIntervalWorker(): Int {
+        var interval = 0
         if (schedule == BackupSchedule.DAILY.name) {
-            IntervalWorker.interval = 1
+            interval = 1
         }
         if (schedule == BackupSchedule.WEEKLY.name) {
-            IntervalWorker.interval = 7
+            interval = 7
         }
         if (schedule == BackupSchedule.MONTHLY.name) {
-            IntervalWorker.interval = 30
+            interval = 30
         }
 
-        return IntervalWorker
+        return interval
     }
 
     object IntervalWorker {

@@ -36,7 +36,10 @@ class BackupDbService(val appContext: Context) {
 
     private var listFileId = mutableListOf<String>()
 
-    val currentDateTime = CurrentDate.getCurrentDateTime().toString("dd MMM yyyy HH:mm")
+    val currentDateTimewithFormat = CurrentDate.getCurrentDateTime().toString("dd MMM yyyy HH:mm")
+
+    val currentDateTime = CurrentDate.getCurrentDateTime()
+
 
     init {
         googleRepository = GoogleRepository(appContext)

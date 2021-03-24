@@ -5,7 +5,7 @@ import com.mibrahimuadev.spending.data.model.BackupSchedule
 import com.mibrahimuadev.spending.data.model.TransactionType
 import java.util.*
 
-class Converters {
+class ConvertersRoomDataType {
     @TypeConverter
     fun toTransactiontype(value: String): TransactionType {
         return TransactionType.valueOf(value)

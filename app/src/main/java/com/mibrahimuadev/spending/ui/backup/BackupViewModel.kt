@@ -8,17 +8,19 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.FileList
 import com.mibrahimuadev.spending.data.entity.AccountEntity
 import com.mibrahimuadev.spending.data.entity.BackupEntity
-import com.mibrahimuadev.spending.data.entity.SettingEntity
 import com.mibrahimuadev.spending.data.model.BackupSchedule
 import com.mibrahimuadev.spending.data.model.BackupScheduleImp
 import com.mibrahimuadev.spending.data.repository.GoogleRepository
-import com.mibrahimuadev.spending.data.workmanager.BackupWorker
+import com.mibrahimuadev.spending.data.workmanager.BackupWorkerOneTime
+import com.mibrahimuadev.spending.data.workmanager.BackupWorkerPeriodic
+import com.mibrahimuadev.spending.utils.CurrentDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 
 
 class BackupViewModel(val applicationContext: Application) : AndroidViewModel(applicationContext) {
@@ -78,16 +80,33 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
                 BackupSchedule.valueOf(it.settingValue ?: "NEVER")
             }
 
-    fun doBackupOneTime() {
-        val requestBackup = OneTimeWorkRequestBuilder<BackupWorker>()
-            .addTag(BACKUP_WORKER_TAG)
-            .setConstraints(constraintsWorks)
-            .build()
+    fun doBackupOneTime(): Boolean {
+        /**
+         * 12 Hour = 4.32e+7 millisecond
+         */
+        val availabeTimeBackup: Long = backupDateFlow.value?.googleBackup?.time?.plus(4.32e+7)?.toLong() ?: 0
+        val currentDateTime: Long = CurrentDate.now.time.time
 
-        workManager.enqueueUniqueWork(BACKUP_WORKER_TAG, ExistingWorkPolicy.REPLACE, requestBackup)
+        if (currentDateTime < availabeTimeBackup) {
+            Timber.d("Cannot request backup worker because last backup exceed available time backup")
+            return false
+        } else {
+            Timber.d("Begin one time backup work request")
+            val requestBackup = OneTimeWorkRequestBuilder<BackupWorkerOneTime>()
+                .addTag(BACKUP_WORKER_TAG)
+                .setConstraints(constraintsWorks)
+                .build()
+
+            workManager.enqueueUniqueWork(
+                BACKUP_WORKER_TAG,
+                ExistingWorkPolicy.REPLACE,
+                requestBackup
+            )
+            return true
+        }
     }
 
-    fun doBackupPeriodic() {
+    fun doBackupPeriodic(backupSchedule: BackupSchedule) {
         /**
          * Kisaran waktu
          * 1. Never = do nothing about this function
@@ -97,27 +116,31 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
          */
 
         /**
-         * fungsi ini dipanggil ketika user pertama kali login
-         * dan ketika update setting schedule backup
+         * fungsi dipanggil ketika update setting schedule backup
          */
 
-        val backupConf = backupSchedule.value?.name ?: ""
-        if (backupConf.isNotEmpty()) {
-            val scheduleBackup = BackupScheduleImp(backupConf).getIntervalWorker()
-            val requestBackup = PeriodicWorkRequestBuilder<BackupWorker>(
-                scheduleBackup.interval,
-                scheduleBackup.timeUnit
-            )
-                .addTag(BACKUP_WORKER_TAG)
-                .setConstraints(constraintsWorks)
-                .build()
+        val backupConf = backupSchedule.name
+        val scheduleBackup: Int = BackupScheduleImp(backupConf).getIntervalWorker()
+        val lastBackup: Long = backupDateFlow.value?.googleBackup?.time ?: 0
 
-            workManager.enqueueUniquePeriodicWork(
-                BACKUP_WORKER_TAG,
-                ExistingPeriodicWorkPolicy.REPLACE,
-                requestBackup
-            )
-        }
+        val data = Data.Builder()
+        data.putLong("last_backup", lastBackup)
+        data.putInt("schedule_backup", scheduleBackup)
+
+        Timber.d("Begin periodic backup work request with parameters : scheduleBackup = $scheduleBackup, lastBackup = $lastBackup")
+
+        val requestBackup = PeriodicWorkRequestBuilder<BackupWorkerPeriodic>(1, TimeUnit.DAYS)
+            .addTag(BACKUP_WORKER_TAG)
+            .setConstraints(constraintsWorks)
+            .setInputData(data.build())
+            .build()
+
+        workManager.enqueueUniquePeriodicWork(
+            BACKUP_WORKER_TAG,
+            ExistingPeriodicWorkPolicy.REPLACE,
+            requestBackup
+        )
+
     }
 
     fun insertOrUpdateLoggedUser(accountEntity: AccountEntity) {
@@ -147,20 +170,16 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         }
     }
 
-//    fun getBackupSchedule() {
-//        viewModelScope.launch {
-//            val result = viewModelScope.async {
-//                googleRepository.getBackupScheduleConf()
-//            }
-//            val backupSchedule = result.await().settingValue ?: "NEVER"
-//            _backupSchedule.postValue(BackupSchedule.valueOf(backupSchedule))
-//            Timber.d("Retrieve backup schedule from database with result : ${backupSchedule}")
-//        }
-//    }
-
     fun updateBackupSchedule(backupSchedule: BackupSchedule) {
         viewModelScope.launch {
+
             googleRepository.updateBackupSchedule(backupSchedule)
+
+            /**
+             * Configure periodic backup work request
+             */
+            doBackupPeriodic(backupSchedule)
+
             Timber.d("Update backup schedule to database with value : ${backupSchedule}")
         }
     }

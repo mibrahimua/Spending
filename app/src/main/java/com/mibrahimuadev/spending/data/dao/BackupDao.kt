@@ -26,10 +26,10 @@ interface BackupDao {
     }
 
     @Query("UPDATE backup_entity SET localBackup = :localBackup WHERE userId = :userId")
-    suspend fun updateLocalBackup(userId: String, localBackup: String)
+    suspend fun updateLocalBackup(userId: String, localBackup: Date)
 
     @Query("UPDATE backup_entity SET googleBackup = :googleBackup WHERE userId = :userId")
-    suspend fun updateGoogleBackup(userId: String, googleBackup: String)
+    suspend fun updateGoogleBackup(userId: String, googleBackup: Date)
 
     @Query("DELETE FROM backup_entity")
     fun deleteBackupDate()

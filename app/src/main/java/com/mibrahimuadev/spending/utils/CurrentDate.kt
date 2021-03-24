@@ -59,6 +59,9 @@ object CurrentDate {
     }
 
     fun Date.toString(format: String, locale: Locale = Locale.getDefault()): String {
+        /**
+         * dd MMM yyyy HH:mm
+         */
         val formatter = SimpleDateFormat(format, locale)
         return formatter.format(this)
     }

@@ -82,13 +82,13 @@ class GoogleRepository(val appContext: Context) {
         }
     }
 
-    suspend fun updateLocalBackup(userId: String, localBackup: String) {
+    suspend fun updateLocalBackup(userId: String, localBackup: Date) {
         return withContext(Dispatchers.IO) {
             backupDao.updateLocalBackup(userId, localBackup)
         }
     }
 
-    suspend fun updateGoogleBackup(userId: String, googleBackup: String) {
+    suspend fun updateGoogleBackup(userId: String, googleBackup: Date) {
         return withContext(Dispatchers.IO) {
             backupDao.updateGoogleBackup(userId, googleBackup)
         }
