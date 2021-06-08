@@ -31,7 +31,7 @@ class BackupWorkerPeriodic(val appContext: Context, workerParams: WorkerParamete
             if (diffDateTime >= scheduleBackup && scheduleBackup != 0) {
                 Timber.d("Begin periodic backup worker")
 
-                val result: Data = BackupDbService(appContext).syncFileBackupDrive()
+                val result: Data = BackupDbService(appContext).uploadFileBackup()
                 Result.success(result)
             } else {
                 Timber.d("Cancel backup worker because constraints doesn't meet")

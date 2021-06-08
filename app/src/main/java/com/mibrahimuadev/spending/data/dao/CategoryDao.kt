@@ -3,7 +3,8 @@ package com.mibrahimuadev.spending.data.dao
 import androidx.room.*
 import com.mibrahimuadev.spending.data.entity.CategoryEntity
 import com.mibrahimuadev.spending.data.model.Category
-import com.mibrahimuadev.spending.data.model.TransactionType
+import com.mibrahimuadev.spending.data.model.CategoryType
+import com.mibrahimuadev.spending.data.backup.CreateJsonDbVersionOne
 
 @Dao
 interface CategoryDao {
@@ -14,7 +15,7 @@ interface CategoryDao {
             WHERE k.categoryType = :categoryType
             GROUP BY k.categoryId"""
     )
-    fun getAllCategoriesByType(categoryType: TransactionType): List<Category>
+    fun getAllCategoriesByType(categoryType: CategoryType): List<Category>
 
     @Query(
         """SELECT k.categoryId, k.categoryName, c.iconId, c.iconName, k.categoryType 
@@ -41,4 +42,7 @@ interface CategoryDao {
 
     @Query("DELETE FROM category")
     suspend fun deleteAllCategories()
+
+    @Query("SELECT * FROM category")
+    fun getAllCategoryVersionOne(): List<CreateJsonDbVersionOne.Category>
 }

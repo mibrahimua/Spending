@@ -6,12 +6,12 @@ import androidx.work.Data
 import androidx.work.WorkerParameters
 import com.mibrahimuadev.spending.data.network.google.BackupDbService
 
-class BackupWorkerOneTime(val appContext: Context, workerParams: WorkerParameters) :
+class RestoreWorkerOneTIme (val appContext: Context, workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
 
         return try {
-            val result: Data = BackupDbService(appContext).uploadFileBackup()
+            val result: Data = BackupDbService(appContext).downloadFileBackup()
             Result.success(result)
 
         } catch (throwable: Throwable) {

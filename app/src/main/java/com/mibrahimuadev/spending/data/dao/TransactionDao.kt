@@ -5,6 +5,7 @@ import com.mibrahimuadev.spending.data.entity.TransactionEntity
 import com.mibrahimuadev.spending.data.model.Transaction
 import com.mibrahimuadev.spending.data.model.TransactionSummary
 import com.mibrahimuadev.spending.data.model.TransactionSummaryPrevious
+import com.mibrahimuadev.spending.data.backup.CreateJsonDbVersionOne
 
 @Dao
 interface TransactionDao {
@@ -75,4 +76,7 @@ interface TransactionDao {
 
     @Query("DELETE FROM transaction_spend WHERE transactionId = :transactionId")
     suspend fun deleteTransaction(transactionId: Long)
+
+    @Query("SELECT * FROM transaction_spend")
+    fun getAllTransactionSpendVersionOne(): List<CreateJsonDbVersionOne.TransactionSpend>
 }

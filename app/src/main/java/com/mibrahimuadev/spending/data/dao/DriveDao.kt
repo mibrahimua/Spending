@@ -2,6 +2,7 @@ package com.mibrahimuadev.spending.data.dao
 
 import androidx.room.*
 import com.mibrahimuadev.spending.data.entity.DriveEntity
+import com.mibrahimuadev.spending.data.backup.CreateJsonDbVersionOne
 
 @Dao
 interface DriveDao {
@@ -20,4 +21,7 @@ interface DriveDao {
 
     @Query("DELETE FROM drive_entitiy")
     suspend fun deleteDrive()
+
+    @Query("SELECT * FROM drive_entitiy")
+    fun getAllDriveEntityVersionOne(): List<CreateJsonDbVersionOne.DriveEntity>
 }

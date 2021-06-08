@@ -5,7 +5,7 @@ data class Category(
 
     val categoryName: String? = "",
 
-    val categoryType: TransactionType,
+    val categoryType: CategoryType,
 
     val iconId: Int? = 0,
 

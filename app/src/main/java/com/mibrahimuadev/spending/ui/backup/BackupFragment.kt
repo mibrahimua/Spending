@@ -38,6 +38,7 @@ import com.mibrahimuadev.spending.utils.CurrentDate.toString
 import com.mibrahimuadev.spending.utils.PermissionsApp
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import timber.log.Timber
 import java.util.*
 
 
@@ -109,16 +110,21 @@ class BackupFragment : Fragment() {
         }
 
         binding.buttonBackup.setOnClickListener {
-            val doBackup: Boolean = backupViewModel.doBackupOneTime()
-            if (!doBackup) {
-                val alertDialog = AlertDialog.Builder(requireContext()).create()
-                alertDialog.setTitle("Warning")
-                alertDialog.setMessage("Failed to backup database, \nyou can perform backups 12 hours after the last backup")
-                alertDialog.setButton(
-                    AlertDialog.BUTTON_NEUTRAL, "OK"
-                ) { dialog, which -> dialog.dismiss() }
-                alertDialog.show()
-            }
+            backupViewModel.doRestoreOneTime()
+
+            /**
+             * Disable for testing download file from google drive
+             */
+//            val doBackup: Boolean = backupViewModel.doBackupOneTime()
+//            if (!doBackup) {
+//                val alertDialog = AlertDialog.Builder(requireContext()).create()
+//                alertDialog.setTitle("Warning")
+//                alertDialog.setMessage("Failed to backup database, \nyou can perform backups 12 hours after the last backup")
+//                alertDialog.setButton(
+//                    AlertDialog.BUTTON_NEUTRAL, "OK"
+//                ) { dialog, which -> dialog.dismiss() }
+//                alertDialog.show()
+//            }
         }
 
         return binding.root
@@ -204,7 +210,7 @@ class BackupFragment : Fragment() {
         super.onStart()
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
-        Log.i(TAG, "check if user if exist : ${isUserExist}")
+        Timber.i("check if user if exist : ${isUserExist}")
 
         if (isUserExist) {
             runBlocking {
@@ -212,9 +218,13 @@ class BackupFragment : Fragment() {
                     try {
                         val checkPermission = GoogleAuthService(requireActivity().application)
                         checkPermission.checkDriveAuth()
-                        Log.i(TAG, "ada permission")
+                        Timber.i("ada permission")
                     } catch (e: UserRecoverableAuthIOException) {
-                        Log.i(TAG, "tidak ada permission, request ulang")
+                        Timber.i("tidak ada permission, request ulang")
+                        /**
+                         * alternate for startActivityForResult
+                         * https://stackoverflow.com/a/63654043/16139045
+                         */
                         startActivityForResult(e.getIntent(), 0)
                     }
                 }
@@ -271,7 +281,7 @@ class BackupFragment : Fragment() {
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("BackupFragment", "signInResult:failed code=" + e.statusCode)
+            Timber.w( "signInResult:failed code=${e.statusCode}")
             Toast.makeText(
                 requireContext(),
                 "Failed to sign in : ${e.statusCode}",
@@ -283,6 +293,10 @@ class BackupFragment : Fragment() {
     }
 
     private fun loggingIn() {
+        /**
+         * alternate for startActivityForResult
+         * https://stackoverflow.com/a/63654043/16139045
+         */
         startActivityForResult(mGoogleSignInClient.signInIntent, REQUEST_CODE_SIGN_IN)
     }
 

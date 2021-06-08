@@ -2,6 +2,7 @@ package com.mibrahimuadev.spending.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.mibrahimuadev.spending.data.model.CategoryType
 import com.mibrahimuadev.spending.data.model.TransactionType
 
 
@@ -16,6 +17,6 @@ data class CategoryEntity(
 
     val iconId: Int,
 
-    val categoryType: TransactionType
+    val categoryType: CategoryType
 
 )

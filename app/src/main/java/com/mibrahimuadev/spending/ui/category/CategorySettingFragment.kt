@@ -10,6 +10,7 @@ import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.adapter.CategorySettingListAdapter
+import com.mibrahimuadev.spending.data.model.CategoryType
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.databinding.FragmentCategorySettingBinding
 
@@ -47,12 +48,12 @@ class CategorySettingFragment : Fragment() {
                 R.id.radioExpense -> {
                     binding.radioExpense.setTextColor(Color.WHITE)
                     binding.radioIncome.setTextColor(Color.BLACK)
-                    categoryViewModel._categoryType.value = TransactionType.EXPENSE
+                    categoryViewModel._categoryType.value = CategoryType.EXPENSE
                 }
                 R.id.radioIncome -> {
                     binding.radioIncome.setTextColor(Color.WHITE)
                     binding.radioExpense.setTextColor(Color.BLACK)
-                    categoryViewModel._categoryType.value = TransactionType.INCOME
+                    categoryViewModel._categoryType.value = CategoryType.INCOME
                 }
             }
         }

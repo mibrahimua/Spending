@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mibrahimuadev.spending.data.entity.CategoryEntity
 import com.mibrahimuadev.spending.data.model.Category
+import com.mibrahimuadev.spending.data.model.CategoryType
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.data.repository.CategoryRepository
 import com.mibrahimuadev.spending.data.repository.IconCategoryRepository
@@ -54,13 +55,13 @@ class CategoryViewModel(application: Application) : AndroidViewModel(application
     val _iconName = MutableLiveData<String>()
     val iconName: LiveData<String> = _iconName
 
-    val _categoryType = MutableLiveData<TransactionType>()
-    val categoryType: LiveData<TransactionType> = _categoryType
+    val _categoryType = MutableLiveData<CategoryType>()
+    val categoryType: LiveData<CategoryType> = _categoryType
 
     val _lastCategoryId = MutableLiveData<Int>()
     val lastCategoryId: LiveData<Int> = _lastCategoryId
 
-    fun getAllCategoriesByType(typeCategory: TransactionType) {
+    fun getAllCategoriesByType(typeCategory: CategoryType) {
         _dataLoading.value = true
         viewModelScope.launch() {
             val result = categoryRepository.getAllCategoriesByType(typeCategory)

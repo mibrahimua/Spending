@@ -127,9 +127,10 @@ class GoogleRepository(val appContext: Context) {
                     .setApplicationName("Spending")
                     .build()
 
+                val databasePath = appContext.filesDir.path + "/BackupDB/spending_database.json"
                 // The DriveServiceHelper encapsulates all REST API and SAF functionality.
                 // Its instantiation is required before handling any onClick actions.
-                mDriveServiceHelper = DriveServiceHelper(googleDriveService)
+                mDriveServiceHelper = DriveServiceHelper(googleDriveService, databasePath)
                 Timber.d("Authorization is success with value : ${googleDriveService}")
             }
             job1.join()
@@ -187,6 +188,17 @@ class GoogleRepository(val appContext: Context) {
             Timber.d("Call function uploadFileBackupDrive from driveServiceHelper, folder id = $folderId\"")
 
             return@withContext driveServiceHelper?.uploadFileBackupDrive(folderId)
+        }
+    }
+
+    suspend fun downloadFileBackupDrive(
+        driveServiceHelper: DriveServiceHelper?,
+        folderId: String
+    ) {
+        withContext(Dispatchers.IO) {
+            Timber.d("Call function downloadFileBackupDrive from driveServiceHelper, folder id = ${folderId}")
+
+            driveServiceHelper?.downloadFileBackupDrive(folderId)
         }
     }
 

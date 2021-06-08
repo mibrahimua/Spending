@@ -3,7 +3,7 @@ package com.mibrahimuadev.spending.data.dao
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.mibrahimuadev.spending.data.entity.AccountEntity
-import com.mibrahimuadev.spending.data.entity.CategoryEntity
+import com.mibrahimuadev.spending.data.backup.CreateJsonDbVersionOne
 import kotlinx.coroutines.flow.Flow
 
 
@@ -30,4 +30,7 @@ interface AccountDao {
 
     @RawQuery
     fun changeCheckpoint(supportSQLiteQuery: SupportSQLiteQuery?): Int
+
+    @Query("SELECT * FROM account")
+    fun getAllUserVersionOne(): List<CreateJsonDbVersionOne.Account>
 }

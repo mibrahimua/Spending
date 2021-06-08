@@ -7,6 +7,7 @@ import com.mibrahimuadev.spending.data.entity.CategoryEntity
 import com.mibrahimuadev.spending.data.dao.CategoryDao
 import com.mibrahimuadev.spending.data.source.CategoryDataSource
 import com.mibrahimuadev.spending.data.model.Category
+import com.mibrahimuadev.spending.data.model.CategoryType
 import com.mibrahimuadev.spending.data.model.TransactionType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
@@ -20,7 +21,7 @@ class CategoryRepository(application: Application) : CategoryDataSource {
         categoryDao = database.categoryDao()
     }
 
-    override suspend fun getAllCategoriesByType(typeCategory: TransactionType): Result<List<Category>> {
+    override suspend fun getAllCategoriesByType(typeCategory: CategoryType): Result<List<Category>> {
         return withContext(Dispatchers.IO) {
             Result.Success(categoryDao.getAllCategoriesByType(typeCategory))
         }

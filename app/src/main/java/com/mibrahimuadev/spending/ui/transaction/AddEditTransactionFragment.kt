@@ -24,6 +24,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.mibrahimuadev.spending.R
+import com.mibrahimuadev.spending.data.model.CategoryType
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.databinding.FragmentAddTransactionBinding
 import com.mibrahimuadev.spending.utils.CurrentDate
@@ -240,7 +241,7 @@ class AddEditTransactionFragment : Fragment(), Calculator {
             Navigation.findNavController(requireView())
                 .navigate(
                     AddEditTransactionFragmentDirections.actionAddTransactionFragmentToAddCategoryTranscFragment(
-                        transactionViewModel.transactionType.value!!
+                        CategoryType.valueOf(transactionViewModel.transactionType.value!!.name)
                     )
                 )
         }

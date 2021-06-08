@@ -13,6 +13,7 @@ import com.mibrahimuadev.spending.data.model.BackupScheduleImp
 import com.mibrahimuadev.spending.data.repository.GoogleRepository
 import com.mibrahimuadev.spending.data.workmanager.BackupWorkerOneTime
 import com.mibrahimuadev.spending.data.workmanager.BackupWorkerPeriodic
+import com.mibrahimuadev.spending.data.workmanager.RestoreWorkerOneTIme
 import com.mibrahimuadev.spending.utils.CurrentDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -28,6 +29,8 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
     private val TAG = "BackupViewModel"
 
     private val BACKUP_WORKER_TAG = "BACKUP_WORKER"
+
+    private val RESTORE_WORKER_TAG = "RESTORE_WORKER"
 
     private val googleRepository: GoogleRepository
 
@@ -84,10 +87,11 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         /**
          * 12 Hour = 4.32e+7 millisecond
          */
-        val availabeTimeBackup: Long = backupDateFlow.value?.googleBackup?.time?.plus(4.32e+7)?.toLong() ?: 0
+        val availabeTimeBackup: Long =
+            backupDateFlow.value?.googleBackup?.time?.plus(4.32e+7)?.toLong() ?: 0
         val currentDateTime: Long = CurrentDate.now.time.time
 
-        if (currentDateTime < availabeTimeBackup) {
+        if (currentDateTime > availabeTimeBackup) {
             Timber.d("Cannot request backup worker because last backup exceed available time backup")
             return false
         } else {
@@ -140,7 +144,21 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
             ExistingPeriodicWorkPolicy.REPLACE,
             requestBackup
         )
+    }
 
+    fun doRestoreOneTime(): Boolean {
+        Timber.d("Begin one time restore work request")
+        val requestRestore = OneTimeWorkRequestBuilder<RestoreWorkerOneTIme>()
+            .addTag(RESTORE_WORKER_TAG)
+            .setConstraints(constraintsWorks)
+            .build()
+
+        workManager.enqueueUniqueWork(
+            RESTORE_WORKER_TAG,
+            ExistingWorkPolicy.REPLACE,
+            requestRestore
+        )
+        return true
     }
 
     fun insertOrUpdateLoggedUser(accountEntity: AccountEntity) {

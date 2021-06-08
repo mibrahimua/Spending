@@ -2,6 +2,7 @@ package com.mibrahimuadev.spending.utils
 
 import androidx.room.TypeConverter
 import com.mibrahimuadev.spending.data.model.BackupSchedule
+import com.mibrahimuadev.spending.data.model.CategoryType
 import com.mibrahimuadev.spending.data.model.TransactionType
 import java.util.*
 
@@ -13,6 +14,16 @@ class ConvertersRoomDataType {
 
     @TypeConverter
     fun fromTransactiontype(value: TransactionType): String {
+        return value.name
+    }
+
+    @TypeConverter
+    fun toCategoryType(value: String): CategoryType {
+        return CategoryType.valueOf(value)
+    }
+
+    @TypeConverter
+    fun fromCategoryType(value: CategoryType): String {
         return value.name
     }
 

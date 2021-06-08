@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.data.model.Category
+import com.mibrahimuadev.spending.data.model.CategoryType
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.ui.category.CategorySettingFragmentDirections
 
@@ -18,7 +19,7 @@ class CategorySettingListAdapter internal constructor(private val context: Conte
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private val categories = mutableListOf<Category>()
-    private lateinit var categoryType: TransactionType
+    private lateinit var categoryType: CategoryType
 
     inner class CategoryViewHolder(itemVIew: View) : RecyclerView.ViewHolder(itemVIew) {
         var categoryIcon: ImageView = itemView.findViewById(R.id.categoryIcon)
@@ -48,7 +49,7 @@ class CategorySettingListAdapter internal constructor(private val context: Conte
 
     internal fun setCategory(
         category: List<Category>,
-        typeCategory: TransactionType
+        typeCategory: CategoryType
     ) {
         this.categories.removeAll(categories)
         this.categories.addAll(category)

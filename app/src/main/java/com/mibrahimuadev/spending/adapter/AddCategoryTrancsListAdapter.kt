@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.mibrahimuadev.spending.R
 import com.mibrahimuadev.spending.data.model.Category
+import com.mibrahimuadev.spending.data.model.CategoryType
 import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.ui.transaction.AddCategoryTranscFragmentDirections
 
@@ -23,7 +24,7 @@ class AddCategoryTrancsListAdapter internal constructor(
     private var categoriesCopy = mutableListOf<Category>()
     private var lastCategoryId: Int = 0
     private var isNewCategory: Boolean = false
-    private lateinit var categoryType: TransactionType
+    private lateinit var categoryType: CategoryType
 
     inner class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var categoryIcon: ImageView = itemView.findViewById(R.id.categoryIcon)
@@ -42,7 +43,7 @@ class AddCategoryTrancsListAdapter internal constructor(
 
     internal fun setCategory(
         category: List<Category>,
-        typeCategory: TransactionType,
+        typeCategory: CategoryType,
     ) {
         this.categories.addAll(category)
         categoriesCopy.addAll(category)
@@ -57,7 +58,7 @@ class AddCategoryTrancsListAdapter internal constructor(
             isNewCategory = false
         } else {
             for (category in categoriesCopy) {
-                if (category.categoryName?.toLowerCase()?.contains(filterText.toLowerCase())!!) {
+                if (category.categoryName?.lowercase()?.contains(filterText.lowercase())!!) {
                     isNewCategory = false
                     categories.add(category)
                 }

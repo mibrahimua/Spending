@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.mibrahimuadev.spending.data.entity.SettingEntity
 import com.mibrahimuadev.spending.data.model.BackupSchedule
+import com.mibrahimuadev.spending.data.backup.CreateJsonDbVersionOne
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -20,4 +21,6 @@ interface SettingDao {
     @Query("UPDATE setting_app SET settingValue = null, userId = null")
     fun deleteAllSettingValue()
 
+    @Query("SELECT * FROM setting_app")
+    fun getAllSettingAppVersionOne(): List<CreateJsonDbVersionOne.SettingApp>
 }

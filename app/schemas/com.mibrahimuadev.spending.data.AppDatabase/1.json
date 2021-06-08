@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "cea8448a4828f5fd585dcc2d9c6641f6",
+    "identityHash": "4dd224e8701a47015084862fbb11bea4",
     "entities": [
       {
         "tableName": "transaction_spend",
@@ -189,38 +189,6 @@
         "foreignKeys": []
       },
       {
-        "tableName": "google_auth",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` INTEGER NOT NULL, `accessToken` TEXT NOT NULL, `refreshToken` TEXT NOT NULL, PRIMARY KEY(`userId`))",
-        "fields": [
-          {
-            "fieldPath": "userId",
-            "columnName": "userId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "accessToken",
-            "columnName": "accessToken",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "refreshToken",
-            "columnName": "refreshToken",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "userId"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
         "tableName": "drive_entitiy",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fileType` TEXT NOT NULL, `fileId` TEXT, `fileName` TEXT, `lastModified` INTEGER, PRIMARY KEY(`fileType`))",
         "fields": [
@@ -338,7 +306,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cea8448a4828f5fd585dcc2d9c6641f6')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4dd224e8701a47015084862fbb11bea4')"
     ]
   }
 }

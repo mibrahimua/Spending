@@ -2,8 +2,8 @@ package com.mibrahimuadev.spending.data.dao
 
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.google.api.client.util.DateTime
 import com.mibrahimuadev.spending.data.entity.BackupEntity
+import com.mibrahimuadev.spending.data.backup.CreateJsonDbVersionOne
 import kotlinx.coroutines.flow.Flow
 import java.util.*
 
@@ -36,4 +36,7 @@ interface BackupDao {
 
     @RawQuery
     fun changeCheckpoint(supportSQLiteQuery: SupportSQLiteQuery?): Int
+
+    @Query("SELECT * FROM backup_entity")
+    fun getAllBackupEntityVersionOne(): List<CreateJsonDbVersionOne.BackupEntity>
 }

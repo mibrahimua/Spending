@@ -2,10 +2,10 @@ package com.mibrahimuadev.spending.data.network.google
 
 import android.annotation.SuppressLint
 import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.OpenableColumns
-import android.util.Log
 import android.util.Pair
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
@@ -17,10 +17,7 @@ import com.google.api.services.drive.model.FileList
 import com.mibrahimuadev.spending.data.entity.DriveEntity
 import com.mibrahimuadev.spending.ui.backup.DriveData
 import timber.log.Timber
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
-import java.sql.Time
+import java.io.*
 import java.util.*
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -30,7 +27,7 @@ import java.util.concurrent.Executors
  * A utility for performing read/write operations on Drive files via the REST API and opening a
  * file picker UI via Storage Access Framework.
  */
-class DriveServiceHelper(private val mDriveService: Drive) {
+class DriveServiceHelper(private val mDriveService: Drive, private val databasePath: String) {
     private val mExecutor: Executor = Executors.newSingleThreadExecutor()
 
     fun createFolderDrive(): DriveEntity {
@@ -98,16 +95,22 @@ class DriveServiceHelper(private val mDriveService: Drive) {
     fun uploadFileBackupDrive(folderId: String): DriveData {
         try {
             val fileMetadata = File()
-            fileMetadata.name = "spending_database.db"
+            fileMetadata.name = "spending_database.json"
             fileMetadata.parents = Collections.singletonList(folderId)
             val filePath =
-                java.io.File("/data/data/com.mibrahimuadev.spending/files/BackupDB/spending_database.db")
-            val mediaContent = FileContent("application/x-sqlite3", filePath)
+                java.io.File(databasePath)
+
+            /**
+             * mime sqlite type : application/x-sqlite3
+             * mime json type : application/json
+             */
+//            val mediaContent = FileContent("application/x-sqlite3", filePath)
+            val mediaContent = FileContent("application/json", filePath)
             val file: File = mDriveService.files().create(fileMetadata, mediaContent)
                 .setFields("id, parents")
                 .execute()
 
-            Timber.d("Uploading file backtup to drive with value : ${file.name}")
+            Timber.d("Uploading file backtup to drive with value : ${file.id}")
             return DriveData(
                 fileType = "files",
                 fileId = file.id,
@@ -126,13 +129,31 @@ class DriveServiceHelper(private val mDriveService: Drive) {
         }
     }
 
+    /**
+     * Download a file stored on Google Drive
+     */
+    fun downloadFileBackupDrive(fileId: String?) {
+        val outputStream: OutputStream = ByteArrayOutputStream()
+        mDriveService.files().get(fileId)
+            .executeMediaAndDownloadTo(outputStream)
+        Timber.d("Result from download file backup drive  ${outputStream} ")
+//        Timber.d("databasePath is ${databasePath}")
+        val byteArrayOutputStream: ByteArrayOutputStream = outputStream as ByteArrayOutputStream
+        FileOutputStream(databasePath).use { outputStreamDownload ->
+            byteArrayOutputStream.writeTo(
+                outputStreamDownload
+            )
+        }
+    }
+
     fun searchFileBackupDrive(): MutableList<String> {
 
         var pageToken: String? = null
         val listFileId = mutableListOf<String>()
         do {
             val result: FileList = mDriveService.files().list()
-                .setQ("mimeType = 'application/x-sqlite3' and trashed = false")
+//                .setQ("mimeType = 'application/x-sqlite3' and trashed = false")
+                .setQ("mimeType = 'application/json' and trashed = false")
                 .setSpaces("drive")
                 .setFields("nextPageToken, files(id, name)")
                 .setPageToken(pageToken)
@@ -234,7 +255,7 @@ class DriveServiceHelper(private val mDriveService: Drive) {
      * The returned list will only contain files visible to this app, i.e. those which were
      * created by this app. To perform operations on files not created by the app, the project must
      * request Drive Full Scope in the [Google
- * Developer's Console](https://play.google.com/apps/publish) and be submitted to Google for verification.
+     * Developer's Console](https://play.google.com/apps/publish) and be submitted to Google for verification.
      */
     fun queryFiles(): Task<FileList> {
         return Tasks.call(mExecutor,
