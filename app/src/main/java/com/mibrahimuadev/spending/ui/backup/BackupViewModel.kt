@@ -90,8 +90,10 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
         val availabeTimeBackup: Long =
             backupDateFlow.value?.googleBackup?.time?.plus(4.32e+7)?.toLong() ?: 0
         val currentDateTime: Long = CurrentDate.now.time.time
-
-        if (currentDateTime > availabeTimeBackup) {
+        /**
+         * change current condition to currentDateTime > availabeTimeBackup when all is done
+         */
+        if (currentDateTime < availabeTimeBackup) {
             Timber.d("Cannot request backup worker because last backup exceed available time backup")
             return false
         } else {
@@ -148,6 +150,9 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
 
     fun doRestoreOneTime(): Boolean {
         Timber.d("Begin one time restore work request")
+        /**
+         * Hasil restore tidak otomatis tampil saat pertama kali buka halaman depan
+         */
         val requestRestore = OneTimeWorkRequestBuilder<RestoreWorkerOneTIme>()
             .addTag(RESTORE_WORKER_TAG)
             .setConstraints(constraintsWorks)

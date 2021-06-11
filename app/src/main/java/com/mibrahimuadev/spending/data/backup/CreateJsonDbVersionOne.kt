@@ -180,7 +180,7 @@ class CreateJsonDbVersionOne(val application: Application) : CreateJsonDbVersion
 
 
         rootObject.put("entities", entitiesArray)
-//        println(rootObject)
+        Timber.d(rootObject.toString())
         try {
             fileJson = FileWriter(
                 File(
@@ -206,8 +206,8 @@ class CreateJsonDbVersionOne(val application: Application) : CreateJsonDbVersion
 
     data class BackupEntity(
         val userId: String,
-        val localBackup: Date?,
-        val googleBackup: Date?,
+        val localBackup: Long?,
+        val googleBackup: Long?,
     )
 
     data class Category(
@@ -229,7 +229,7 @@ class CreateJsonDbVersionOne(val application: Application) : CreateJsonDbVersion
         val fileType: String,
         val fileId: String?,
         val fileName: String?,
-        val lastModified: Date?
+        val lastModified: Long?
     )
 
     data class TransactionSpend(
@@ -238,7 +238,7 @@ class CreateJsonDbVersionOne(val application: Application) : CreateJsonDbVersion
         val transactionIncome: Double?,
         val transactionExpense: Double?,
         val categoryId: Int,
-        val transactionDate: Date,
+        val transactionDate: Long,
         val transactionNote: String? = ""
     )
 

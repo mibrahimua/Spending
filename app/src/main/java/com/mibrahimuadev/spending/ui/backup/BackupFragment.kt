@@ -110,21 +110,29 @@ class BackupFragment : Fragment() {
         }
 
         binding.buttonBackup.setOnClickListener {
-            backupViewModel.doRestoreOneTime()
+
+//            backupViewModel.testMappingDataBackup()
 
             /**
-             * Disable for testing download file from google drive
+             * Disable line bellow for testing read json file from backup db dir
              */
-//            val doBackup: Boolean = backupViewModel.doBackupOneTime()
-//            if (!doBackup) {
-//                val alertDialog = AlertDialog.Builder(requireContext()).create()
-//                alertDialog.setTitle("Warning")
-//                alertDialog.setMessage("Failed to backup database, \nyou can perform backups 12 hours after the last backup")
-//                alertDialog.setButton(
-//                    AlertDialog.BUTTON_NEUTRAL, "OK"
-//                ) { dialog, which -> dialog.dismiss() }
-//                alertDialog.show()
-//            }
+
+//            backupViewModel.doRestoreOneTime()
+
+            /**
+             * Disable line bellow for testing download file from google drive
+             */
+
+            val doBackup: Boolean = backupViewModel.doBackupOneTime()
+            if (!doBackup) {
+                val alertDialog = AlertDialog.Builder(requireContext()).create()
+                alertDialog.setTitle("Warning")
+                alertDialog.setMessage("Failed to backup database, \nyou can perform backups 12 hours after the last backup")
+                alertDialog.setButton(
+                    AlertDialog.BUTTON_NEUTRAL, "OK"
+                ) { dialog, which -> dialog.dismiss() }
+                alertDialog.show()
+            }
         }
 
         return binding.root
@@ -153,7 +161,7 @@ class BackupFragment : Fragment() {
                 backupViewModel.updateBackupSchedule(
                     BackupSchedule.valueOf(
                         currentButton.text.toString()
-                            .toUpperCase(Locale.getDefault())
+                            .uppercase()
                     )
                 )
                 dialogBackupSchedule.dismiss()
@@ -272,6 +280,9 @@ class BackupFragment : Fragment() {
                         userEmail = account.email!!
                     )
                 )
+                backupViewModel.doRestoreOneTime()
+
+                backupViewModel.updateBackupSchedule(BackupSchedule.valueOf("NEVER"))
             }
             Toast.makeText(requireContext(), "Welcome ${account?.email}", Toast.LENGTH_SHORT)
                 .show()

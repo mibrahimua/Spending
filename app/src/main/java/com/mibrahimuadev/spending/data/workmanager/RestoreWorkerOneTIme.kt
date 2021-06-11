@@ -11,7 +11,7 @@ class RestoreWorkerOneTIme (val appContext: Context, workerParams: WorkerParamet
     override suspend fun doWork(): Result {
 
         return try {
-            val result: Data = BackupDbService(appContext).downloadFileBackup()
+            val result: Data = BackupDbService(appContext).restoreFileBackup()
             Result.success(result)
 
         } catch (throwable: Throwable) {

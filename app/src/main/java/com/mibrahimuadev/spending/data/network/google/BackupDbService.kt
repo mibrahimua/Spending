@@ -10,6 +10,8 @@ import com.mibrahimuadev.spending.data.backup.CreateJsonDbVersion
 import com.mibrahimuadev.spending.data.entity.BackupEntity
 import com.mibrahimuadev.spending.data.model.BaseDrive
 import com.mibrahimuadev.spending.data.repository.GoogleRepository
+import com.mibrahimuadev.spending.data.restore.ReadJsonDbVersion
+import com.mibrahimuadev.spending.data.restore.RestoreManagement
 import com.mibrahimuadev.spending.utils.CurrentDate
 import com.mibrahimuadev.spending.utils.CurrentDate.toString
 import kotlinx.coroutines.Dispatchers
@@ -135,7 +137,7 @@ class BackupDbService(val appContext: Context) {
      */
 
 
-    suspend fun createJsonDbToBackupDBDir() {
+    suspend fun createJsonDbToBackupDbDir() {
         val backupManagement = BackupManagement(appContext)
         val createJson: CreateJsonDbVersion = backupManagement.verifyAppVersion()
 
@@ -178,7 +180,7 @@ class BackupDbService(val appContext: Context) {
                  * membuat function yang berguna untuk mengecek versi aplikasi
                  *
                  */
-                createJsonDbToBackupDBDir()
+                createJsonDbToBackupDbDir()
 
                 getDriveServiceHelper()
                 if (driveServiceHelper != null) {
@@ -286,10 +288,11 @@ class BackupDbService(val appContext: Context) {
         }
     }
 
-    fun downloadFileBackup(): Data {
+    fun restoreFileBackup(): Data {
         val backup = Data.Builder()
         GlobalScope.launch {
             mutex.withLock {
+                createLocalDirBackupDB()
                 getDriveServiceHelper()
                 if (driveServiceHelper != null) {
 
@@ -297,6 +300,7 @@ class BackupDbService(val appContext: Context) {
                     searchFolderDrive()
                     searchFileBackupDrive()
                     downloadFileBackupDrive()
+                    insertBackupDataToDatabase()
                     Timber.d("Sync with Google Drive are finished")
                     backup.putBoolean("BACKUP", true)
 
@@ -309,13 +313,17 @@ class BackupDbService(val appContext: Context) {
         return backup.build()
     }
 
+    suspend fun insertBackupDataToDatabase() {
+        val readJson: ReadJsonDbVersion = RestoreManagement(appContext).verifyAppVersion()
+
+        readJson.insertBackupDataToDatabase()
+    }
+
     suspend fun downloadFileBackupDrive() {
-        GlobalScope.launch {
-            googleRepository.downloadFileBackupDrive(
-                driveServiceHelper,
-                listFileId[0]
-            )
-        }
+        googleRepository.downloadFileBackupDrive(
+            driveServiceHelper,
+            listFileId[0]
+        )
         Timber.d("Download file backup from Google Drive")
     }
 

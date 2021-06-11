@@ -14,9 +14,9 @@ interface ReadJsonDbVersion {
      * mapping data ke dalam masing2 list
      */
 
-    fun readFileBackup()
+    fun readFileBackup(): String?
 
-    fun mappingDataBackup()
+    fun mappingDataBackup(backupDatabaseFile: String)
 
-    fun insertBackupDataToDatabase()
+    suspend fun insertBackupDataToDatabase()
 }

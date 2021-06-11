@@ -21,6 +21,7 @@ import com.mibrahimuadev.spending.data.entity.BackupEntity
 import com.mibrahimuadev.spending.data.entity.DriveEntity
 import com.mibrahimuadev.spending.data.entity.SettingEntity
 import com.mibrahimuadev.spending.data.model.BackupSchedule
+import com.mibrahimuadev.spending.data.network.google.BackupDbService
 import com.mibrahimuadev.spending.data.network.google.DriveServiceHelper
 import com.mibrahimuadev.spending.data.network.google.GoogleAuthService
 import com.mibrahimuadev.spending.ui.backup.DriveData
@@ -154,7 +155,6 @@ class GoogleRepository(val appContext: Context) {
         }
     }
 
-
     suspend fun createFolderDrive(driveServiceHelper: DriveServiceHelper?): DriveEntity? {
         return withContext(Dispatchers.IO) {
             Timber.d("Call function createFolderDrive from driveServiceHelper")
@@ -217,7 +217,7 @@ class GoogleRepository(val appContext: Context) {
 
     suspend fun updateBackupSchedule(backupSchedule: BackupSchedule) {
         return withContext(Dispatchers.IO) {
-            settingDao.updateSettingValue("backup_schedule", backupSchedule)
+            settingDao.updateBackupSettingValue("backup_schedule", backupSchedule)
         }
     }
 

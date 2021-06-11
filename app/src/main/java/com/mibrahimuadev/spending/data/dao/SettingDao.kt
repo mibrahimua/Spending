@@ -16,7 +16,7 @@ interface SettingDao {
     fun updateSettingUserId(userId: String)
 
     @Query("UPDATE setting_app SET settingValue = :settingValue WHERE settingSysname = :settingSysName")
-    fun updateSettingValue(settingSysName: String, settingValue: BackupSchedule)
+    fun updateBackupSettingValue(settingSysName: String, settingValue: BackupSchedule = BackupSchedule.NEVER)
 
     @Query("UPDATE setting_app SET settingValue = null, userId = null")
     fun deleteAllSettingValue()
