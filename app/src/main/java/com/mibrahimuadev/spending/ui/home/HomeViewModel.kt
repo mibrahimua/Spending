@@ -137,7 +137,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private fun getAllTransactions() {
         viewModelScope.launch {
             val result =
-                repository.getAllTransactions(selectedStartDate.value!!, selectedEndDate.value!!)
+                repository.getAllTransactions(
+                    selectedStartDate.value!!,
+                    selectedEndDate.value!!
+                )
             if (result is Result.Success) {
                 _allTransactions.value = result.data
             }

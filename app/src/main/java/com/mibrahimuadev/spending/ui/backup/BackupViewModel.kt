@@ -151,7 +151,7 @@ class BackupViewModel(val applicationContext: Application) : AndroidViewModel(ap
     fun doRestoreOneTime(): Boolean {
         Timber.d("Begin one time restore work request")
         /**
-         * Hasil restore tidak otomatis tampil saat pertama kali buka halaman depan
+         * Hasil restore tidak otomatis tampil saat pertama kali buka halaman depan:
          */
         val requestRestore = OneTimeWorkRequestBuilder<RestoreWorkerOneTIme>()
             .addTag(RESTORE_WORKER_TAG)
