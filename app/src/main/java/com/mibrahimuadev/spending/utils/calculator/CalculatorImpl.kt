@@ -167,8 +167,9 @@ class CalculatorImpl(calculator: Calculator, private val context: Context) {
             try {
                 val result = ExpressionBuilder(expression.replace(",", "")).build().evaluate()
                 showNewResult(result.format())
-                baseValue = result
                 inputDisplayedFormula = result.format()
+                baseValue = result
+
                 showNewFormula(expression.replace("sqrt", "√"))
             } catch (e: Exception) {
                 context.toast(R.string.unknown_error_occurred)
@@ -208,10 +209,14 @@ class CalculatorImpl(calculator: Calculator, private val context: Context) {
 
     fun handleClear() {
         var newValue = inputDisplayedFormula.dropLast(1)
-        if (newValue == "") {
+        if (newValue == "" || newValue == "0") {
             newValue = "0"
+            resetValues()
         }
-
+        /**
+         * disini diberi pengaturan jika value yang dihapus ialah operator
+         * maka value dari variable last operator juga harus dihapus
+         */
         newValue = newValue.trimEnd(',')
         inputDisplayedFormula = newValue
         addThousandsDelimiter()
