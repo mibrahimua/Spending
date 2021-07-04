@@ -11,6 +11,7 @@ object Formatter {
         symbols.groupingSeparator = ','
 
         val formatter = DecimalFormat()
+        formatter.isDecimalSeparatorAlwaysShown = false
         formatter.maximumFractionDigits = 12
         formatter.decimalFormatSymbols = symbols
         formatter.isGroupingUsed = true

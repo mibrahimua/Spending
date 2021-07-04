@@ -11,6 +11,8 @@ import com.mibrahimuadev.spending.data.model.TransactionType
 import com.mibrahimuadev.spending.data.repository.CategoryRepository
 import com.mibrahimuadev.spending.data.repository.TransactionRepository
 import com.mibrahimuadev.spending.data.source.TransactionRepositoryInterface
+import com.mibrahimuadev.spending.utils.Formatter
+import com.mibrahimuadev.spending.utils.format
 import com.mibrahimuadev.spending.utils.wrapper.Event
 import com.mibrahimuadev.spending.utils.wrapper.Result
 import kotlinx.coroutines.launch
@@ -73,11 +75,11 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     val _transactionExpense = MutableLiveData<String>()
     val transactionExpense: LiveData<String> = _transactionExpense
 
-    val _categoryId = MutableLiveData<Int>()
-    val categoryId: LiveData<Int> = _categoryId
+    val _categoryId = MutableLiveData<Int?>()
+    val categoryId: LiveData<Int?> = _categoryId
 
-    val _categoryName = MutableLiveData<String>()
-    val categoryName: LiveData<String> = _categoryName
+    val _categoryName = MutableLiveData<String?>()
+    val categoryName: LiveData<String?> = _categoryName
 
     val _dateTransaction = MutableLiveData<Date>()
     val dateTransaction: LiveData<Date> = _dateTransaction
@@ -102,10 +104,10 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
                 if (result is Result.Success) {
                     _transactionId.value = result.data.transactionId
                     _transactionType.value = result.data.transactionType
-                    _transactionIncome.value = result.data.transactionIncome.toString()
-                    _transactionExpense.value = result.data.transactionExpense.toString()
+                    _transactionIncome.value = result.data.transactionIncome.format()
+                    _transactionExpense.value = result.data.transactionExpense.format()
                     _categoryId.value = result.data.categoryId
-                    _categoryName.value = result.data.categoryName
+                    _categoryName.value = result.data.categoryName!!
                     _dateTransaction.value = result.data.transactionDate
                     _noteTransaction.value = result.data.transactionNote
                     _dataLoading.value = false
@@ -142,6 +144,11 @@ class TransactionViewModel(application: Application) : AndroidViewModel(applicat
     fun saveCalculatorState(lastOperation: String, lastKey: String) {
         _calcOperation.value = lastOperation
         _calcLastKey.value = lastKey
+        /**
+         * saat pertama kali membuka halaman tambah transaksi
+         * jika user menekan operator pertama kali maka saat submit operator tersebut tidak hilang
+         * bahkan jika diclear
+         */
     }
 
     fun onDataNotAvailable() {
